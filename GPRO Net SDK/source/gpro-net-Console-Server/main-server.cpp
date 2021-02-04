@@ -22,7 +22,6 @@
 	Main source for console server application.
 */
 
-#include "gpro-net/gpro-net.h"
 //Provided
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,17 +34,17 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/RakNetTypes.h" 
 
+//Shared Lib
+#include "gpro-net/gpro-net.h"
+#include "gpro-net/GameMessages.h"
+#include "gpro-net/GameState.h"
+#include "gpro-net/ChatMessage.h"
+
 #define MAX_CLIENTS 10
 #define SERVER_PORT 7777
 
-enum GameMessages
-{
-	ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1
-};
-
 int main(void)
 {
-	//char str[512];
 
 	RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
 	RakNet::Packet* packet;
@@ -81,18 +80,18 @@ int main(void)
 			case ID_REMOTE_NEW_INCOMING_CONNECTION:
 				printf("Another client has connected.\n");
 				break;
-			case ID_CONNECTION_REQUEST_ACCEPTED:
-			{
-				printf("Our connection request has been accepted.\n");
+			//case ID_CONNECTION_REQUEST_ACCEPTED:
+			//{
+			//	printf("Our connection request has been accepted.\n");
 
-				// Use a BitStream to write a custom user message
-				// Bitstreams are easier to use than sending casted structures, and handle endian swapping automatically
-				RakNet::BitStream bsOut;
-				bsOut.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
-				bsOut.Write("Hello world");
-				peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-			}
-			break;
+			//	// Use a BitStream to write a custom user message
+			//	// Bitstreams are easier to use than sending casted structures, and handle endian swapping automatically
+			//	RakNet::BitStream bsOut;
+			//	bsOut.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
+			//	bsOut.Write("Hello world");
+			//	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+			//}
+			//break;
 			case ID_NEW_INCOMING_CONNECTION:
 				printf("A connection is incoming.\n");
 				break;
@@ -115,6 +114,15 @@ int main(void)
 				printf("%s\n", rs.C_String());
 			}
 			break;
+			case ID_CHAT_MESSAGE:
+			{
+				RakNet::RakString rs;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				bsIn.Read(rs);
+				printf("%s\n", rs.C_String());
+			}
+				break;
 
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
