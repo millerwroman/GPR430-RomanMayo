@@ -37,7 +37,7 @@
 #include "gpro-net/gpro-net.h"
 #include "gpro-net/GameMessages.h"
 #include "gpro-net/GameState.h"
-#include "gpro-net/ChatMessage.h"
+#include "gpro-net//PackageStructs.h"
 
 //Declare Baisc Pattern
 void HandleLocalInput(GameState* gs);
@@ -46,11 +46,12 @@ void Update(GameState* gs);
 void HandleOutputRemote(const GameState* gs);
 void HandleOutputLocal(GameState* gs);
 
+
 int main(void)
 {
 	//char str[512];
 	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.60";
+	const char SERVER_IP[] = "172.16.2.186";
 
 	GameState* gs = new GameState();
 	gs->peer = RakNet::RakPeerInterface::GetInstance();
@@ -108,13 +109,20 @@ void HandleRemoteInput(GameState* gs)
 
 			// Use a BitStream to write a custom user message
 			// Bitstreams are easier to use than sending casted structures, and handle endian swapping automatically
-			RakNet::BitStream bsOut;
+			//RakNet::BitStream bsOut;
 			//bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
 			//bsOut.Write((RakNet::Time)RakNet::GetTime());
-			bsOut.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
-			bsOut.Write("Hello World");
-			peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-
+			//bsOut.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
+			//bsOut.Write("Hello World");
+			//peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+			std::string localIp = peer->GetLocalIP(0);
+			InitalConnectMessage msg
+			{
+				(char)ID_INITAL_CONTACT,
+				"Default Username",
+				"172.16.6.81"
+			};
+			peer->Send((char*)&msg, sizeof(msg), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			//How to send a struct or class
 			//GameMessage1 msg
 			//{

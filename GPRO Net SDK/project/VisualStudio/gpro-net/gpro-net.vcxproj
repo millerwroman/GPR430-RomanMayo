@@ -175,7 +175,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\gpro-net\ChatMessage.h" />
+    <ClInclude Include="..\..\..\include\gpro-net\PackageStructs.h" />
     <ClInclude Include="..\..\..\include\gpro-net\GameMessages.h" />
     <ClInclude Include="..\..\..\include\gpro-net\GameState.h" />
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net.h" />

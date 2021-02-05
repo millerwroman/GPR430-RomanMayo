@@ -38,7 +38,7 @@
 #include "gpro-net/gpro-net.h"
 #include "gpro-net/GameMessages.h"
 #include "gpro-net/GameState.h"
-#include "gpro-net/ChatMessage.h"
+#include "gpro-net/PackageStructs.h"
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 7777
@@ -80,18 +80,14 @@ int main(void)
 			case ID_REMOTE_NEW_INCOMING_CONNECTION:
 				printf("Another client has connected.\n");
 				break;
-			//case ID_CONNECTION_REQUEST_ACCEPTED:
-			//{
-			//	printf("Our connection request has been accepted.\n");
-
-			//	// Use a BitStream to write a custom user message
-			//	// Bitstreams are easier to use than sending casted structures, and handle endian swapping automatically
-			//	RakNet::BitStream bsOut;
-			//	bsOut.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
-			//	bsOut.Write("Hello world");
-			//	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-			//}
-			//break;
+			case ID_INITAL_CONTACT:
+			{
+				InitalConnectMessage msg;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.Read(msg);
+				printf("Here");
+			}
+			break;
 			case ID_NEW_INCOMING_CONNECTION:
 				printf("A connection is incoming.\n");
 				break;
