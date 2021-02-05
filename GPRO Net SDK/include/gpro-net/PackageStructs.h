@@ -13,15 +13,15 @@ struct GameMessage1
 	//Time
 };
 #pragma pack (pop)
-
-#pragma pack(push,1)
-struct InitalConnectMessage
-{
-	//ID
-	char msgID;
-	//Message
-	char username[512];
-	//Ip Adress
-	char ip[512];
-};
-#pragma pack (pop)
+//
+//#pragma pack(push,1)
+//struct InitalConnectMessage
+//{
+//	//ID
+//	char msgID;
+//	//Message
+//	char username[512];
+//	//Ip Adress
+//	RakNet::SystemAddress sysAdress;
+//};
+//#pragma pack (pop)

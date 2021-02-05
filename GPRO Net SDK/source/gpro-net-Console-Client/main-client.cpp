@@ -107,32 +107,18 @@ void HandleRemoteInput(GameState* gs)
 		{
 			printf("Our connection request has been accepted.\n");
 
-			// Use a BitStream to write a custom user message
-			// Bitstreams are easier to use than sending casted structures, and handle endian swapping automatically
-			//RakNet::BitStream bsOut;
-			//bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
-			//bsOut.Write((RakNet::Time)RakNet::GetTime());
-			//bsOut.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
-			//bsOut.Write("Hello World");
-			//peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-			std::string localIp = peer->GetLocalIP(0);
+			/*std::string localIp = peer->GetLocalIP(0);
 			InitalConnectMessage msg
 			{
 				(char)ID_INITAL_CONTACT,
 				"Default Username",
-				"172.16.6.81"
 			};
-			peer->Send((char*)&msg, sizeof(msg), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-			//How to send a struct or class
-			//GameMessage1 msg
-			//{
-			//	//ID_TIMESTAMP,
-			//	//RakNet::GetTime(),
-			//	(char)ID_CHAT_MESSAGE,
-			//	"hello"
+			peer->Send((char*)&msg, sizeof(msg), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);*/
+			RakNet::BitStream bs;
+			bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
+			bs.Write("Default Username");
+			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 
-			//};
-			//peer->Send((char*)&msg, sizeof(msg), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 		}
 		break;
 		case ID_NEW_INCOMING_CONNECTION:

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream> //Take this out when we can 
+#include <map>
 
 //RakNet
 #include "RakNet/RakPeerInterface.h"
@@ -45,6 +46,7 @@
 
 int main(void)
 {
+	std::map < RakNet::RakString, RakNet::SystemAddress> connectedClients;
 
 	RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
 	RakNet::Packet* packet;
@@ -82,10 +84,22 @@ int main(void)
 				break;
 			case ID_INITAL_CONTACT:
 			{
-				InitalConnectMessage msg;
+				//Do we need to add this to our inital connect
+				//InitalConnectMessage* msg = (InitalConnectMessage*)packet->data;
+				//msg->sysAdress = packet->systemAddress;
+				//CurrentConnectedClients[peer->NumberOfConnections() - 1] = msg;
+				//RakNet::
+				RakNet::RakString username;
 				RakNet::BitStream bsIn(packet->data, packet->length, false);
-				bsIn.Read(msg);
-				printf("Here");
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				bsIn.Read(username);
+				connectedClients[username] = packet->systemAddress;
+
+				//Send Message back
+				bsIn.Reset();
+				bsIn.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
+				bsIn.Write("Hey Dan, Welcome our server!");
+				peer->Send(&bsIn, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			}
 			break;
 			case ID_NEW_INCOMING_CONNECTION:
@@ -118,7 +132,7 @@ int main(void)
 				bsIn.Read(rs);
 				printf("%s\n", rs.C_String());
 			}
-				break;
+			break;
 
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
