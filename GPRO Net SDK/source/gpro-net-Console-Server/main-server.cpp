@@ -84,11 +84,6 @@ int main(void)
 				break;
 			case ID_INITAL_CONTACT:
 			{
-				//Do we need to add this to our inital connect
-				//InitalConnectMessage* msg = (InitalConnectMessage*)packet->data;
-				//msg->sysAdress = packet->systemAddress;
-				//CurrentConnectedClients[peer->NumberOfConnections() - 1] = msg;
-				//RakNet::
 				RakNet::RakString username;
 				RakNet::BitStream bsIn(packet->data, packet->length, false);
 				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
@@ -96,10 +91,10 @@ int main(void)
 				connectedClients[username] = packet->systemAddress;
 
 				//Send Message back
-				bsIn.Reset();
-				bsIn.Write((RakNet::MessageID)ID_GAME_MESSAGE_1);
-				bsIn.Write("Hey Dan, Welcome our server!");
-				peer->Send(&bsIn, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+				RakNet::BitStream bs;
+				bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
+				bs.Write("Welcome our server!");
+				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			}
 			break;
 			case ID_NEW_INCOMING_CONNECTION:

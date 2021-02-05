@@ -46,12 +46,16 @@ void Update(GameState* gs);
 void HandleOutputRemote(const GameState* gs);
 void HandleOutputLocal(GameState* gs);
 
+//Others
+void ReadStringToConsole(RakNet::Packet* packet);
+
+
 
 int main(void)
 {
 	//char str[512];
 	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.186";
+	const char SERVER_IP[] = "172.16.2.69";
 
 	GameState* gs = new GameState();
 	gs->peer = RakNet::RakPeerInterface::GetInstance();
@@ -64,11 +68,12 @@ int main(void)
 
 	while (true)
 	{
+
 		HandleLocalInput(gs);
 		HandleRemoteInput(gs);
-		Update(gs);
+		//Update(gs);
 		HandleOutputRemote(gs);
-		HandleOutputLocal(gs);
+		//HandleOutputLocal(gs);
 	}
 
 	RakNet::RakPeerInterface::DestroyInstance(gs->peer);
@@ -78,6 +83,12 @@ int main(void)
 
 void HandleLocalInput(GameState* gs)
 {
+	if (gs->madeInitalContact)
+	{
+		printf("Outgoing Message:\n");
+		std::cin >> gs->msg;
+	}
+
 }
 
 void HandleRemoteInput(GameState* gs)
@@ -105,20 +116,18 @@ void HandleRemoteInput(GameState* gs)
 			break;
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 		{
-			printf("Our connection request has been accepted.\n");
+			printf("Connection Request Accepted\n");
 
-			/*std::string localIp = peer->GetLocalIP(0);
-			InitalConnectMessage msg
-			{
-				(char)ID_INITAL_CONTACT,
-				"Default Username",
-			};
-			peer->Send((char*)&msg, sizeof(msg), HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);*/
 			RakNet::BitStream bs;
 			bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
 			bs.Write("Default Username");
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-
+		}
+		break;
+		case ID_INITAL_CONTACT:
+		{
+			ReadStringToConsole(packet);
+			gs->madeInitalContact = true;
 		}
 		break;
 		case ID_NEW_INCOMING_CONNECTION:
@@ -132,17 +141,14 @@ void HandleRemoteInput(GameState* gs)
 			break;
 		case ID_CONNECTION_LOST:
 			printf("Connection lost.\n");
-			break;
+			//break;
 
 		case ID_GAME_MESSAGE_1:
 		{
-			RakNet::RakString rs;
-			RakNet::BitStream bsIn(packet->data, packet->length, false);
-			bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-			bsIn.Read(rs);
-			printf("%s\n", rs.C_String());
+			ReadStringToConsole(packet);
 		}
 		break;
+
 
 		default:
 			printf("(Default) Message with identifier %i has arrived.\n", packet->data[0]);
@@ -158,8 +164,33 @@ void Update(GameState* gs)
 
 void HandleOutputRemote(const GameState* gs)
 {
+	if (gs->msg != "")
+	{
+
+	}
 }
 
 void HandleOutputLocal(GameState* gs)
 {
 }
+
+void ReadStringToConsole(RakNet::Packet* packet)
+{
+	RakNet::RakString rs;
+	RakNet::BitStream bsIn(packet->data, packet->length, false);
+	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+	bsIn.Read(rs);
+	printf("%s\n", rs.C_String());
+}
+
+void SendChatMessage(char string[512], GameMessages id,  RakNet::RakPeerInterface* peer)
+{
+	RakNet::RakString rakString = RakNet::RakString(string);
+	RakNet::BitStream bs;
+	bs.Write((RakNet::MessageID)id);
+
+
+
+}
+
+

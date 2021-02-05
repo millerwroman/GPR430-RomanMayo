@@ -4,13 +4,13 @@
 struct GameMessage1
 {
 	//TODO: Uncomment once time is set up
-	//char timeID; //needs to be ID_TIMESTAMP
-	//RakNet::Time time; //assuing using RakNet::GetTime();
-	//ID
+	char timeID; //needs to be ID_TIMESTAMP
+	RakNet::Time time; //assuing using RakNet::GetTime();
+	ID
 	char msgID;
-	//Message
+	Message
 	char msg[512];
-	//Time
+	Time
 };
 #pragma pack (pop)
 //
