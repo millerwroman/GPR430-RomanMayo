@@ -37,17 +37,23 @@
 #include "gpro-net/gpro-net.h"
 #include "gpro-net/GameMessages.h"
 #include "gpro-net/GameState.h"
-#include "gpro-net//PackageStructs.h"
+//#include "gpro-net/PackageStructs.h"
 
 //Declare Baisc Pattern
 void HandleLocalInput(GameState* gs);
 void HandleRemoteInput(GameState* gs);
 void Update(GameState* gs);
-void HandleOutputRemote(const GameState* gs);
+void HandleOutputRemote(GameState* gs);
 void HandleOutputLocal(GameState* gs);
 
 //Others
 void ReadStringToConsole(RakNet::Packet* packet);
+unsigned char GetPacketIdentifier(RakNet::Packet* p);
+ChatMessage CreateChatMessage(char msg[512]);
+
+//Packet Handelers
+void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet);
+void SendChatMessage(GameState* gs);
 
 
 
@@ -55,7 +61,7 @@ int main(void)
 {
 	//char str[512];
 	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.69";
+	const char SERVER_IP[] = "172.16.2.57";
 
 	GameState* gs = new GameState();
 	gs->peer = RakNet::RakPeerInterface::GetInstance();
@@ -69,11 +75,11 @@ int main(void)
 	while (true)
 	{
 
-		HandleLocalInput(gs);
-		HandleRemoteInput(gs);
+		HandleLocalInput(gs); //Write message
+		HandleRemoteInput(gs); //check new Messages
 		//Update(gs);
-		HandleOutputRemote(gs);
-		//HandleOutputLocal(gs);
+		HandleOutputRemote(gs); //Send message
+		HandleOutputLocal(gs); //Show new messages
 	}
 
 	RakNet::RakPeerInterface::DestroyInstance(gs->peer);
@@ -86,7 +92,9 @@ void HandleLocalInput(GameState* gs)
 	if (gs->madeInitalContact)
 	{
 		printf("Outgoing Message:\n");
-		std::cin >> gs->msg;
+		char msg[512];
+		std::cin >> msg;
+		gs->msgOut = CreateChatMessage(msg);
 	}
 
 }
@@ -100,11 +108,6 @@ void HandleRemoteInput(GameState* gs)
 	{
 		switch (packet->data[0])
 		{
-			//case ID_TIMESTAMP:
-			//{
-
-			//}
-			break;
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 			printf("Another client has disconnected.\n");
 			break;
@@ -127,6 +130,7 @@ void HandleRemoteInput(GameState* gs)
 		case ID_INITAL_CONTACT:
 		{
 			ReadStringToConsole(packet);
+			gs->serverAdress = packet->systemAddress;
 			gs->madeInitalContact = true;
 		}
 		break;
@@ -148,6 +152,11 @@ void HandleRemoteInput(GameState* gs)
 			ReadStringToConsole(packet);
 		}
 		break;
+		case ID_CHAT_MESSAGE:
+		{
+			UnpackChatMessageToQueue(gs, packet);
+		}
+		break;
 
 
 		default:
@@ -162,11 +171,11 @@ void Update(GameState* gs)
 {
 }
 
-void HandleOutputRemote(const GameState* gs)
+void HandleOutputRemote(GameState* gs)
 {
-	if (gs->msg != "")
+	if (gs->msgOut.msg != "")
 	{
-
+		SendChatMessage(gs);
 	}
 }
 
@@ -183,14 +192,43 @@ void ReadStringToConsole(RakNet::Packet* packet)
 	printf("%s\n", rs.C_String());
 }
 
-void SendChatMessage(char string[512], GameMessages id,  RakNet::RakPeerInterface* peer)
+ChatMessage CreateChatMessage(char msg[512])
 {
-	RakNet::RakString rakString = RakNet::RakString(string);
-	RakNet::BitStream bs;
-	bs.Write((RakNet::MessageID)id);
+	ChatMessage msgOut
+	{
+		(char)ID_CHAT_MESSAGE,
+		(char)msg,
+		(char)ID_TIMESTAMP,
+		RakNet::GetTime()
+	};
 
-
-
+	return msgOut;
 }
 
+void SendChatMessage(GameState* gs)
+{
+	if (!gs) return;
+	if (!gs->peer) return;
 
+	gs->peer->Send((char*)&(gs->msgOut), sizeof(gs->msgOut), HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
+}
+
+unsigned char GetPacketIdentifier(RakNet::Packet* p)
+{
+	if ((unsigned char)p->data[0] == ID_TIMESTAMP)
+		return (unsigned char)p->data[sizeof(unsigned char) + sizeof(unsigned long)];
+	else
+		return (unsigned char)p->data[0];
+}
+
+void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet)
+{
+	ChatMessage* msg = (ChatMessage*)packet->data;
+	assert(packet->length == sizeof(ChatMessage)); // Idk why we need this but it says to -  ask dan
+	if (packet->length != sizeof(ChatMessage))
+	{
+		return;
+	}
+
+	gs->msgIn.push(msg);
+}

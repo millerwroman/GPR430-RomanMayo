@@ -1,16 +1,15 @@
 #pragma once
 
 #pragma pack(push,1)
-struct GameMessage1
+struct ChatMessage
 {
-	//TODO: Uncomment once time is set up
+	//ID
+	char msgID;
+	//Message
+	char msg[512];
+	//Time ID
 	char timeID; //needs to be ID_TIMESTAMP
 	RakNet::Time time; //assuing using RakNet::GetTime();
-	ID
-	char msgID;
-	Message
-	char msg[512];
-	Time
 };
 #pragma pack (pop)
 //
