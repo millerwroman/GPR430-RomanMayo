@@ -46,8 +46,8 @@
 
 int main(void)
 {
-	std::map < RakNet::RakString, RakNet::SystemAddress> connectedClients;
-
+	std::map <RakNet::RakString, RakNet::SystemAddress> connectedClients;
+	//GetConnectionIndex or somthing
 	RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
 	RakNet::Packet* packet;
 
@@ -61,20 +61,28 @@ int main(void)
 	{
 		for (packet = peer->Receive(); packet; peer->DeallocatePacket(packet), packet = peer->Receive())
 		{
-			//RakNet::MessageID msg = packet->data[0];
-			//if (packet->data[0] == ID_TIMESTAMP)
-			//{
-			//	//Handle Type
-			//	//1) bitstream
-			//	//2) skip message byte
-			//	//3) read time
-			//	//4) read new message byte: what is the actuall id to handle
-			//	//msg = 
-			//}
+			RakNet::MessageID msg = packet->data[0];
+			RakNet::BitStream bsIn(packet->data, packet->length, false);
+			bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+			RakNet::Time sendTime;
+
+			if (packet->data[0] == ID_TIMESTAMP)
+			{
+				//Handle Type
+				//1) bitstream
+				//2) skip message byte
+				//3) read time
+				//4) read new message byte: what is the actuall id to handle
+				//msg = 
+				bsIn.Read(sendTime);
+
+				bsIn.Read(msg);
+			}
 			switch (packet->data[0])
 			{
 			case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 				printf("Another client has disconnected.\n");
+				//This gaves more data than just id
 				break;
 			case ID_REMOTE_CONNECTION_LOST:
 				printf("Another client has lost the connection.\n");
@@ -119,13 +127,11 @@ int main(void)
 				printf("%s\n", rs.C_String());
 			}
 			break;
-			case ID_CHAT_MESSAGE:
+			case ID_TIMESTAMP: //ID_CHAT_MESSAGE:
 			{
-				RakNet::RakString rs;
-				RakNet::BitStream bsIn(packet->data, packet->length, false);
-				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-				bsIn.Read(rs);
-				printf("%s\n", rs.C_String());
+				//ChatMessage msg;
+
+				//printf("%s\n", rs.C_String());
 			}
 			break;
 
