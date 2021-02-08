@@ -13,5 +13,5 @@ public:
 	bool madeInitalContact = false;
 
 	ChatMessage msgOut; 
-	std::queue<ChatMessage*> msgIn;
+	std::queue<ChatMessage*> msgInQueue;
 };

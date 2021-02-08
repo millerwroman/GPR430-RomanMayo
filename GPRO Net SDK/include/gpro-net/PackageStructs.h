@@ -3,13 +3,14 @@
 #pragma pack(push,1)
 struct ChatMessage
 {
-	//ID
-	char msgID;
-	//Message
-	char msg[512];
 	//Time ID
-	char timeID; //needs to be ID_TIMESTAMP
+	unsigned char timeID; //needs to be ID_TIMESTAMP
 	RakNet::Time time; //assuing using RakNet::GetTime();
+	//ID
+	unsigned char msgID;
+	//Message
+	unsigned char msg[512];
+	
 };
 #pragma pack (pop)
 //

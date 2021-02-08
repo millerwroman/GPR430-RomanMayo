@@ -49,7 +49,8 @@ void HandleOutputLocal(GameState* gs);
 //Others
 void ReadStringToConsole(RakNet::Packet* packet);
 unsigned char GetPacketIdentifier(RakNet::Packet* p);
-ChatMessage CreateChatMessage(char msg[512]);
+ChatMessage CreateChatMessage(unsigned char msg);
+void ReadAndEmptyMessages(GameState* gs);
 
 //Packet Handelers
 void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet);
@@ -94,7 +95,7 @@ void HandleLocalInput(GameState* gs)
 		printf("Outgoing Message:\n");
 		char msg[512];
 		std::cin >> msg;
-		gs->msgOut = CreateChatMessage(msg);
+		gs->msgOut = CreateChatMessage(*msg);
 	}
 
 }
@@ -173,14 +174,19 @@ void Update(GameState* gs)
 
 void HandleOutputRemote(GameState* gs)
 {
-	if (gs->msgOut.msg != "")
+	if (gs->msgOut.msg[0] == '\0')
 	{
 		SendChatMessage(gs);
+		gs->msgOut.msg[0] = '\0';
 	}
 }
 
 void HandleOutputLocal(GameState* gs)
 {
+	if (gs->msgInQueue.size() > 0)
+	{
+		ReadAndEmptyMessages(gs);
+	}
 }
 
 void ReadStringToConsole(RakNet::Packet* packet)
@@ -192,14 +198,24 @@ void ReadStringToConsole(RakNet::Packet* packet)
 	printf("%s\n", rs.C_String());
 }
 
-ChatMessage CreateChatMessage(char msg[512])
+void ReadAndEmptyMessages(GameState* gs)
+{
+	while (gs->msgInQueue.size() > 0)
+	{
+		ChatMessage* msg = gs->msgInQueue.front();
+		printf("%s\n", msg->msg);
+		gs->msgInQueue.pop();
+	}
+}
+
+ChatMessage CreateChatMessage(unsigned char msg)
 {
 	ChatMessage msgOut
 	{
-		(char)ID_CHAT_MESSAGE,
-		(char)msg,
-		(char)ID_TIMESTAMP,
-		RakNet::GetTime()
+		ID_TIMESTAMP,
+		RakNet::GetTime(),
+		ID_CHAT_MESSAGE,
+		msg
 	};
 
 	return msgOut;
@@ -230,5 +246,5 @@ void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet)
 		return;
 	}
 
-	gs->msgIn.push(msg);
+	gs->msgInQueue.push(msg);
 }
