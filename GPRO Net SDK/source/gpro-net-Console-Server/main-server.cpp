@@ -34,6 +34,7 @@
 #include "RakNet/MessageIdentifiers.h"
 #include "RakNet/BitStream.h"
 #include "RakNet/RakNetTypes.h" 
+#include "RakNet/GetTime.h"
 
 //Shared Lib
 #include "gpro-net/gpro-net.h"
@@ -130,17 +131,19 @@ int main(void)
 			break;
 			case ID_CHAT_MESSAGE:
 			{
+				char message[512];
+				bsIn.Read(message);
 				//WRITE THAT SHIT TO FILE
-				/*RakNet::BitStream bsOut;
+
+				RakNet::BitStream bsOut;
 				bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
 				bsOut.Write(sendTime);
 				bsOut.Write((RakNet::MessageID)ID_CHAT_MESSAGE);
-				bsOut.Write()*/
+				bsOut.Write(message);
 
-				RakNet::RakString string;
-				bsIn.Read(string);
-				string.Printf();
-				peer->Send(&bsIn, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
+				
+				printf(message);
+				peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
 			}
 			break;
 			case ID_REQUEST_CONNECTED_USERS:

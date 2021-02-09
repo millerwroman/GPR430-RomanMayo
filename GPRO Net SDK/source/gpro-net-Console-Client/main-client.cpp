@@ -171,10 +171,10 @@ void HandleRemoteInput(GameState* gs)
 		break;
 		case ID_CHAT_MESSAGE:
 		{
-			RakNet::RakString rs;
-			bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-			bsIn.Write(rs);
-			gs->msgInQueue.push(rs);
+			char message[512];
+			bsIn.Read(message);
+
+			gs->msgInQueue.push(RakNet::RakString(message));
 		}
 		break;
 		case ID_REQUEST_CONNECTED_USERS:
