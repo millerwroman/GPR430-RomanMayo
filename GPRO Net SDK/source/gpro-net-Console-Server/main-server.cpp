@@ -130,12 +130,17 @@ int main(void)
 			break;
 			case ID_CHAT_MESSAGE:
 			{
-				ChatMessage* msg = (ChatMessage*)packet->data;
-				assert(packet->length == sizeof(ChatMessage));
-
 				//WRITE THAT SHIT TO FILE
+				/*RakNet::BitStream bsOut;
+				bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
+				bsOut.Write(sendTime);
+				bsOut.Write((RakNet::MessageID)ID_CHAT_MESSAGE);
+				bsOut.Write()*/
 
-				peer->Send((char*)msg, sizeof(*msg), HIGH_PRIORITY, RELIABLE_SEQUENCED, 0, packet->systemAddress, true);
+				RakNet::RakString string;
+				bsIn.Read(string);
+				string.Printf();
+				peer->Send(&bsIn, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
 			}
 			break;
 			case ID_REQUEST_CONNECTED_USERS:

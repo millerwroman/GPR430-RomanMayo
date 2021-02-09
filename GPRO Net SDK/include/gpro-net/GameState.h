@@ -14,6 +14,6 @@ public:
 	bool madeInitalContact = false;
 
 	bool requestUsernames = false;
-	ChatMessage msgOut; 
+	char msgOut[512];
 	std::queue<RakNet::RakString> msgInQueue;
 };

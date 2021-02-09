@@ -49,11 +49,9 @@ void HandleOutputLocal(GameState* gs);
 //Others
 void AddRakStringToQueue(GameState* gs, RakNet::Packet* packet);
 unsigned char GetPacketIdentifier(RakNet::Packet* p);
-ChatMessage CreateChatMessage(RakNet::RakString msg);
 void ReadAndEmptyQueue(GameState* gs);
 
 //Packet Handelers
-void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet);
 void SendChatMessage(GameState* gs);
 
 
@@ -62,7 +60,7 @@ int main(void)
 {
 	//char str[512];
 	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.218";
+	const char SERVER_IP[] = "172.16.2.197";
 
 	GameState* gs = new GameState();
 	gs->peer = RakNet::RakPeerInterface::GetInstance();
@@ -102,7 +100,7 @@ void HandleLocalInput(GameState* gs)
 		}
 		else
 		{
-			gs->msgOut = CreateChatMessage(msg);
+			std::copy(std::begin(msg), std::end(msg), std::begin(gs->msgOut));
 		}
 	}
 
@@ -173,7 +171,10 @@ void HandleRemoteInput(GameState* gs)
 		break;
 		case ID_CHAT_MESSAGE:
 		{
-			UnpackChatMessageToQueue(gs, packet);
+			RakNet::RakString rs;
+			bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+			bsIn.Write(rs);
+			gs->msgInQueue.push(rs);
 		}
 		break;
 		case ID_REQUEST_CONNECTED_USERS:
@@ -201,10 +202,10 @@ void HandleOutputRemote(GameState* gs)
 		bsOut.Write((RakNet::MessageID)ID_REQUEST_CONNECTED_USERS);
 		gs->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
 	}
-	else if (!gs->msgOut.msg.IsEmpty())
+	else if (gs->msgOut)
 	{
 		SendChatMessage(gs);
-		gs->msgOut = ChatMessage();
+		std::fill_n(gs->msgOut, 512, '\0');
 	}
 
 }
@@ -243,26 +244,17 @@ void ReadAndEmptyQueue(GameState* gs)
 	}
 }
 
-ChatMessage CreateChatMessage(RakNet::RakString msg)
-{
-
-	ChatMessage msgOut
-	{
-		ID_TIMESTAMP,
-		RakNet::GetTime(),
-		ID_CHAT_MESSAGE,
-		msg
-	};
-
-	return msgOut;
-}
-
 void SendChatMessage(GameState* gs)
 {
 	if (!gs) return;
 	if (!gs->peer) return;
+	RakNet::BitStream bsOut;
+	bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
+	bsOut.Write(RakNet::GetTime());
+	bsOut.Write((RakNet::MessageID)ID_CHAT_MESSAGE);
+	bsOut.Write(gs->msgOut);
 
-	gs->peer->Send((char*)&(gs->msgOut), sizeof(gs->msgOut), HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
+	gs->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
 }
 
 unsigned char GetPacketIdentifier(RakNet::Packet* p)
@@ -271,16 +263,4 @@ unsigned char GetPacketIdentifier(RakNet::Packet* p)
 		return (unsigned char)p->data[sizeof(unsigned char) + sizeof(unsigned long)];
 	else
 		return (unsigned char)p->data[0];
-}
-
-void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet)
-{
-	ChatMessage* msg = (ChatMessage*)packet->data;
-	assert(packet->length == sizeof(ChatMessage)); // Idk why we need this but it says to -  ask dan
-	if (packet->length != sizeof(ChatMessage))
-	{
-		return;
-	}
-
-	gs->msgInQueue.push(msg->msg);
 }
