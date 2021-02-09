@@ -115,7 +115,7 @@ void HandleRemoteInput(GameState* gs)
 
 	while (packet = peer->Receive())
 	{
-		RakNet::MessageID msg = packet->data[0];
+		RakNet::MessageID msgID = packet->data[0];
 		RakNet::BitStream bsIn(packet->data, packet->length, false);
 		bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 		RakNet::Time sendTime;
@@ -123,9 +123,9 @@ void HandleRemoteInput(GameState* gs)
 		if (packet->data[0] == ID_TIMESTAMP)
 		{
 			bsIn.Read(sendTime);
-			bsIn.Read(msg);
+			bsIn.Read(msgID);
 		}
-		switch (msg)
+		switch (msgID)
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 			printf("Another client has disconnected.\n");
