@@ -9,7 +9,7 @@ struct ChatMessage
 	//ID
 	unsigned char msgID;
 	//Message
-	unsigned char msg[512];
+	RakNet::RakString msg;
 	
 };
 #pragma pack (pop)

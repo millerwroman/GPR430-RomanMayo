@@ -1,6 +1,7 @@
 #pragma once
 #include "RakNet/RakPeerInterface.h"
 #include "PackageStructs.h"
+#include "RakNet/RakString.h"
 #include <queue>
 
 class GameState
@@ -14,5 +15,5 @@ public:
 
 	bool requestUsernames = false;
 	ChatMessage msgOut; 
-	std::queue<ChatMessage*> msgInQueue;
+	std::queue<RakNet::RakString> msgInQueue;
 };

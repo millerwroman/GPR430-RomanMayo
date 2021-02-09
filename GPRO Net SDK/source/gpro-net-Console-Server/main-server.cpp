@@ -87,8 +87,9 @@ int main(void)
 				bsIn.Read(sendTime);
 
 				bsIn.Read(msg);
+
 			}
-			switch (packet->data[0])
+			switch (msg)
 			{
 			case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 				printf("Another client has disconnected.\n");
@@ -137,11 +138,17 @@ int main(void)
 				printf("%s\n", rs.C_String());
 			}
 			break;
+			case ID_CHAT_MESSAGE:
+			{
+				printf("Chat message");
+			}
+			break;
 			case ID_REQUEST_CONNECTED_USERS:
 			{
 				SendConnectedUsers(peer, packet->systemAddress);
 			}
-				break;
+			break;
+
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
 				break;
@@ -159,11 +166,14 @@ void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress ad
 	RakNet::BitStream bsOut;
 	bsOut.Write((RakNet::MessageID)ID_REQUEST_CONNECTED_USERS);
 	std::map<RakNet::RakString, RakNet::SystemAddress>::iterator it;
+
+	RakNet::RakString userNames = "\n Connected Users: \n";
 	for (it = g_connectedClients.begin(); it != g_connectedClients.end(); it++)
 	{
-		bsOut.Write(it->first);
-		bsOut.Write("\n");
+		userNames += it->first;
+		userNames += "\n";
 	}
+	bsOut.Write(userNames);
 	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, address, false);
 }
 

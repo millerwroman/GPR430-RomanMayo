@@ -47,10 +47,10 @@ void HandleOutputRemote(GameState* gs);
 void HandleOutputLocal(GameState* gs);
 
 //Others
-void ReadStringToConsole(RakNet::Packet* packet);
+void AddRakStringToQueue(GameState* gs, RakNet::Packet* packet);
 unsigned char GetPacketIdentifier(RakNet::Packet* p);
-ChatMessage CreateChatMessage(unsigned char msg);
-void ReadAndEmptyMessages(GameState* gs);
+ChatMessage CreateChatMessage(RakNet::RakString msg);
+void ReadAndEmptyQueue(GameState* gs);
 
 //Packet Handelers
 void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet);
@@ -94,14 +94,14 @@ void HandleLocalInput(GameState* gs)
 	{
 		printf("Request Connected Users: 'u'\n Outgoing Message:\n");
 		char msg[512];
-		std::cin >> msg;
+		std::cin.getline(msg, 512);
 		if (msg[0] == 'u' || msg[0] == 'U')
 		{
 			gs->requestUsernames = true;
 		}
 		else
 		{
-			gs->msgOut = CreateChatMessage(*msg);
+			gs->msgOut = CreateChatMessage(msg);
 		}
 	}
 
@@ -131,13 +131,13 @@ void HandleRemoteInput(GameState* gs)
 
 			RakNet::BitStream bs;
 			bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
-			bs.Write("Default Username");
+			bs.Write("Miller");
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 		}
 		break;
 		case ID_INITAL_CONTACT:
 		{
-			ReadStringToConsole(packet);
+			AddRakStringToQueue(gs, packet);
 			gs->serverAdress = packet->systemAddress;
 			gs->madeInitalContact = true;
 		}
@@ -157,7 +157,7 @@ void HandleRemoteInput(GameState* gs)
 
 		case ID_GAME_MESSAGE_1:
 		{
-			ReadStringToConsole(packet);
+			AddRakStringToQueue(gs, packet);
 		}
 		break;
 		case ID_CHAT_MESSAGE:
@@ -167,7 +167,7 @@ void HandleRemoteInput(GameState* gs)
 		break;
 		case ID_REQUEST_CONNECTED_USERS:
 		{
-			ReadStringToConsole(packet);
+			AddRakStringToQueue(gs, packet);
 		}
 		break;
 		default:
@@ -190,43 +190,51 @@ void HandleOutputRemote(GameState* gs)
 		bsOut.Write((RakNet::MessageID)ID_REQUEST_CONNECTED_USERS);
 		gs->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
 	}
-	else if (gs->msgOut.msg[0] != '\0')
+	else if (!gs->msgOut.msg.IsEmpty())
 	{
 		SendChatMessage(gs);
-		gs->msgOut.msg[0] = '\0';
+		gs->msgOut = ChatMessage();
 	}
 
 }
 
 void HandleOutputLocal(GameState* gs)
 {
+	if (gs->requestUsernames)
+	{
+		gs->requestUsernames = false;
+
+	}
 	if (gs->msgInQueue.size() > 0)
 	{
-		ReadAndEmptyMessages(gs);
+		ReadAndEmptyQueue(gs);
 	}
+
 }
 
-void ReadStringToConsole(RakNet::Packet* packet)
+void AddRakStringToQueue(GameState* gs, RakNet::Packet* packet)
 {
 	RakNet::RakString rs;
 	RakNet::BitStream bsIn(packet->data, packet->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 	bsIn.Read(rs);
-	printf("%s\n", rs.C_String());
+	gs->msgInQueue.push(rs);
 }
 
-void ReadAndEmptyMessages(GameState* gs)
+void ReadAndEmptyQueue(GameState* gs)
 {
 	while (gs->msgInQueue.size() > 0)
 	{
-		ChatMessage* msg = gs->msgInQueue.front();
-		printf("%s\n", msg->msg);
+		RakNet::RakString msg = gs->msgInQueue.front();
+		msg.Printf();
+		printf("\n");
 		gs->msgInQueue.pop();
 	}
 }
 
-ChatMessage CreateChatMessage(unsigned char msg)
+ChatMessage CreateChatMessage(RakNet::RakString msg)
 {
+
 	ChatMessage msgOut
 	{
 		ID_TIMESTAMP,
@@ -263,5 +271,5 @@ void UnpackChatMessageToQueue(GameState* gs, RakNet::Packet* packet)
 		return;
 	}
 
-	gs->msgInQueue.push(msg);
+	gs->msgInQueue.push(msg->msg);
 }
