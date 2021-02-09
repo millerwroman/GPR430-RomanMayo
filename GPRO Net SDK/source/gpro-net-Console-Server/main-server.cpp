@@ -45,10 +45,8 @@
 #define SERVER_PORT 7777
 
 //Things to do:
-// 1) Client can ask for usernames
 // 2) Fix consistancy on loop
 // 4) write messages to text file
-// 5) 
 
 void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress address);
 
@@ -78,16 +76,8 @@ int main(void)
 
 			if (packet->data[0] == ID_TIMESTAMP)
 			{
-				//Handle Type
-				//1) bitstream
-				//2) skip message byte
-				//3) read time
-				//4) read new message byte: what is the actuall id to handle
-				//msg = 
 				bsIn.Read(sendTime);
-
 				bsIn.Read(msg);
-
 			}
 			switch (msg)
 			{
@@ -140,7 +130,12 @@ int main(void)
 			break;
 			case ID_CHAT_MESSAGE:
 			{
-				printf("Chat message");
+				ChatMessage* msg = (ChatMessage*)packet->data;
+				assert(packet->length == sizeof(ChatMessage));
+
+				//WRITE THAT SHIT TO FILE
+
+				peer->Send((char*)&(*msg), sizeof(*msg), HIGH_PRIORITY, RELIABLE_SEQUENCED, 0, packet->systemAddress, true);
 			}
 			break;
 			case ID_REQUEST_CONNECTED_USERS:

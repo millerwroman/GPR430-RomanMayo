@@ -95,6 +95,7 @@ void HandleLocalInput(GameState* gs)
 		printf("Request Connected Users: 'u'\n Outgoing Message:\n");
 		char msg[512];
 		std::cin.getline(msg, 512);
+		printf("\n");
 		if (msg[0] == 'u' || msg[0] == 'U')
 		{
 			gs->requestUsernames = true;
@@ -114,7 +115,17 @@ void HandleRemoteInput(GameState* gs)
 
 	while (packet = peer->Receive())
 	{
-		switch (packet->data[0])
+		RakNet::MessageID msg = packet->data[0];
+		RakNet::BitStream bsIn(packet->data, packet->length, false);
+		bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+		RakNet::Time sendTime;
+
+		if (packet->data[0] == ID_TIMESTAMP)
+		{
+			bsIn.Read(sendTime);
+			bsIn.Read(msg);
+		}
+		switch (msg)
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 			printf("Another client has disconnected.\n");
