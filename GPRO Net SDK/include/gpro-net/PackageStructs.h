@@ -13,6 +13,7 @@ struct ChatMessage
 	
 };
 #pragma pack (pop)
+
 //
 //#pragma pack(push,1)
 //struct InitalConnectMessage

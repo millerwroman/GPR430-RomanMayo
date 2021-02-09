@@ -44,9 +44,19 @@
 #define MAX_CLIENTS 10
 #define SERVER_PORT 7777
 
+//Things to do:
+// 1) Client can ask for usernames
+// 2) Fix consistancy on loop
+// 4) write messages to text file
+// 5) 
+
+void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress address);
+
+
+std::map <RakNet::RakString, RakNet::SystemAddress> g_connectedClients;
+
 int main(void)
 {
-	std::map <RakNet::RakString, RakNet::SystemAddress> connectedClients;
 	//GetConnectionIndex or somthing
 	RakNet::RakPeerInterface* peer = RakNet::RakPeerInterface::GetInstance();
 	RakNet::Packet* packet;
@@ -96,12 +106,12 @@ int main(void)
 				RakNet::BitStream bsIn(packet->data, packet->length, false);
 				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 				bsIn.Read(username);
-				connectedClients[username] = packet->systemAddress;
+				g_connectedClients[username] = packet->systemAddress;
 
 				//Send Message back
 				RakNet::BitStream bs;
 				bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
-				bs.Write("Welcome our server!");
+				bs.Write("Welcome our server! \n\n");
 				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			}
 			break;
@@ -127,14 +137,11 @@ int main(void)
 				printf("%s\n", rs.C_String());
 			}
 			break;
-			case ID_TIMESTAMP: //ID_CHAT_MESSAGE:
+			case ID_REQUEST_CONNECTED_USERS:
 			{
-				//ChatMessage msg;
-
-				//printf("%s\n", rs.C_String());
+				SendConnectedUsers(peer, packet->systemAddress);
 			}
-			break;
-
+				break;
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
 				break;
@@ -142,8 +149,21 @@ int main(void)
 		}
 	}
 
-
 	RakNet::RakPeerInterface::DestroyInstance(peer);
 
 	return 0;
 }
+
+void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress address)
+{
+	RakNet::BitStream bsOut;
+	bsOut.Write((RakNet::MessageID)ID_REQUEST_CONNECTED_USERS);
+	std::map<RakNet::RakString, RakNet::SystemAddress>::iterator it;
+	for (it = g_connectedClients.begin(); it != g_connectedClients.end(); it++)
+	{
+		bsOut.Write(it->first);
+		bsOut.Write("\n");
+	}
+	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, address, false);
+}
+

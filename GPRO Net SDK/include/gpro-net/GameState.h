@@ -12,6 +12,7 @@ public:
 
 	bool madeInitalContact = false;
 
+	bool requestUsernames = false;
 	ChatMessage msgOut; 
 	std::queue<ChatMessage*> msgInQueue;
 };

@@ -62,7 +62,7 @@ int main(void)
 {
 	//char str[512];
 	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.57";
+	const char SERVER_IP[] = "172.16.2.218";
 
 	GameState* gs = new GameState();
 	gs->peer = RakNet::RakPeerInterface::GetInstance();
@@ -92,10 +92,17 @@ void HandleLocalInput(GameState* gs)
 {
 	if (gs->madeInitalContact)
 	{
-		printf("Outgoing Message:\n");
+		printf("Request Connected Users: 'u'\n Outgoing Message:\n");
 		char msg[512];
 		std::cin >> msg;
-		gs->msgOut = CreateChatMessage(*msg);
+		if (msg[0] == 'u' || msg[0] == 'U')
+		{
+			gs->requestUsernames = true;
+		}
+		else
+		{
+			gs->msgOut = CreateChatMessage(*msg);
+		}
 	}
 
 }
@@ -158,8 +165,11 @@ void HandleRemoteInput(GameState* gs)
 			UnpackChatMessageToQueue(gs, packet);
 		}
 		break;
-
-
+		case ID_REQUEST_CONNECTED_USERS:
+		{
+			ReadStringToConsole(packet);
+		}
+		break;
 		default:
 			printf("(Default) Message with identifier %i has arrived.\n", packet->data[0]);
 			break;
@@ -174,11 +184,18 @@ void Update(GameState* gs)
 
 void HandleOutputRemote(GameState* gs)
 {
-	if (gs->msgOut.msg[0] == '\0')
+	if (gs->requestUsernames)
+	{
+		RakNet::BitStream bsOut;
+		bsOut.Write((RakNet::MessageID)ID_REQUEST_CONNECTED_USERS);
+		gs->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
+	}
+	else if (gs->msgOut.msg[0] != '\0')
 	{
 		SendChatMessage(gs);
 		gs->msgOut.msg[0] = '\0';
 	}
+
 }
 
 void HandleOutputLocal(GameState* gs)
