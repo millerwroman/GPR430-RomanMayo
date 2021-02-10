@@ -25,8 +25,9 @@
 //Provided
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <iostream> //Take this out when we can 
+#include <fstream>
 #include <map>
 
 //RakNet
@@ -50,6 +51,8 @@
 // 4) write messages to text file
 
 void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress address);
+void WriteMessageToFile(std::string path, RakNet::Time, char msg[512]);
+
 
 
 std::map <RakNet::RakString, RakNet::SystemAddress> g_connectedClients;
@@ -133,7 +136,8 @@ int main(void)
 			{
 				char message[512];
 				bsIn.Read(message);
-				//WRITE THAT SHIT TO FILE
+
+				WriteMessageToFile("C../../MessageLog.txt", sendTime, message);
 
 				RakNet::BitStream bsOut;
 				bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
@@ -178,5 +182,19 @@ void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress ad
 	}
 	bsOut.Write(userNames);
 	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, address, false);
+}
+
+void WriteMessageToFile(std::string path, RakNet::Time time, char msg[512])
+{
+		
+		std::ofstream file;
+		file.open(path);
+		if (file.is_open())
+		{
+			printf("here");
+		}
+		int timeInt = (int)time;
+		file << std::to_string(timeInt) + ":    " + msg + "\n";
+		file.close();
 }
 
