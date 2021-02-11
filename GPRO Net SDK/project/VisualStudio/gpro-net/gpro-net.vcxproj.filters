@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\gpro-net-common">
+      <UniqueIdentifier>{d02b0f3a-48df-4956-85b0-58ae59aa9d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gpro-net-common">
+      <UniqueIdentifier>{1a5cc071-1faa-4933-8bad-d71d96613d5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net.h">
@@ -30,10 +36,19 @@
     <ClInclude Include="..\..\..\include\gpro-net\RakNetHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\gpro-net\gpro-net-common\gpro-net-console.h">
+      <Filter>Header Files\gpro-net-common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gpro-net\gpro-net-common\gpro-net-gamestate.h">
+      <Filter>Header Files\gpro-net-common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\gpro-net\gpro-net.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\gpro-net\gpro-net-common\gpro-net-console_win.c">
+      <Filter>Source Files\gpro-net-common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -175,6 +175,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\gpro-net\gpro-net-common\gpro-net-console.h" />
+    <ClInclude Include="..\..\..\include\gpro-net\gpro-net-common\gpro-net-gamestate.h" />
     <ClInclude Include="..\..\..\include\gpro-net\PackageStructs.h" />
     <ClInclude Include="..\..\..\include\gpro-net\GameMessages.h" />
     <ClInclude Include="..\..\..\include\gpro-net\GameState.h" />
@@ -182,6 +184,7 @@
     <ClInclude Include="..\..\..\include\gpro-net\RakNetHelpers.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\gpro-net\gpro-net-common\gpro-net-console_win.c" />
     <ClCompile Include="..\..\..\source\gpro-net\gpro-net.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
