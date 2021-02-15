@@ -32,235 +32,107 @@
 #include "RakNet/BitStream.h"
 #include "RakNet/RakNetTypes.h" 
 #include "RakNet/GetTime.h" 
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/MessageIdentifiers.h"
 
 //Shared Lib
 #include "gpro-net/gpro-net.h"
 #include "gpro-net/GameMessages.h"
-#include "gpro-net/GameState.h"
-//#include "gpro-net/PackageStructs.h"
-
-//Declare Baisc Pattern
-void HandleLocalInput(GameState* gs);
-void HandleRemoteInput(GameState* gs);
-void Update(GameState* gs);
-void HandleOutputRemote(GameState* gs);
-void HandleOutputLocal(GameState* gs);
-
-//Others
-void AddRakStringToQueue(GameState* gs, RakNet::Packet* packet);
-unsigned char GetPacketIdentifier(RakNet::Packet* p);
-void ReadAndEmptyQueue(GameState* gs);
-
-//Packet Handelers
-void SendChatMessage(GameState* gs);
+#include "gpro-net/gpro-net-common/gpro-net-console.h"
 
 
+//Things that are common to all message types
+// 1) Timestamp ID (constant)
+// 2) Timestamp
+// 3) Identifier actual
+// 4) Ability to read and write
 
-int main(void)
+//Things that are differnt
+// 1) actual message data
+//		-- Any type of raw bytes
+//		-- no raw or emcapsualted pointers
+
+class cMessage
 {
-	//char str[512];
-	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.197";
+	RakNet::MessageID msgID;
+protected:
+	cMessage(RakNet::MessageID id_new) : msgID(id_new) {}
+public:
+	RakNet::MessageID GetID() const { return msgID; }
 
-	GameState* gs = new GameState();
-	gs->peer = RakNet::RakPeerInterface::GetInstance();
-	RakNet::SocketDescriptor sd;
-	gs->peer->Startup(1, &sd, 1);
-	gs->peer->SetMaximumIncomingConnections(0);
-	gs->peer->Connect(SERVER_IP, SERVER_PORT, 0, 0);
-	printf("Starting the CLIENT.\n");
-
-
-	while (true)
+	virtual RakNet::BitStream& Read(RakNet::BitStream& bs)
 	{
-
-		HandleLocalInput(gs); //Write message
-		HandleRemoteInput(gs); //check new Messages
-		//Update(gs);
-		HandleOutputRemote(gs); //Send message
-		HandleOutputLocal(gs); //Show new messages
+		return bs;
+	}
+	virtual RakNet::BitStream& Write(RakNet::BitStream& bs) const
+	{
+		return bs;
 	}
 
-	RakNet::RakPeerInterface::DestroyInstance(gs->peer);
-
-	return 0;
+};
+RakNet::BitStream& operator >> (RakNet::BitStream& bs, cMessage& msg)
+{
+	return msg.Read(bs);
+}
+RakNet::BitStream& operator << (RakNet::BitStream& bs, cMessage const& msg)
+{
+	return msg.Write(bs);
 }
 
-void HandleLocalInput(GameState* gs)
+class cMessageHeader
 {
-	if (gs->madeInitalContact)
+	RakNet::Time time;
+//Sequence
+	int count;
+	RakNet::MessageID* id_list;
+};
+
+class cTimeMessage : public cMessage
+{
+	RakNet::Time time;
+public:
+	cTimeMessage() :cMessage(ID_TIMESTAMP), time(RakNet::GetTime()) {}
+
+	virtual RakNet::BitStream& Read(RakNet::BitStream& bs) override
 	{
-		printf("Request Connected Users: 'u'\n Outgoing Message:\n");
-		char msg[512];
-		std::cin.getline(msg, 512);
-		printf("\n");
-		if (msg[0] == 'u' || msg[0] == 'U')
-		{
-			gs->requestUsernames = true;
-		}
-		else
-		{
-			std::copy(std::begin(msg), std::end(msg), std::begin(gs->msgOut));
-		}
+		//Read some bs id
+		//bs->Read(time);
+		return bs;
 	}
-
-}
-
-void HandleRemoteInput(GameState* gs)
-{
-	RakNet::RakPeerInterface* peer = gs->peer;
-	RakNet::Packet* packet = gs->packet;
-
-	while (packet = peer->Receive())
+	virtual RakNet::BitStream& Write(RakNet::BitStream& bs) const override
 	{
-		RakNet::MessageID msgID = packet->data[0];
-		RakNet::BitStream bsIn(packet->data, packet->length, false);
-		bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-		RakNet::Time sendTime;
-
-		if (packet->data[0] == ID_TIMESTAMP)
-		{
-			bsIn.Read(sendTime);
-			bsIn.Read(msgID);
-		}
-		switch (msgID)
-		{
-		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-			printf("Another client has disconnected.\n");
-			break;
-		case ID_REMOTE_CONNECTION_LOST:
-			printf("Another client has lost the connection.\n");
-			break;
-		case ID_REMOTE_NEW_INCOMING_CONNECTION:
-			printf("Another client has connected.\n");
-			break;
-		case ID_CONNECTION_REQUEST_ACCEPTED:
-		{
-			printf("Connection Request Accepted\n");
-
-			RakNet::BitStream bs;
-			bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
-			bs.Write("Miller");
-			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
-		}
-		break;
-		case ID_INITAL_CONTACT:
-		{
-			AddRakStringToQueue(gs, packet);
-			gs->serverAdress = packet->systemAddress;
-			gs->madeInitalContact = true;
-		}
-		break;
-		case ID_NEW_INCOMING_CONNECTION:
-			printf("A connection is incoming.\n");
-			break;
-		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			printf("The server is full.\n");
-			break;
-		case ID_DISCONNECTION_NOTIFICATION:
-			printf("We have been disconnected.\n");
-			break;
-		case ID_CONNECTION_LOST:
-			printf("Connection lost.\n");
-			//break;
-
-		case ID_GAME_MESSAGE_1:
-		{
-			AddRakStringToQueue(gs, packet);
-		}
-		break;
-		case ID_CHAT_MESSAGE:
-		{
-			char message[512];
-			bsIn.Read(message);
-
-			gs->msgInQueue.push(RakNet::RakString(message));
-		}
-		break;
-		case ID_REQUEST_CONNECTED_USERS:
-		{
-			AddRakStringToQueue(gs, packet);
-		}
-		break;
-		default:
-			printf("(Default) Message with identifier %i has arrived.\n", packet->data[0]);
-			break;
-		}//End of Switch
-		peer->DeallocatePacket(packet);
-	}//End of While
-}
-
-void Update(GameState* gs)
-{
-}
-
-void HandleOutputRemote(GameState* gs)
-{
-	if (gs->requestUsernames)
-	{
-		RakNet::BitStream bsOut;
-		bsOut.Write((RakNet::MessageID)ID_REQUEST_CONNECTED_USERS);
-		gs->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
+		//bs->Write(GetID());
+		//bs->Write(time);
+		return bs;
 	}
-	else if (gs->msgOut)
+};
+
+class cChatmessage : public cMessage
+{
+	char* cstr;
+	int len;
+public:
+	cChatmessage(char* cstr_new) : cMessage(ID_CHAT_MESSAGE), cstr(cstr_new), len(strlen(cstr_new)) {}
+
+	virtual RakNet::BitStream& Read(RakNet::BitStream& bs) override
+
 	{
-		SendChatMessage(gs);
-		std::fill_n(gs->msgOut, 512, '\0');
+		//bs->Read(len);
+		//bs->Read(cstr, len);
+		return bs;
 	}
-
-}
-
-void HandleOutputLocal(GameState* gs)
-{
-	if (gs->requestUsernames)
+	virtual RakNet::BitStream& Write(RakNet::BitStream& bs) const override
 	{
-		gs->requestUsernames = false;
-
+	//	bs->Write(len);
+		//bs->Write(cstr, len);
+		return bs;
 	}
-	if (gs->msgInQueue.size() > 0)
-	{
-		ReadAndEmptyQueue(gs);
-	}
+};
 
-}
-
-void AddRakStringToQueue(GameState* gs, RakNet::Packet* packet)
+int main(int const argc, char const* const argv[])
 {
-	RakNet::RakString rs;
-	RakNet::BitStream bsIn(packet->data, packet->length, false);
-	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-	bsIn.Read(rs);
-	gs->msgInQueue.push(rs);
-}
+	gpro_consoleDrawTestPatch();
 
-void ReadAndEmptyQueue(GameState* gs)
-{
-	while (gs->msgInQueue.size() > 0)
-	{
-		RakNet::RakString msg = gs->msgInQueue.front();
-		msg.Printf();
-		printf("\n");
-		gs->msgInQueue.pop();
-	}
-}
-
-void SendChatMessage(GameState* gs)
-{
-	if (!gs) return;
-	if (!gs->peer) return;
-	RakNet::BitStream bsOut;
-	bsOut.Write((RakNet::MessageID)ID_TIMESTAMP);
-	bsOut.Write(RakNet::GetTime());
-	bsOut.Write((RakNet::MessageID)ID_CHAT_MESSAGE);
-	bsOut.Write(gs->msgOut);
-
-	gs->peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
-}
-
-unsigned char GetPacketIdentifier(RakNet::Packet* p)
-{
-	if ((unsigned char)p->data[0] == ID_TIMESTAMP)
-		return (unsigned char)p->data[sizeof(unsigned char) + sizeof(unsigned long)];
-	else
-		return (unsigned char)p->data[0];
+	printf("\n\n");
+	system("pause");
 }
