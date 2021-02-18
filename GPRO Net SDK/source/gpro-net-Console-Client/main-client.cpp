@@ -93,13 +93,13 @@ class cTimeMessage : public cMessage
 public:
 	cTimeMessage() :cMessage(ID_TIMESTAMP), time(RakNet::GetTime()) {}
 
-	virtual RakNet::BitStream& Read(RakNet::BitStream& bs) override
+	virtual bool Read(RakNet::BitStream* bs) override
 	{
 		//Read some bs id
 		//bs->Read(time);
 		return bs;
 	}
-	virtual RakNet::BitStream& Write(RakNet::BitStream& bs) const override
+	virtual bool Write(RakNet::BitStream* bs) const override
 	{
 		//bs->Write(GetID());
 		//bs->Write(time);
@@ -110,21 +110,22 @@ public:
 class cChatmessage : public cMessage
 {
 	char* cstr;
-	int len;
+	size_t len;
 public:
 	cChatmessage(char* cstr_new) : cMessage(ID_CHAT_MESSAGE), cstr(cstr_new), len(strlen(cstr_new)) {}
 
-	virtual RakNet::BitStream& Read(RakNet::BitStream& bs) override
+
+	virtual bool Read(RakNet::BitStream* bs) override
 
 	{
-		//bs->Read(len);
-		//bs->Read(cstr, len);
+		bs->Read(len);
+		bs->Read(cstr, (unsigned)len);
 		return bs;
 	}
-	virtual RakNet::BitStream& Write(RakNet::BitStream& bs) const override
+	virtual bool Write(RakNet::BitStream* bs) const override
 	{
-	//	bs->Write(len);
-		//bs->Write(cstr, len);
+		bs->Write(len);
+		bs->Write(cstr, (unsigned)len);
 		return bs;
 	}
 };
