@@ -11,9 +11,16 @@ public:
 	RakNet::Packet* packet;
 	RakNet::SystemAddress serverAdress;
 
-	bool madeInitalContact = false;
+	bool serverEstablished = true;
 
-	bool requestUsernames = false;
+	char username[512];
+	int numberGameRooms = 3;
+	int roomSelection;
+
+
+	bool inLobby = true;
+
+
 	char msgOut[512];
 	std::queue<RakNet::RakString> msgInQueue;
 };

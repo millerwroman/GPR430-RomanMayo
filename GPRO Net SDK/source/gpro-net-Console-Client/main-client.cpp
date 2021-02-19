@@ -37,9 +37,9 @@
 
 //Shared Lib
 #include "gpro-net/gpro-net.h"
+#include "gpro-net/GameState.h"
 #include "gpro-net/GameMessages.h"
 #include "gpro-net/gpro-net-common/gpro-net-console.h"
-
 
 //Things that are common to all message types
 // 1) Timestamp ID (constant)
@@ -60,29 +60,21 @@ protected:
 public:
 	RakNet::MessageID GetID() const { return msgID; }
 
-	virtual RakNet::BitStream& Read(RakNet::BitStream& bs)
+	virtual bool Read(RakNet::BitStream* bs)
 	{
 		return bs;
 	}
-	virtual RakNet::BitStream& Write(RakNet::BitStream& bs) const
+	virtual bool Write(RakNet::BitStream* bs) const
 	{
 		return bs;
 	}
 
 };
-RakNet::BitStream& operator >> (RakNet::BitStream& bs, cMessage& msg)
-{
-	return msg.Read(bs);
-}
-RakNet::BitStream& operator << (RakNet::BitStream& bs, cMessage const& msg)
-{
-	return msg.Write(bs);
-}
 
 class cMessageHeader
 {
 	RakNet::Time time;
-//Sequence
+	//Sequence
 	int count;
 	RakNet::MessageID* id_list;
 };
@@ -130,10 +122,191 @@ public:
 	}
 };
 
-int main(int const argc, char const* const argv[])
-{
-	gpro_consoleDrawTestPatch();
 
+void DisplayGame(GameState* gs)
+{
+	HANDLE const stdHandle = GetStdHandle(STD_OUTPUT_HANDLE), console = GetConsoleWindow();
+	if (stdHandle && console)
+	{
+		short x, y;
+		gpro_consoleColor fg, bg;
+		for (y = 0; y < 2; ++y)
+		{
+			for (x = 0; x < 8; ++x)
+			{
+				fg = (gpro_consoleColor)y;
+				bg = (gpro_consoleColor)x;
+				gpro_consoleSetColor(fg, bg);
+				gpro_consoleSetCursor(x * 2, y);
+				printf("%x", (int)x);
+				gpro_consoleSetCursorColor(x * 2 + 1, y, fg, bg);
+				printf("%x", (int)y);
+			}
+		}
+		gpro_consoleGetCursor(&x, &y);
+		gpro_consoleGetColor(&fg, &bg);
+		gpro_consoleGetCursorColor(&x, &y, &fg, &bg);
+		gpro_consoleResetColor();
+		printf("[]=(%d, %d) \n", (int)x, (int)y);
+
+		return;
+	}
+	return;
+}
+
+
+void InputLocal(GameState* gs)
+{
+	if (!gs->serverEstablished) return;
+
+	if (gs->inLobby)
+	{
+		printf("Username: ");
+		std::cin.getline(gs->username, 512);
+
+		printf("\n\nThere are currently %i rooms \n", gs->numberGameRooms);
+
+		bool validRoom = false;
+		while (!validRoom)
+		{
+			printf("\nRoom number to join: ");
+			char tempRoom[512];
+			std::cin.getline(tempRoom, 512);
+			if (int room = atoi(tempRoom) < gs->numberGameRooms)
+			{
+				validRoom = true;
+				gs->roomSelection = room;
+			}
+			else
+			{
+				std::fill_n(tempRoom, 512, '\0');
+			}
+		}
+		gpro_consoleClear();
+		gs->inLobby = false;
+	}
+	else
+	{
+		DisplayGame(gs);
+	}
+}
+
+void InputRemote(GameState* gs)
+{
+	RakNet::RakPeerInterface* peer = gs->peer;
+	RakNet::Packet* packet = gs->packet;
+
+	while (packet = peer->Receive())
+	{
+		RakNet::MessageID msgID = packet->data[0];
+		RakNet::BitStream bsIn(packet->data, packet->length, false);
+		bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+		RakNet::Time sendTime;
+
+		if (packet->data[0] == ID_TIMESTAMP)
+		{
+			bsIn.Read(sendTime);
+			bsIn.Read(msgID);
+		}
+		switch (msgID)
+		{
+		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
+			printf("Another client has disconnected.\n");
+			break;
+		case ID_REMOTE_CONNECTION_LOST:
+			printf("Another client has lost the connection.\n");
+			break;
+		case ID_REMOTE_NEW_INCOMING_CONNECTION:
+			printf("Another client has connected.\n");
+			break;
+		case ID_CONNECTION_REQUEST_ACCEPTED:
+		{
+			printf("Connection Request Accepted\n");
+
+			RakNet::BitStream bs;
+			bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
+			//create package
+			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+		}
+		break;
+		case ID_INITAL_CONTACT:
+		{
+			gs->serverAdress = packet->systemAddress;
+		}
+		break;
+		case ID_NEW_INCOMING_CONNECTION:
+			printf("A connection is incoming.\n");
+			break;
+		case ID_NO_FREE_INCOMING_CONNECTIONS:
+			printf("The server is full.\n");
+			break;
+		case ID_DISCONNECTION_NOTIFICATION:
+			printf("We have been disconnected.\n");
+			break;
+		case ID_CONNECTION_LOST:
+			printf("Connection lost.\n");
+			break;
+
+		case ID_CHAT_MESSAGE:
+		{
+			char message[512];
+			bsIn.Read(message);
+
+			gs->msgInQueue.push(RakNet::RakString(message));
+		}
+		break;
+		default:
+			printf("(Default) Message with identifier %i has arrived.\n", packet->data[0]);
+			break;
+		}//End of Switch
+		peer->DeallocatePacket(packet);
+	}//End of While
+}
+
+void Update(GameState* gs)
+{
+
+}
+
+void OutputRemote(GameState* gs)
+{
+
+}
+
+void OutputLocal(GameState* gs)
+{
+
+}
+
+
+int main(/*int const argc, char const* const argv[]*/)
+{
+	bool gameRunning = true;
+
+	const unsigned short SERVER_PORT = 7777;
+	const char SERVER_IP[] = "172.16.2.186";
+
+	GameState* gameState = new GameState();
+	gameState->peer = RakNet::RakPeerInterface::GetInstance();
+	RakNet::SocketDescriptor sd;
+	gameState->peer->Startup(1, &sd, 1);
+	gameState->peer->SetMaximumIncomingConnections(0);
+	gameState->peer->Connect(SERVER_IP, SERVER_PORT, 0, 0);
+	printf("Starting the CLIENT.\n");
+
+
+	while (gameRunning)
+	{
+		assert(gameState);
+		InputLocal(gameState);
+		InputRemote(gameState);
+		Update(gameState);
+		OutputRemote(gameState);
+		OutputLocal(gameState);
+	}
+
+	RakNet::RakPeerInterface::DestroyInstance(gameState->peer);
 	printf("\n\n");
 	system("pause");
+	return 0;
 }
