@@ -295,8 +295,11 @@ void InputRemote(GameState* gs)
 	}//End of While
 }
 
-void PlayerTurn(GameState* gs)
+bool PlayerTurn(GameState* gs)
 {
+	//DONE-If your last marble is in your goal - turn repeat
+	//If you end on YOUR side and its empty AND the other side has marbles YOU win them
+	//DONE- ALWAYS counter clockwise rotation
 
 	int numRocks = gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection];
 	gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection] = 0;
@@ -304,7 +307,7 @@ void PlayerTurn(GameState* gs)
 
 	int x = gs->selection;
 	int y = static_cast<int>(gs->isMyRowBottom);
-	
+
 	while (numRocks > 0)
 	{
 		if (y == 0) //Top row
@@ -335,22 +338,26 @@ void PlayerTurn(GameState* gs)
 			}
 			y = 0;
 		}
-
 	}
+
+	//Did my rock end in own goal
+	if (y == (gs->isMyRowBottom ? 1 : 0) && x == (gs->isMyRowBottom ? 7 : 0))
+	{
+		return true;
+	}
+	return false;
 }
 
 void Update(GameState* gs)
 {
-	//If your last marble is in your goal - turn repeat
-	//If you end on YOUR side and its empty AND the other side has marbles YOU win them
-	//ALWAYS counter clockwise rotation
+
 
 	if (gs->isPlayerTurn)
 	{
 		//If there is a selection (safety check) 
 		if (gs->selection != -1)
 		{
-			PlayerTurn(gs);
+			bool repeatTurn = PlayerTurn(gs);
 		}
 	}
 
