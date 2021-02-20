@@ -18,11 +18,14 @@ public:
 	int numberGameRooms = 3;
 	int roomSelection;
 
-	unsigned int playBoard[2][8];
+	bool isPlayerTurn = true;
+	bool isMyRowBottom = true;
+	int playBoard[2][8];
 	//Slot [0][0] player 1 (self) score
 	//Slot [1][0] player 2 score
-	unsigned int topMarbleTotal = 24;
-	unsigned int bottomMarbleTotal = 24;
+	int topMarbleTotal = 24;
+	int bottomMarbleTotal = 24;
+	int selection = -1;
 
 
 	bool inLobby = true;

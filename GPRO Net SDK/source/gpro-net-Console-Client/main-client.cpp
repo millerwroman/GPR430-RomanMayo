@@ -295,9 +295,73 @@ void InputRemote(GameState* gs)
 	}//End of While
 }
 
-void Update(GameState* gs)
+void PlayerTurn(GameState* gs)
 {
 
+	int numRocks = gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection];
+	gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection] = 0;
+	gs->selection = 1;
+
+	int x = gs->selection;
+	int y = static_cast<int>(gs->isMyRowBottom);
+	
+	while (numRocks > 0)
+	{
+		if (y == 0) //Top row
+		{
+			while (x >= (gs->isMyRowBottom ? 1 : 0))
+			{
+				gs->playBoard[y][x]++;
+				numRocks--;
+				if (numRocks <= 0)
+				{
+					break;
+				}
+				x--;
+			}
+			y = 1;
+		}
+		else if (y == 1)
+		{
+			while (x <= (gs->isMyRowBottom ? 7 : 6))
+			{
+				gs->playBoard[y][x]++;
+				numRocks--;
+				if (numRocks <= 0)
+				{
+					break;
+				}
+				x++;
+			}
+			y = 0;
+		}
+
+	}
+}
+
+void Update(GameState* gs)
+{
+	//If your last marble is in your goal - turn repeat
+	//If you end on YOUR side and its empty AND the other side has marbles YOU win them
+	//ALWAYS counter clockwise rotation
+
+	if (gs->isPlayerTurn)
+	{
+		//If there is a selection (safety check) 
+		if (gs->selection != -1)
+		{
+			PlayerTurn(gs);
+		}
+	}
+
+
+
+	//Update side total
+	for (int i = 1; i < 7; ++i)
+	{
+		gs->topMarbleTotal += gs->playBoard[0][i];
+		gs->bottomMarbleTotal += gs->playBoard[1][i];
+	}
 }
 
 void OutputRemote(GameState* gs)
@@ -330,10 +394,10 @@ int main(/*int const argc, char const* const argv[]*/)
 	while (gameRunning)
 	{
 		assert(gameState);
-		InputLocal(gameState);
+		InputLocal(gameState); //Chose square
 		InputRemote(gameState);
-		Update(gameState);
-		OutputRemote(gameState);
+		Update(gameState); //Update board
+		OutputRemote(gameState); //Send board
 		OutputLocal(gameState);
 	}
 
