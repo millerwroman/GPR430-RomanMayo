@@ -125,33 +125,65 @@ public:
 
 void DisplayGame(GameState* gs)
 {
+	//gpro_consoleClear();
+	gpro_consoleColor topRow = gpro_consoleColor_blue;
+	gpro_consoleColor bottomRow = gpro_consoleColor_red;
+	gpro_consoleColor textColor = gpro_consoleColor_black;
+
+	gpro_consoleColor sideTotal = gpro_consoleColor_green;
+
 	HANDLE const stdHandle = GetStdHandle(STD_OUTPUT_HANDLE), console = GetConsoleWindow();
 	if (stdHandle && console)
 	{
 		short x, y;
-		gpro_consoleColor fg, bg;
 		for (y = 0; y < 2; ++y)
 		{
 			for (x = 0; x < 8; ++x)
 			{
-				fg = (gpro_consoleColor)y;
-				bg = (gpro_consoleColor)x;
-				gpro_consoleSetColor(fg, bg);
-				gpro_consoleSetCursor(x * 2, y);
-				printf("%x", (int)x);
-				gpro_consoleSetCursorColor(x * 2 + 1, y, fg, bg);
-				printf("%x", (int)y);
+				gpro_consoleSetCursor(x * 10, y);
+				if (y == 0) //Top row
+				{
+					if (x == 0) // Score
+					{
+						gpro_consoleSetColor(textColor, topRow);
+						printf("Scr: %i", gs->playBoard[0][0]);
+					}
+					else if (x == 7) //Side Total
+					{
+						gpro_consoleSetCursorColor(x * 10, y, textColor, sideTotal);
+						printf("Cnt: %i", gs->topMarbleTotal);
+
+					}
+					else
+					{
+						gpro_consoleSetCursorColor(x * 10, y, textColor, topRow);
+						printf("[%x,%x]: %i", (int)y, (int)(x), 0);
+					}
+				}
+				else
+				{
+					if (x == 7) // Score
+					{
+						gpro_consoleSetColor(textColor, bottomRow);
+						printf("Scr: %i", gs->playBoard[0][1]);
+					}
+					else if (x == 0) // Side total
+					{
+						gpro_consoleSetCursorColor(x * 10, y, textColor, sideTotal);
+						printf("Cnt: %i", gs->bottomMarbleTotal);
+					}
+					else
+					{
+						gpro_consoleSetCursorColor(x * 10, y, textColor, bottomRow);
+						printf("[%x,%x]: %i", (int)y, (int)(7 - x), 0);
+					}
+
+				}
 			}
 		}
-		gpro_consoleGetCursor(&x, &y);
-		gpro_consoleGetColor(&fg, &bg);
-		gpro_consoleGetCursorColor(&x, &y, &fg, &bg);
 		gpro_consoleResetColor();
-		printf("[]=(%d, %d) \n", (int)x, (int)y);
-
-		return;
 	}
-	return;
+	system("pause");
 }
 
 
@@ -294,7 +326,7 @@ int main(/*int const argc, char const* const argv[]*/)
 	gameState->peer->Connect(SERVER_IP, SERVER_PORT, 0, 0);
 	printf("Starting the CLIENT.\n");
 
-
+	gpro_consoleResetColor();
 	while (gameRunning)
 	{
 		assert(gameState);
