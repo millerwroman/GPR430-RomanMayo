@@ -151,31 +151,31 @@ void DisplayGame(GameState* gs)
 					else if (x == 7) //Side Total
 					{
 						gpro_consoleSetCursorColor(x * 10, y, textColor, sideTotal);
-						printf("Cnt: %i", gs->topMarbleTotal);
+						printf("Cnt: %i", gs->playBoard[0][7]);
 
 					}
 					else
 					{
 						gpro_consoleSetCursorColor(x * 10, y, textColor, topRow);
-						printf("[%x,%x]: %i", (int)y, (int)(x), 0);
+						printf("[%x,%x]: %i", (int)y, (int)(x), gs->playBoard[y][x]);
 					}
 				}
-				else
+				else // Bottom Row
 				{
 					if (x == 7) // Score
 					{
 						gpro_consoleSetColor(textColor, bottomRow);
-						printf("Scr: %i", gs->playBoard[0][1]);
+						printf("Scr: %i", gs->playBoard[1][7]);
 					}
 					else if (x == 0) // Side total
 					{
 						gpro_consoleSetCursorColor(x * 10, y, textColor, sideTotal);
-						printf("Cnt: %i", gs->bottomMarbleTotal);
+						printf("Cnt: %i", gs->playBoard[1][0]);
 					}
 					else
 					{
 						gpro_consoleSetCursorColor(x * 10, y, textColor, bottomRow);
-						printf("[%x,%x]: %i", (int)y, (int)(7 - x), 0);
+						printf("[%x,%x]: %i", (int)y, (int)(7 - x), gs->playBoard[y][x]);
 					}
 
 				}
@@ -295,10 +295,21 @@ void InputRemote(GameState* gs)
 	}//End of While
 }
 
+void InitBoard(GameState* gs)
+{
+	for(int i=0; i<2; ++i)
+	{
+		for(int j=1; j<7; ++j)
+		{
+			gs->playBoard[i][j] = 4;
+		}
+	}
+}
+
 bool PlayerTurn(GameState* gs)
 {
-	//DONE-If your last marble is in your goal - turn repeat
-	//If you end on YOUR side and its empty AND the other side has marbles YOU win them
+	//DONE- If your last marble is in your goal - turn repeat
+	//DONE- If you end on YOUR side and its empty AND the other side has marbles YOU win them
 	//DONE- ALWAYS counter clockwise rotation
 
 	int numRocks = gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection];
@@ -338,10 +349,23 @@ bool PlayerTurn(GameState* gs)
 			}
 			y = 0;
 		}
+	} //End while rocks
+
+	//Did the rock land in a empty spot with rocks on the other side
+	//if( not in score or count & in a spot with only 1 rock & on your side
+	if (x != 0 && x != 7 && gs->playBoard[y][x] == 1 && y == static_cast<int>(gs->isMyRowBottom))
+	{
+		int gainedTotal = 0;
+		gs->playBoard[y][x] = 0;
+		gainedTotal += gs->playBoard[(y == 1 ? 0 : 1)][x] + 1;
+		gs->playBoard[(y == 1 ? 0 : 1)][x] = 0;
+
+		//add to the appropriate score 
+		gs->playBoard[gs->isMyRowBottom ? 1 : 0][gs->isMyRowBottom ? 7 : 0] += gainedTotal;
 	}
 
 	//Did my rock end in own goal
-	if (y == (gs->isMyRowBottom ? 1 : 0) && x == (gs->isMyRowBottom ? 7 : 0))
+	if (y == static_cast<int>(gs->isMyRowBottom) && x == (gs->isMyRowBottom ? 7 : 0))
 	{
 		return true;
 	}
@@ -366,8 +390,8 @@ void Update(GameState* gs)
 	//Update side total
 	for (int i = 1; i < 7; ++i)
 	{
-		gs->topMarbleTotal += gs->playBoard[0][i];
-		gs->bottomMarbleTotal += gs->playBoard[1][i];
+		gs->playBoard[0][7] += gs->playBoard[0][i];
+		gs->playBoard[1][0] += gs->playBoard[1][i];
 	}
 }
 
@@ -395,6 +419,7 @@ int main(/*int const argc, char const* const argv[]*/)
 	gameState->peer->Startup(1, &sd, 1);
 	gameState->peer->SetMaximumIncomingConnections(0);
 	gameState->peer->Connect(SERVER_IP, SERVER_PORT, 0, 0);
+	InitBoard(gameState);
 	printf("Starting the CLIENT.\n");
 
 	gpro_consoleResetColor();

@@ -35,6 +35,8 @@ public:
 	std::queue<RakNet::RakString> msgInQueue;
 };
 
+
+
 /*
 	Mancala:
 		[2]        ___________________________
