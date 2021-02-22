@@ -175,7 +175,7 @@ void DisplayGame(GameState* gs)
 					else
 					{
 						gpro_consoleSetCursorColor(x * 10, y, textColor, bottomRow);
-						printf("[%x,%x]: %i", (int)y, (int)(7 - x), gs->playBoard[y][x]);
+						printf("[%x,%x]: %i", (int)y, (int)(x), gs->playBoard[y][x]);
 					}
 
 				}
@@ -198,16 +198,15 @@ void InputLocal(GameState* gs)
 
 		printf("\n\nThere are currently %i rooms \n", gs->numberGameRooms);
 
-		bool validRoom = false;
-		while (!validRoom)
+		while (true)
 		{
 			printf("\nRoom number to join: ");
 			char tempRoom[512];
 			std::cin.getline(tempRoom, 512);
 			if (int room = atoi(tempRoom) < gs->numberGameRooms)
 			{
-				validRoom = true;
 				gs->roomSelection = room;
+				break;
 			}
 			else
 			{
@@ -219,7 +218,23 @@ void InputLocal(GameState* gs)
 	}
 	else
 	{
-		DisplayGame(gs);
+		gpro_consoleClear();
+		if (gs->isPlayerTurn)
+		{
+			while (true)
+			{
+				DisplayGame(gs);
+				//Make sure you can only select on your side
+				printf("\n Selection: ");
+				char move[512];
+				std::cin.getline(move, 512);
+				gs->selection = atoi(move);
+				if (gs->selection > 0 && gs->selection < 7)
+				{
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -297,9 +312,9 @@ void InputRemote(GameState* gs)
 
 void InitBoard(GameState* gs)
 {
-	for(int i=0; i<2; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
-		for(int j=1; j<7; ++j)
+		for (int j = 1; j < 7; ++j)
 		{
 			gs->playBoard[i][j] = 4;
 		}
@@ -312,18 +327,19 @@ bool PlayerTurn(GameState* gs)
 	//DONE- If you end on YOUR side and its empty AND the other side has marbles YOU win them
 	//DONE- ALWAYS counter clockwise rotation
 
-	int numRocks = gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection];
-	gs->playBoard[static_cast<int>(gs->isMyRowBottom)][gs->selection] = 0;
-	gs->selection = 1;
+	int numRocks = gs->playBoard[static_cast<int>(gs->amPlayerRed)][gs->selection];
+	gs->playBoard[static_cast<int>(gs->amPlayerRed)][gs->selection] = 0;
 
-	int x = gs->selection;
-	int y = static_cast<int>(gs->isMyRowBottom);
+	int x = gs->selection + (gs->amPlayerRed ? 1:-1);
+	int y = static_cast<int>(gs->amPlayerRed);
+	gs->selection = -1;
 
+	bool inAScore = false;
 	while (numRocks > 0)
 	{
 		if (y == 0) //Top row
 		{
-			while (x >= (gs->isMyRowBottom ? 1 : 0))
+			while (x >= (gs->amPlayerRed ? 1 : 0))
 			{
 				gs->playBoard[y][x]++;
 				numRocks--;
@@ -332,12 +348,18 @@ bool PlayerTurn(GameState* gs)
 					break;
 				}
 				x--;
+				inAScore = false;
+				if (y == static_cast<int>(gs->amPlayerRed) && x == (gs->amPlayerRed ? 7 : 0))
+				{
+					inAScore = true;
+				}
 			}
+			x = 1;
 			y = 1;
 		}
 		else if (y == 1)
 		{
-			while (x <= (gs->isMyRowBottom ? 7 : 6))
+			while (x <= (gs->amPlayerRed ? 7 : 6))
 			{
 				gs->playBoard[y][x]++;
 				numRocks--;
@@ -346,14 +368,21 @@ bool PlayerTurn(GameState* gs)
 					break;
 				}
 				x++;
+				inAScore = false;
+				if (y == static_cast<int>(gs->amPlayerRed) && x == (gs->amPlayerRed ? 7 : 0))
+				{
+					inAScore = true;
+				}
 			}
+			x = 6;
 			y = 0;
 		}
 	} //End while rocks
 
 	//Did the rock land in a empty spot with rocks on the other side
 	//if( not in score or count & in a spot with only 1 rock & on your side
-	if (x != 0 && x != 7 && gs->playBoard[y][x] == 1 && y == static_cast<int>(gs->isMyRowBottom))
+	y = y == 0 ? 1 : 0;
+	if (x != 0 && x != 7 && gs->playBoard[(y)][x] == 1 && y == static_cast<int>(gs->amPlayerRed))
 	{
 		int gainedTotal = 0;
 		gs->playBoard[y][x] = 0;
@@ -361,33 +390,38 @@ bool PlayerTurn(GameState* gs)
 		gs->playBoard[(y == 1 ? 0 : 1)][x] = 0;
 
 		//add to the appropriate score 
-		gs->playBoard[gs->isMyRowBottom ? 1 : 0][gs->isMyRowBottom ? 7 : 0] += gainedTotal;
+		gs->playBoard[gs->amPlayerRed ? 1 : 0][gs->amPlayerRed ? 7 : 0] += gainedTotal;
 	}
 
 	//Did my rock end in own goal
-	if (y == static_cast<int>(gs->isMyRowBottom) && x == (gs->isMyRowBottom ? 7 : 0))
-	{
-		return true;
-	}
-	return false;
+	return inAScore;
+	//if (y == static_cast<int>(gs->amPlayerRed) && x == (gs->amPlayerRed ? 7 : 0))
+	//{
+	//	return true;
+	//}
+	//return false;
 }
 
 void Update(GameState* gs)
 {
-
-
 	if (gs->isPlayerTurn)
 	{
 		//If there is a selection (safety check) 
 		if (gs->selection != -1)
 		{
-			bool repeatTurn = PlayerTurn(gs);
+			gs->isPlayerTurn = PlayerTurn(gs);
+			//THIS IS JUST TO SWAP DELTE LATER
+			if (!gs->isPlayerTurn)
+			{
+				gs->isPlayerTurn = true;
+				gs->amPlayerRed = !gs->amPlayerRed;
+			}
 		}
 	}
 
-
-
 	//Update side total
+	gs->playBoard[0][7] = 0;
+	gs->playBoard[1][0] = 0;
 	for (int i = 1; i < 7; ++i)
 	{
 		gs->playBoard[0][7] += gs->playBoard[0][i];
@@ -402,7 +436,7 @@ void OutputRemote(GameState* gs)
 
 void OutputLocal(GameState* gs)
 {
-
+	DisplayGame(gs);
 }
 
 
@@ -411,7 +445,7 @@ int main(/*int const argc, char const* const argv[]*/)
 	bool gameRunning = true;
 
 	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.186";
+	const char SERVER_IP[] = "172.16.2.63";
 
 	GameState* gameState = new GameState();
 	gameState->peer = RakNet::RakPeerInterface::GetInstance();

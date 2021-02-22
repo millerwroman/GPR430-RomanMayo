@@ -19,12 +19,10 @@ public:
 	int roomSelection;
 
 	bool isPlayerTurn = true;
-	bool isMyRowBottom = true;
+	bool amPlayerRed = true;;
 	int playBoard[2][8];
 	//Slot [0][0] player 1 (self) score
 	//Slot [1][0] player 2 score
-	int topMarbleTotal = 24;
-	int bottomMarbleTotal = 24;
 	int selection = -1;
 
 
