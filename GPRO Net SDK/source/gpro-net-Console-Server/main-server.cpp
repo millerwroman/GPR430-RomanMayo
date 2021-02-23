@@ -29,6 +29,7 @@
 #include <iostream> //Take this out when we can 
 #include <fstream>
 #include <map>
+#include <vector>
 
 //RakNet
 #include "RakNet/RakPeerInterface.h"
@@ -45,10 +46,8 @@
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 7777
+#define GAME_ROOMS 5
 
-//Things to do:
-// 2) Fix consistancy on loop
-// 4) write messages to text file
 
 void SendConnectedUsers(RakNet::RakPeerInterface* peer, RakNet::SystemAddress address);
 void WriteMessageToFile(std::string path, RakNet::Time, char msg[512]);
@@ -56,6 +55,8 @@ void WriteMessageToFile(std::string path, RakNet::Time, char msg[512]);
 
 
 std::map <RakNet::RakString, RakNet::SystemAddress> g_connectedClients;
+//A array of rakstring vectors (usernames) length 5 (max 10 clients so everyone can be a player)
+std::vector<RakNet::RakString> g_gameRooms[GAME_ROOMS];
 
 int main(void)
 {
@@ -65,13 +66,14 @@ int main(void)
 
 	RakNet::SocketDescriptor sd(SERVER_PORT, 0);
 	peer->Startup(MAX_CLIENTS, &sd, 1);
-	printf("Starting the SERVER.\n");
+	printf("Starting the SERVER.\n\n\n");
 	// We need to let the server accept incoming connections from the clients
 	peer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
-	while (1)
+	//GameLoop
+	while (true)
 	{
-		for (packet = peer->Receive(); packet; peer->DeallocatePacket(packet), packet = peer->Receive())
+		while (packet = peer->Receive())
 		{
 			RakNet::MessageID msgID = packet->data[0];
 			RakNet::BitStream bsIn(packet->data, packet->length, false);
@@ -106,7 +108,7 @@ int main(void)
 				//Send Message back
 				RakNet::BitStream bs;
 				bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
-				bs.Write("Welcome our server! \n\n");
+				bs.Write(GAME_ROOMS);
 				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 			}
 			break;
@@ -122,7 +124,6 @@ int main(void)
 			case ID_CONNECTION_LOST:
 				printf("A client lost the connection.\n");
 				break;
-
 			case ID_GAME_MESSAGE_1:
 			{
 				RakNet::RakString rs;
@@ -155,11 +156,24 @@ int main(void)
 				SendConnectedUsers(peer, packet->systemAddress);
 			}
 			break;
-
+			case ID_REQUEST_JOIN_GAMEROOM:
+			{
+				//are you player?
+				//are your red or blue
+				//is it your turn
+				//what is the board
+				int roomSelection;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				bsIn.Read(roomSelection);
+				PlayerType type = (g_gameRooms[roomSelection].size() > 2 ? PlayerType::SPECTATOR : (PlayerType)(g_gameRooms[roomSelection].size() - 1));
+			}
+			break;
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
 				break;
 			}
+			peer->DeallocatePacket(packet);
 		}
 	}
 

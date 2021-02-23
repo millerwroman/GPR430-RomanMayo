@@ -122,6 +122,18 @@ public:
 	}
 };
 
+void ConnectToServer(GameState* gameState)
+{
+	if (!gameState) return;
+	const unsigned short SERVER_PORT = 7777;
+	const char SERVER_IP[] = "172.16.2.194";
+	gameState->peer = RakNet::RakPeerInterface::GetInstance();
+	RakNet::SocketDescriptor sd;
+	gameState->peer->Startup(1, &sd, 1);
+	gameState->peer->SetMaximumIncomingConnections(0);
+	gameState->peer->Connect(SERVER_IP, SERVER_PORT, 0, 0);
+}
+
 
 void DisplayGame(GameState* gs)
 {
@@ -189,15 +201,28 @@ void DisplayGame(GameState* gs)
 
 void InputLocal(GameState* gs)
 {
-	if (!gs->serverEstablished) return;
-
-	if (gs->inLobby)
+	if (gs->username[0] == '\0')
 	{
 		printf("Username: ");
 		std::cin.getline(gs->username, 512);
+		ConnectToServer(gs);
+	}
 
-		printf("\n\nThere are currently %i rooms \n", gs->numberGameRooms);
+	if (!gs->serverEstablished) return;
 
+	switch (gs->playerStatus)
+	{
+	case NOT_CONNECTED:
+		break;
+	case IN_LOBBY:
+	{
+		gpro_consoleClear();
+		printf("\n\nRooms to Join\n");
+		for (int i = 0; i < gs->numberGameRooms; ++i)
+		{
+			printf("Room %i)\n", i);
+
+		}
 		while (true)
 		{
 			printf("\nRoom number to join: ");
@@ -210,13 +235,14 @@ void InputLocal(GameState* gs)
 			}
 			else
 			{
+				printf("Invalid Selection Try Again\n");
 				std::fill_n(tempRoom, 512, '\0');
 			}
 		}
 		gpro_consoleClear();
-		gs->inLobby = false;
 	}
-	else
+	break;
+	case IN_GAME:
 	{
 		gpro_consoleClear();
 		if (gs->isPlayerTurn)
@@ -235,6 +261,13 @@ void InputLocal(GameState* gs)
 				}
 			}
 		}
+		else
+		{
+			DisplayGame(gs);
+			printf("\nOther Players Turn");
+		}
+	}
+	break;
 	}
 }
 
@@ -269,16 +302,19 @@ void InputRemote(GameState* gs)
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 		{
 			printf("Connection Request Accepted\n");
-
+			gs->serverAdress = packet->systemAddress;
 			RakNet::BitStream bs;
 			bs.Write((RakNet::MessageID)ID_INITAL_CONTACT);
-			//create package
+			bs.Write(gs->username);
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
 		}
 		break;
 		case ID_INITAL_CONTACT:
 		{
-			gs->serverAdress = packet->systemAddress;
+			RakNet::BitStream bsIn(packet->data, packet->length, false);
+			bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+			bsIn.Read(gs->numberGameRooms);
+			gs->playerStatus = IN_LOBBY;
 		}
 		break;
 		case ID_NEW_INCOMING_CONNECTION:
@@ -326,20 +362,21 @@ bool PlayerTurn(GameState* gs)
 	//DONE- If your last marble is in your goal - turn repeat
 	//DONE- If you end on YOUR side and its empty AND the other side has marbles YOU win them
 	//DONE- ALWAYS counter clockwise rotation
+	//NEED WIN CONFISHION
 
-	int numRocks = gs->playBoard[static_cast<int>(gs->amPlayerRed)][gs->selection];
-	gs->playBoard[static_cast<int>(gs->amPlayerRed)][gs->selection] = 0;
+	int numRocks = gs->playBoard[static_cast<int>(gs->playerType)][gs->selection];
+	gs->playBoard[static_cast<int>(gs->playerType)][gs->selection] = 0;
 
-	int x = gs->selection + (gs->amPlayerRed ? 1:-1);
-	int y = static_cast<int>(gs->amPlayerRed);
-	gs->selection = -1;
+	int x = gs->selection + (gs->playerType ? 1 : -1);
+	int y = static_cast<int>(gs->playerType);
+	gs->selection = INVALID_SELECTION;
 
 	bool inAScore = false;
 	while (numRocks > 0)
 	{
 		if (y == 0) //Top row
 		{
-			while (x >= (gs->amPlayerRed ? 1 : 0))
+			while (x >= static_cast<int>(gs->playerType))
 			{
 				gs->playBoard[y][x]++;
 				numRocks--;
@@ -349,7 +386,7 @@ bool PlayerTurn(GameState* gs)
 				}
 				x--;
 				inAScore = false;
-				if (y == static_cast<int>(gs->amPlayerRed) && x == (gs->amPlayerRed ? 7 : 0))
+				if (y == static_cast<int>(gs->playerType) && x == (gs->playerType == PLAYER_2 ? 7 : 0))
 				{
 					inAScore = true;
 				}
@@ -359,7 +396,7 @@ bool PlayerTurn(GameState* gs)
 		}
 		else if (y == 1)
 		{
-			while (x <= (gs->amPlayerRed ? 7 : 6))
+			while (x <= (gs->playerType == PLAYER_2 ? 7 : 6))
 			{
 				gs->playBoard[y][x]++;
 				numRocks--;
@@ -369,7 +406,7 @@ bool PlayerTurn(GameState* gs)
 				}
 				x++;
 				inAScore = false;
-				if (y == static_cast<int>(gs->amPlayerRed) && x == (gs->amPlayerRed ? 7 : 0))
+				if (y == static_cast<int>(gs->playerType) && x == (gs->playerType == PLAYER_2 ? 7 : 0))
 				{
 					inAScore = true;
 				}
@@ -382,7 +419,7 @@ bool PlayerTurn(GameState* gs)
 	//Did the rock land in a empty spot with rocks on the other side
 	//if( not in score or count & in a spot with only 1 rock & on your side
 	y = y == 0 ? 1 : 0;
-	if (x != 0 && x != 7 && gs->playBoard[(y)][x] == 1 && y == static_cast<int>(gs->amPlayerRed))
+	if (x != 0 && x != 7 && gs->playBoard[(y)][x] == 1 && y == static_cast<int>(gs->playerType))
 	{
 		int gainedTotal = 0;
 		gs->playBoard[y][x] = 0;
@@ -390,16 +427,11 @@ bool PlayerTurn(GameState* gs)
 		gs->playBoard[(y == 1 ? 0 : 1)][x] = 0;
 
 		//add to the appropriate score 
-		gs->playBoard[gs->amPlayerRed ? 1 : 0][gs->amPlayerRed ? 7 : 0] += gainedTotal;
+		gs->playBoard[static_cast<int>(gs->playerType)][gs->playerType == PLAYER_2 ? 7 : 0] += gainedTotal;
 	}
 
 	//Did my rock end in own goal
 	return inAScore;
-	//if (y == static_cast<int>(gs->amPlayerRed) && x == (gs->amPlayerRed ? 7 : 0))
-	//{
-	//	return true;
-	//}
-	//return false;
 }
 
 void Update(GameState* gs)
@@ -407,15 +439,9 @@ void Update(GameState* gs)
 	if (gs->isPlayerTurn)
 	{
 		//If there is a selection (safety check) 
-		if (gs->selection != -1)
+		if (gs->selection != INVALID_SELECTION)
 		{
 			gs->isPlayerTurn = PlayerTurn(gs);
-			//THIS IS JUST TO SWAP DELTE LATER
-			if (!gs->isPlayerTurn)
-			{
-				gs->isPlayerTurn = true;
-				gs->amPlayerRed = !gs->amPlayerRed;
-			}
 		}
 	}
 
@@ -431,28 +457,39 @@ void Update(GameState* gs)
 
 void OutputRemote(GameState* gs)
 {
-
+	switch (gs->playerStatus)
+	{
+	case IN_LOBBY:
+	{
+		if (gs->roomSelection != INVALID_SELECTION)
+		{
+			RakNet::BitStream bs;
+			bs.Write((RakNet::MessageID)ID_REQUEST_JOIN_GAMEROOM);
+			bs.Write(gs->roomSelection);
+			gs->peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, gs->serverAdress, false);
+		}
+	}
+	break;
+	}
 }
 
 void OutputLocal(GameState* gs)
 {
-	DisplayGame(gs);
+	switch (gs->playerStatus)
+	{
+	case IN_GAME:
+		DisplayGame(gs);
+		break;
+	}
 }
+
 
 
 int main(/*int const argc, char const* const argv[]*/)
 {
 	bool gameRunning = true;
-
-	const unsigned short SERVER_PORT = 7777;
-	const char SERVER_IP[] = "172.16.2.63";
-
 	GameState* gameState = new GameState();
-	gameState->peer = RakNet::RakPeerInterface::GetInstance();
-	RakNet::SocketDescriptor sd;
-	gameState->peer->Startup(1, &sd, 1);
-	gameState->peer->SetMaximumIncomingConnections(0);
-	gameState->peer->Connect(SERVER_IP, SERVER_PORT, 0, 0);
+
 	InitBoard(gameState);
 	printf("Starting the CLIENT.\n");
 

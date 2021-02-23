@@ -3,7 +3,23 @@
 #include "PackageStructs.h"
 #include "RakNet/RakString.h"
 #include <queue>
+#include <vector>
 
+#define INVALID_SELECTION -1
+
+enum ClientStatus
+{
+	NOT_CONNECTED = 0,
+	IN_LOBBY,
+	IN_GAME
+};
+
+enum PlayerType
+{
+	SPECTATOR = -1,
+	PLAYER_1 = 0,
+	PLAYER_2 = 1
+};
 
 class GameState
 {
@@ -15,18 +31,18 @@ public:
 	bool serverEstablished = true;
 
 	char username[512];
-	int numberGameRooms = 3;
-	int roomSelection;
+	int numberGameRooms;
+	int roomSelection = INVALID_SELECTION;
 
 	bool isPlayerTurn = true;
-	bool amPlayerRed = true;;
-	int playBoard[2][8];
+	PlayerType playerType = SPECTATOR;
+	char playBoard[2][8];
 	//Slot [0][0] player 1 (self) score
 	//Slot [1][0] player 2 score
-	int selection = -1;
+	int selection = INVALID_SELECTION;
 
 
-	bool inLobby = true;
+	ClientStatus playerStatus = NOT_CONNECTED;
 
 
 	char msgOut[512];
