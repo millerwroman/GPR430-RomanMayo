@@ -28,6 +28,7 @@
 
 
 #include "gpro-net/gpro-net/gpro-net-RakNet.hpp"
+#include <vector>
 
 
 namespace gproNet
@@ -37,7 +38,7 @@ namespace gproNet
 	enum eMessageServer
 	{
 		ID_GPRO_MESSAGE_SERVER_BEGIN = ID_GPRO_MESSAGE_COMMON_END,
-
+		ID_RETURN_TO_MASTER,
 
 
 		ID_GPRO_MESSAGE_SERVER_END
@@ -57,6 +58,9 @@ namespace gproNet
 		// ~cRakNetServer
 		//	Destructor.
 		virtual ~cRakNetServer();
+	public:
+		void SetMasterServer(RakNet::SystemAddress masterAddress) { mMasterServer = masterAddress; }
+		virtual RakNet::SystemAddress GetServerAddress() { return mAddress; }
 
 		// protected methods
 	protected:
@@ -67,6 +71,11 @@ namespace gproNet
 		//		param msgID: message identifier
 		//		return: was message processed
 		virtual bool ProcessMessage(RakNet::BitStream& bitstream, RakNet::SystemAddress const sender, RakNet::Time const dtSendToReceive, RakNet::MessageID const msgID);
+
+	private:
+		RakNet::SystemAddress mMasterServer;
+		RakNet::SystemAddress mAddress; //This would get set on initialization from RakNet
+		
 	};
 
 }

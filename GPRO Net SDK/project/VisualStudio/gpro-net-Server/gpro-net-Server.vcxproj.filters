@@ -32,5 +32,8 @@
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net-server\gpro-net-RakNet-Server.hpp">
       <Filter>Header Files\gpro-net-server</Filter>
     </ClInclude>
+    <ClInclude Include="gpro-netRakNet-MasterServer.h">
+      <Filter>Header Files\gpro-net-server</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,17 +23,36 @@
 */
 
 #include "gpro-net/gpro-net-server/gpro-net-RakNet-Server.hpp"
+#include "gpro-net/gpro-net-server/gpro-netRakNet-MasterServer.h"
 
+const static int MAX_SERVERS = 10;
 
 int main(int const argc, char const* const argv[])
 {
-	gproNet::cRakNetServer server;
-
-	while (1)
+	//Array of servers (0 is master)
+	gproNet::cRakNetServer* GameServers[MAX_SERVERS];
+	//Init all servers
+	GameServers[0] = new cRakNetServerMaster(); //Init Master Server
+	RakNet::SystemAddress masterAddress = GameServers[0]->GetServerAddress();
+	for(int i=1; i<MAX_SERVERS; ++i)
 	{
-		server.MessageLoop();
+		GameServers[i] = new gproNet::cRakNetServer();
+		GameServers[i]->SetMasterServer(masterAddress);
+	}
+	bool runServers = true; //Flip this when shutdown is ready
+	while (runServers)
+	{
+		//have each server run a message loop
+		for (gproNet::cRakNetServer* server : GameServers)
+		{
+			server->MessageLoop();
+		}
 	}
 
+	for (auto* game_server : GameServers)
+	{
+		delete game_server;
+	}
 	printf("\n\n");
 	system("pause");
 }

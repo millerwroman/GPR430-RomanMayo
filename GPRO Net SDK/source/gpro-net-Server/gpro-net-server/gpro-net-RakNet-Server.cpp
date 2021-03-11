@@ -27,6 +27,8 @@
 
 namespace gproNet
 {
+
+
 	cRakNetServer::cRakNetServer()
 	{
 		RakNet::SocketDescriptor sd(SET_GPRO_SERVER_PORT, 0);
@@ -71,7 +73,12 @@ namespace gproNet
 			WriteTest(bitstream_w, "Hello client from server");
 			peer->Send(&bitstream_w, MEDIUM_PRIORITY, UNRELIABLE_SEQUENCED, 0, sender, false);
 		}	return true;
-
+		case ID_RETURN_TO_MASTER:
+		{
+			//This would be sent from the client if they wish to return to the main server
+			//This would then return the system address of the master server with the this ID and the client would connect
+			return true;
+		}
 		}
 		return false;
 	}
