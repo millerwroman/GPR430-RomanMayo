@@ -59,24 +59,10 @@ int testPlugin()
 #endif	// (defined _WINDOWS || defined _WIN32)
 
 
-// utility test (game states, console)
-int testUtility()
-{
-	gpro_battleship battleship;
-	gpro_checkers checkers;
-	gpro_mancala mancala;
-
-	gpro_battleship_reset(battleship);
-	gpro_checkers_reset(checkers);
-	gpro_mancala_reset(mancala);
-
-	return gpro_consoleDrawTestPatch();
-}
 
 
 int main(int const argc, char const* const argv[])
 {
-	testUtility();
 
 	testPlugin();
 

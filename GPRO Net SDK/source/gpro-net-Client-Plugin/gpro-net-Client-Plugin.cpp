@@ -23,9 +23,26 @@
 */
 
 #include "gpro-net-Client-Plugin.h"
+#include "gpro-net/gpro-net/gpro-net-util/gpro-net-gamestate.h"
 
+GameState gameState;
 
 int foo(int bar)
 {
 	return (bar + 1);
 }
+
+void ClientSelectionMade(int x, int y)
+{
+	gameState.x = x;
+	gameState.y = y;
+
+	//Package and send message to server
+}
+
+void SendMessages()
+{
+	
+}
+
+

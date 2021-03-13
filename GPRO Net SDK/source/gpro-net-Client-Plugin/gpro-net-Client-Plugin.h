@@ -24,6 +24,8 @@
 	****THIS FILE MUST NOT CONTAIN C++ KEYWORDS****
 */
 
+struct GameState;
+
 #ifndef _GPRO_NET_PLUGIN_CLIENT_H_
 #define _GPRO_NET_PLUGIN_CLIENT_H_
 
@@ -37,6 +39,9 @@ extern "C" {
 
 
 GPRO_NET_SYMBOL int foo(int bar);
+GPRO_NET_SYMBOL void ClientSelectionMade(int x, int y);
+GPRO_NET_SYMBOL void SendMessages();
+
 
 
 #ifdef __cplusplus
