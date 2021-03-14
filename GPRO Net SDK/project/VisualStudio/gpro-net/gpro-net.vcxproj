@@ -177,11 +177,13 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net.h" />
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net\gpro-net-RakNet.hpp" />
+    <ClInclude Include="..\..\..\include\gpro-net\gpro-net\gpro-net-util\GameMessages.h" />
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net\gpro-net-util\gpro-net-console.h" />
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net\gpro-net-util\gpro-net-gamestate.h" />
     <ClInclude Include="..\..\..\include\gpro-net\gpro-net\gpro-net-util\gpro-net-lib.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\include\gpro-net\gpro-net\gpro-net-util\GameMessages.cpp" />
     <ClCompile Include="..\..\..\source\gpro-net\gpro-net.c" />
     <ClCompile Include="..\..\..\source\gpro-net\gpro-net\gpro-net-RakNet.cpp" />
     <ClCompile Include="..\..\..\source\gpro-net\gpro-net\gpro-net-util\gpro-net-console_win.c" />

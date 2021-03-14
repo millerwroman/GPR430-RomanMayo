@@ -24,8 +24,10 @@
 
 #include "gpro-net-Client-Plugin.h"
 #include "gpro-net/gpro-net/gpro-net-util/gpro-net-gamestate.h"
+#include "PrimaryLoopFuntions.h"
 
 GameState gameState;
+static NetworkInterface* g_Interface;
 
 int foo(int bar)
 {
@@ -40,9 +42,19 @@ void ClientSelectionMade(int x, int y)
 	//Package and send message to server
 }
 
-void SendMessages()
+bool InitPlugin()
 {
-	
+	if (g_Interface) return;
+
+	g_Interface = new NetworkInterface();
+}
+
+bool DestroyPlugin()
+{
+	if (!g_Interface) return;
+
+	delete g_Interface;
+	g_Interface = nullptr;
 }
 
 

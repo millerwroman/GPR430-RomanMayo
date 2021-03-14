@@ -53,8 +53,7 @@ namespace gproNet
 	enum eMessageCommon
 	{
 		ID_GPRO_MESSAGE_COMMON_BEGIN = ID_USER_PACKET_ENUM,
-
-
+	
 
 		ID_GPRO_MESSAGE_COMMON_END
 	};
@@ -118,7 +117,7 @@ namespace gproNet
 		// MessageLoop
 		//	Unpack and process packets.
 		//		return: number of messages processed
-		int MessageLoop();
+		virtual int MessageLoop();
 	};
 
 }
