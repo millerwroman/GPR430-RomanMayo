@@ -23,14 +23,12 @@
 */
 
 #include "gpro-net-Client-Plugin.h"
-#include "PrimaryLoopFuntions.h"
+
+#include <iostream>
+
+#include "NetworkInterface.h"
 
 static NetworkInterface* g_Interface;
-
-//int foo(int bar)
-//{
-//	return (bar + 1);
-//}
 
 bool ClientSelectionMade(int x, int y)
 {
@@ -47,10 +45,11 @@ bool InitPlugin()
 	return true;
 }
 
-bool ConnectToServer(char* ip, int port)
+bool ConnectToServer(const char* ip, int port)
 {
 	if (!g_Interface) return false;
-
+	
+	strcpy(g_Interface->stuff, ip);
 	return g_Interface->ConnectToServer(ip, port);
 }
 

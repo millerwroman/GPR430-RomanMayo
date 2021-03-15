@@ -205,11 +205,11 @@ xcopy /y "$(TargetPath)" "%dst%"
   <ItemGroup>
     <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\gpro-net-Client-Plugin.cpp" />
     <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\main-client-dll.c" />
-    <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\PrimaryLoopFuntions.cpp" />
+    <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\NetworkInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\gpro-net-Client-Plugin\gpro-net-Client-Plugin.h" />
-    <ClInclude Include="..\..\..\source\gpro-net-Client-Plugin\PrimaryLoopFuntions.h" />
+    <ClInclude Include="..\..\..\source\gpro-net-Client-Plugin\NetworkInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Unity\gpro-net-Unity\Assets\Scripts\Plugins\gproClientPlugin.cs" />

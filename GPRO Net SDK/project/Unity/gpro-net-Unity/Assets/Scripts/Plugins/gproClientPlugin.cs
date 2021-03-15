@@ -10,8 +10,8 @@ public class gproClientPlugin
     public static extern bool ClientSelectionMade(int x, int y);
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool InitPlugin();
-    //[DllImport("gpro-net-Client-Plugin")]
-    //public static extern bool ConnectToServer(char* ip, int port);
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
+    public static extern bool ConnectToServer(string ip, int port);
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool DestroyPlugin();
     [DllImport("gpro-net-Client-Plugin")]

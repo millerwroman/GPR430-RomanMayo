@@ -1,19 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class gproClientManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private string IP_ADDRESS = "10.0.0.218"; 
+    private int SERVER_PORT = 7777;
     void Start()
     {
-		int test = gproClientPlugin.foo(9000);
-		Debug.Log(test);
+        gproClientPlugin.InitPlugin();
+        gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        gproClientPlugin.UpdateInputRemote();
+        //Get Gamestate
+        //Make turn
+        gproClientPlugin.UpdateOutputRemote();
     }
 }

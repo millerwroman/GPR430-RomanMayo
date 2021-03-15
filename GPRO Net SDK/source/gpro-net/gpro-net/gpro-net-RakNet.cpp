@@ -24,6 +24,8 @@
 
 #include "gpro-net/gpro-net/gpro-net-RakNet.hpp"
 
+#include "gpro-net/gpro-net/gpro-net-util/GameMessages.h"
+
 
 namespace gproNet
 {
@@ -40,9 +42,14 @@ namespace gproNet
 	bool cRakNetManager::ProcessMessage(RakNet::BitStream& bitstream, RakNet::SystemAddress const sender, RakNet::Time const dtSendToReceive, RakNet::MessageID const msgID)
 	{
 		// process messages that can be handled the same way for all types of peers
-		//switch (msgID)
-		//{
-		//}
+		switch (msgID)
+		{
+		case MNCL::GameMessageID::ID_DEFAULT_GAME_MESSAGE:
+			char stuff[512];
+			bitstream.Read(stuff);
+			printf(stuff);
+			break;
+		}
 		return false;
 	}
 

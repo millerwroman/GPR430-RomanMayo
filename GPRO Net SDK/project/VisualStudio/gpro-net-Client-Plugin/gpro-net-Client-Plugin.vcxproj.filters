@@ -24,7 +24,7 @@
     <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\main-client-dll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\PrimaryLoopFuntions.cpp">
+    <ClCompile Include="..\..\..\source\gpro-net-Client-Plugin\NetworkInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="..\..\..\source\gpro-net-Client-Plugin\gpro-net-Client-Plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\gpro-net-Client-Plugin\PrimaryLoopFuntions.h">
+    <ClInclude Include="..\..\..\source\gpro-net-Client-Plugin\NetworkInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

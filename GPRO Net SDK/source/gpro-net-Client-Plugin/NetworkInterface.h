@@ -11,7 +11,7 @@ public:
 	NetworkInterface();
 	~NetworkInterface();
 	//Connections
-	bool ConnectToServer(char* ip, int port) const;
+	bool ConnectToServer(const char* ip, int port) const;
 	RakNet::RakPeerInterface* GetRakInterface() const { return peer; }
 	//Update
 	bool UpdateOutputRemote(); // Send messages
@@ -19,8 +19,11 @@ public:
 	//GameState & Turns
 	const GameState& GetGameState() const { return gameState; }
 	bool PlayerMoveSelected(int x, int y);
+	char stuff[512];
 private:
+	void AddMessageToQueue(MNCL::GameMessage msg);
 	RakNet::RakPeerInterface* peer;
+	RakNet::SystemAddress serverAddress;
 	std::queue<MNCL::GameMessage> sendQueue;
 	GameState gameState;
 };
