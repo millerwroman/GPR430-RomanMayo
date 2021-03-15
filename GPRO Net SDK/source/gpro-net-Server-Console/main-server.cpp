@@ -27,11 +27,12 @@
 
 int main(int const argc, char const* const argv[])
 {
-	gproNet::cRakNetServer server;
+	gproNet::cRakNetServer* server = new gproNet::cRakNetServer();
 
-	while (1)
+
+	while (true)
 	{
-		server.MessageLoop();
+		server->MessageLoop();
 	}
 
 	printf("\n\n");

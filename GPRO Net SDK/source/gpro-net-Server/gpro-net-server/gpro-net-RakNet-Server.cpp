@@ -34,6 +34,7 @@ namespace gproNet
 
 		peer->Startup(MAX_CLIENTS, &sd, 1);
 		peer->SetMaximumIncomingConnections(MAX_CLIENTS);
+		printf("Server Is Running\n\n\n");
 	}
 
 	cRakNetServer::~cRakNetServer()

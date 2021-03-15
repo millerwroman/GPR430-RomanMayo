@@ -73,6 +73,7 @@ bool NetworkInterface::UpdateInputRemote()
 
 	// done
 	//return count;
+	return true;
 }
 
 bool NetworkInterface::PlayerMoveSelected(int x, int y)

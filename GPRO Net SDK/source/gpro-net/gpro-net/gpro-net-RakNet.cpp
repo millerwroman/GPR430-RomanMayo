@@ -45,10 +45,13 @@ namespace gproNet
 		switch (msgID)
 		{
 		case MNCL::GameMessageID::ID_DEFAULT_GAME_MESSAGE:
+		{
 			char stuff[512];
 			bitstream.Read(stuff);
 			printf(stuff);
-			break;
+			return true;
+		}
+			
 		}
 		return false;
 	}
