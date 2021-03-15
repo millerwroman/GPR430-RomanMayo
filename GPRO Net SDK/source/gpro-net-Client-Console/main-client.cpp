@@ -39,7 +39,7 @@ int testPlugin()
 	//HMODULE plugin = LoadLibrary(TEXT("./plugin/gpro-net-Client-Plugin"));
 	//if (plugin)
 	{
-		printf("%d \n", foo(9000));
+		//printf("%d \n", foo(9000));
 
 		// done
 		//return FreeLibrary(plugin);

@@ -23,38 +23,57 @@
 */
 
 #include "gpro-net-Client-Plugin.h"
-#include "gpro-net/gpro-net/gpro-net-util/gpro-net-gamestate.h"
 #include "PrimaryLoopFuntions.h"
 
-GameState gameState;
 static NetworkInterface* g_Interface;
 
-int foo(int bar)
-{
-	return (bar + 1);
-}
+//int foo(int bar)
+//{
+//	return (bar + 1);
+//}
 
-void ClientSelectionMade(int x, int y)
+bool ClientSelectionMade(int x, int y)
 {
-	gameState.x = x;
-	gameState.y = y;
+	if (!g_Interface) return false;
 
-	//Package and send message to server
+	return g_Interface->PlayerMoveSelected(x, y);
 }
 
 bool InitPlugin()
 {
-	if (g_Interface) return;
+	if (g_Interface) return false;
 
 	g_Interface = new NetworkInterface();
+	return true;
+}
+
+bool ConnectToServer(char* ip, int port)
+{
+	if (!g_Interface) return false;
+
+	return g_Interface->ConnectToServer(ip, port);
 }
 
 bool DestroyPlugin()
 {
-	if (!g_Interface) return;
+	if (!g_Interface) return false;
 
 	delete g_Interface;
 	g_Interface = nullptr;
+	return true;
 }
 
+bool UpdateOutputRemote()
+{
+	if (!g_Interface) return false;
+
+	return g_Interface->UpdateOutputRemote();
+}
+
+bool UpdateInputRemote()
+{
+	if (!g_Interface) return false;
+
+	return g_Interface->UpdateInputRemote();
+}
 

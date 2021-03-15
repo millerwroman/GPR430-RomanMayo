@@ -38,11 +38,13 @@ extern "C" {
 #endif	// __cplusplus
 
 
-GPRO_NET_SYMBOL int foo(int bar);
-GPRO_NET_SYMBOL void ClientSelectionMade(int x, int y);
-
-
-
+//GPRO_NET_SYMBOL int foo(int bar);
+GPRO_NET_SYMBOL bool ClientSelectionMade(int x, int y);
+GPRO_NET_SYMBOL bool InitPlugin();
+GPRO_NET_SYMBOL bool ConnectToServer(char* ip, int port);
+GPRO_NET_SYMBOL bool DestroyPlugin();
+GPRO_NET_SYMBOL bool UpdateOutputRemote();
+GPRO_NET_SYMBOL bool UpdateInputRemote();
 #ifdef __cplusplus
 }
 #endif	// __cplusplus

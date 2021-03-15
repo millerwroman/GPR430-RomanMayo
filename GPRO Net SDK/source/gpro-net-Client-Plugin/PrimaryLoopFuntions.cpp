@@ -11,7 +11,7 @@ NetworkInterface::~NetworkInterface()
 	peer = nullptr;
 }
 
-bool NetworkInterface::ConnectToServer(char* ip, int port)
+bool NetworkInterface::ConnectToServer(char* ip, int port) const
 {
 	if (!peer)
 	{
@@ -25,12 +25,19 @@ bool NetworkInterface::ConnectToServer(char* ip, int port)
 	return true;
 }
 
-bool NetworkInterface::SendMessages()
+bool NetworkInterface::UpdateOutputRemote()
 {
 	return true;
 }
 
-bool NetworkInterface::ReciveMessages()
+bool NetworkInterface::UpdateInputRemote()
 {
+	return true;
+}
+
+bool NetworkInterface::PlayerMoveSelected(int x, int y)
+{
+	gameState.x = x;
+	gameState.y = y;
 	return true;
 }
