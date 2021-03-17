@@ -28,10 +28,17 @@ bool NetworkInterface::ConnectToServer(const char* ip, int port) const
 
 bool NetworkInterface::UpdateOutputRemote()
 {
-	RakNet::BitStream bs;
+	/*RakNet::BitStream bs;
 	bs.Write((RakNet::MessageID)MNCL::GameMessageID::ID_DEFAULT_GAME_MESSAGE);
 	bs.Write(stuff);
-	peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+	peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false)*/;
+
+	while (!sendQueue.empty())
+	{
+		MNCL::GameMessage& msg = sendQueue.front();
+		peer->Send(reinterpret_cast<char*>(&msg), sizeof(msg), HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+		sendQueue.pop();
+	}
 	return true;
 }
 
@@ -78,8 +85,10 @@ bool NetworkInterface::UpdateInputRemote()
 
 bool NetworkInterface::PlayerMoveSelected(int x, int y)
 {
-	gameState.x = x;
-	gameState.y = y;
+	//gameState.x = x;
+	//gameState.y = y;
+	MNCL::PlayerSelectionMessage msg = MNCL::PlayerSelectionMessage(x, y);
+	sendQueue.push(msg);
 	return true;
 }
 

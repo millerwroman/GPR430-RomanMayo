@@ -23,6 +23,8 @@
 */
 
 #include "gpro-net/gpro-net-server/gpro-net-RakNet-Server.hpp"
+#include "gpro-net/gpro-net/gpro-net-util/GameMessages.h"
+#include <iostream>
 
 
 namespace gproNet
@@ -72,7 +74,14 @@ namespace gproNet
 			WriteTest(bitstream_w, "Hello client from server");
 			peer->Send(&bitstream_w, MEDIUM_PRIORITY, UNRELIABLE_SEQUENCED, 0, sender, false);
 		}	return true;
+		case MNCL::ID_PLAYER_SELECTION:
+		{
+			MNCL::PlayerSelectionMessage msg;
+			//RakNet::BitStream bs;
+			//bs.Read(msg);
+			//std::cout << "X: " +  std::to_string(msg.x) + " Y: " + std::to_string(msg.y) + "\n";
 
+		}return true;
 		}
 		return false;
 	}
