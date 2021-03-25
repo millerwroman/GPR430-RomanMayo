@@ -66,6 +66,8 @@ bool NetworkInterface::UpdateInputRemote()
 			break;
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 			serverAddress = packet->systemAddress;
+			//packet->length This is how you would get the size of packet (remeber you already have first byte)
+			//if no timestand packetLenghts-1
 			UpdateOutputRemote();
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
