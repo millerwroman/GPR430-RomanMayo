@@ -36,5 +36,14 @@ namespace MNCL //(Mancala)
 
 		int x, y;
 	};
+
+	//Risk With sending stucts:
+	/*
+	* Risk Sending Pointer
+	* If you send X-Plat it might understand data differntly
+	* BS takes care of byte ordedring and packing
+	* Have a Read/Write Pair for the struct and send via bs
+	* Structs are good for storing but not sending
+	*/
 #pragma pack(pop)
 }
