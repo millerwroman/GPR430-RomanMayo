@@ -26,6 +26,7 @@ private:
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
 	GameState gameState;
+	PlayerTurn turn;
 };
 
 

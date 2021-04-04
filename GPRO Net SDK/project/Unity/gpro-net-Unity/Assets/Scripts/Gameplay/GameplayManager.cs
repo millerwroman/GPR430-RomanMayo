@@ -31,6 +31,8 @@ struct GameState
     public Vector2Int selection;
 }
 
+
+
 public class GameplayManager : MonoBehaviour
 {
     private GameState gameState;

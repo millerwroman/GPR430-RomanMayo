@@ -50,3 +50,8 @@ namespace MNCL //(Mancala)
 	*/
 #pragma pack(pop)
 }
+
+struct PlayerTurn
+{
+	int x,y
+};

@@ -72,8 +72,15 @@ bool NetworkInterface::UpdateInputRemote()
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
 			break;
-			default:
-				break;
+		case MNCL::GameMessageID::ID_PLAYER_SELECTION:
+		{
+			MNCL::PlayerSelectionMessage msg(bitstream);
+			turn.x = msg.x;
+			turn.y = msg.y;
+		}
+		break;
+		default:
+			break;
 		}
 
 		// done with packet
@@ -98,7 +105,7 @@ bool NetworkInterface::PlayerMoveSelected(int x, int y)
 
 void NetworkInterface::AddMessageToQueue(MNCL::GameMessage msg)
 {
-	RakNet::BitStream*bs = new RakNet::BitStream();
+	RakNet::BitStream* bs = new RakNet::BitStream();
 	msg.WriteToBitStream(*bs);
 	sendQueue.push(bs);
 }

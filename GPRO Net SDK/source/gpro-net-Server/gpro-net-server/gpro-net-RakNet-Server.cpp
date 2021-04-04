@@ -54,6 +54,16 @@ namespace gproNet
 		{
 		case ID_NEW_INCOMING_CONNECTION:
 			//printf("A connection is incoming.\n");
+			if (!playerZeroTurn)
+			{
+				Players[0] = sender;
+				playerZeroTurn = true;
+			}
+			else
+			{
+				Players[1] = sender;
+				//Begin Game Funtion
+			}
 			return true;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
 			//printf("The server is full.\n");
@@ -77,7 +87,18 @@ namespace gproNet
 		case MNCL::ID_PLAYER_SELECTION:
 		{
 			MNCL::PlayerSelectionMessage data = MNCL::PlayerSelectionMessage(bitstream);
-			printf("%i %i", data.x, data.y);
+			printf("%i %i \n", data.x, data.y);
+			if (Players[static_cast<int>(!playerZeroTurn)] == sender) //If it is the same systemadress as the player whos turn it is
+			{
+				//send to other client
+				RakNet::BitStream bsOut;
+				data.WriteToBitStream(bsOut);
+				peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(), true);
+			}
+			else
+			{
+				//Send back not your turn
+			}
 			return true;
 		}
 		}

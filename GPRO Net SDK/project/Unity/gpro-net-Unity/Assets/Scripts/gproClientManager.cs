@@ -14,9 +14,14 @@ public class gproClientManager : MonoBehaviour
     void Update()
     {
         gproClientPlugin.UpdateInputRemote();
-        gproClientPlugin.ClientSelectionMade(1,2);
+        //gproClientPlugin.ClientSelectionMade(1,2);
         //Get Gamestate
         //Make turn
         gproClientPlugin.UpdateOutputRemote();
     }
 }
+
+//cliewnt takes turn
+//Sends turn to server
+//server says if its your turn or not
+//if its client turns it will process that info
