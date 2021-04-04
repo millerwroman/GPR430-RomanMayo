@@ -51,8 +51,7 @@ namespace gproNet
 			printf(stuff);
 			return true;
 		}
-			
-		}
+		}//End Switch
 		return false;
 	}
 

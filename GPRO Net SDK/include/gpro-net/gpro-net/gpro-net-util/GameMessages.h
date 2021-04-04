@@ -16,23 +16,26 @@ namespace MNCL //(Mancala)
 #pragma pack(push, 1)
 	struct GameMessage //abstract
 	{
+		virtual void WriteToBitStream(RakNet::BitStream& bs);
 		GameMessage();
 		GameMessage(RakNet::MessageID _id) : ID(_id) {}
 		RakNet::MessageID ID;
 	};
 
-	struct TimeStampMessage : public GameMessage
-	{
-		//needs constructor
-		RakNet::MessageID Time_ID = ID_TIMESTAMP;
-		RakNet::Time time;
-		RakNet::MessageID ID;
-	};
+	//struct TimeStampMessage : public GameMessage
+	//{
+	//	//needs constructor
+	//	RakNet::MessageID Time_ID = ID_TIMESTAMP;
+	//	RakNet::Time time;
+	//	RakNet::MessageID ID;
+	//};
 
 	struct PlayerSelectionMessage : public GameMessage
 	{
-		PlayerSelectionMessage();
+		PlayerSelectionMessage() = default;
 		PlayerSelectionMessage(int _x, int _y) : GameMessage((RakNet::MessageID)ID_PLAYER_SELECTION), x(_x), y(_y) {};
+		PlayerSelectionMessage(RakNet::BitStream& bs);
+		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
 		int x, y;
 	};

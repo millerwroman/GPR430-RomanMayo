@@ -24,7 +24,7 @@ private:
 	void AddMessageToQueue(MNCL::GameMessage msg);
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
-	std::queue<MNCL::GameMessage> sendQueue;
+	std::queue<RakNet::BitStream*> sendQueue;
 	GameState gameState;
 };
 

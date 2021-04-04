@@ -76,12 +76,10 @@ namespace gproNet
 		}	return true;
 		case MNCL::ID_PLAYER_SELECTION:
 		{
-			MNCL::PlayerSelectionMessage msg;
-			//RakNet::BitStream bs;
-			//bs.Read(msg);
-			//std::cout << "X: " +  std::to_string(msg.x) + " Y: " + std::to_string(msg.y) + "\n";
-
-		}return true;
+			MNCL::PlayerSelectionMessage data = MNCL::PlayerSelectionMessage(bitstream);
+			printf("%i %i", data.x, data.y);
+			return true;
+		}
 		}
 		return false;
 	}

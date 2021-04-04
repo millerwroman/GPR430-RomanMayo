@@ -2,7 +2,7 @@
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.59"; 
+    private string IP_ADDRESS = "172.16.2.186"; 
     private int SERVER_PORT = 7777;
     void Start()
     {
