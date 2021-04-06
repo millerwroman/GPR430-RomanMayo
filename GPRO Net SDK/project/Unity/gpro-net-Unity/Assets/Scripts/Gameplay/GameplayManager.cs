@@ -21,15 +21,15 @@ using UnityEngine.UI;
 								7
 */
 
-struct GameState
-{
-    public string username;
-    public bool isPlayerTurn;
-    public int amBottomRow; // 0 is FALSE 1 is TRUE
-    public int[,] playBoard;
+//struct GameState
+//{
+//    public string username;
+//    public bool isPlayerTurn;
+//    public int amBottomRow; // 0 is FALSE 1 is TRUE
+//    public int[,] playBoard;
 
-    public Vector2Int selection;
-}
+//    public int x, y;
+//}
 
 
 
@@ -53,18 +53,21 @@ public class GameplayManager : MonoBehaviour
     public void SquareSelected(GameObject obj)
     {
         Vector2Int selected = (obj.GetComponent<SlotIndex>()).Slot;
-        gproClientPlugin.ClientSelectionMade(selected.x,selected.y);
+        //gproClientPlugin.ClientSelectionMade(selected.x,selected.y);
+        gameState.x = selected.x;
+        gameState.y = selected.y;
     }
 
     bool PLayerTurn()
     {
         //IS THIS SELECTION ON MY SIDE
 
-        int numRocks = gameState.playBoard[gameState.selection.x, gameState.selection.y];
-        gameState.playBoard[gameState.selection.x, gameState.selection.y] = 0;
+        int numRocks = gameState.playBoard[gameState.x, gameState.y];
+        gameState.playBoard[gameState.x, gameState.y] = 0;
 
-        Vector2Int sel = gameState.selection;
-        gameState.selection = Vector2Int.zero;
+        Vector2Int sel = new Vector2Int(gameState.x, gameState.y);
+        gameState.x = 0;
+        gameState.y = 0;
 
         bool inAScore = false;
         while (numRocks > 0)

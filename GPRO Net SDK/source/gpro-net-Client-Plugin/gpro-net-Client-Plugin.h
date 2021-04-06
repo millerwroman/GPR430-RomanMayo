@@ -24,13 +24,14 @@
 	****THIS FILE MUST NOT CONTAIN C++ KEYWORDS****
 */
 
-struct GameState;
+
 
 #ifndef _GPRO_NET_PLUGIN_CLIENT_H_
 #define _GPRO_NET_PLUGIN_CLIENT_H_
 
 
 #include "gpro-net/gpro-net/gpro-net-util/gpro-net-lib.h"
+#include "gpro-net/gpro-net/gpro-net-util/gpro-net-gamestate.h"
 
 
 #ifdef __cplusplus
@@ -42,8 +43,8 @@ GPRO_NET_SYMBOL bool ClientSelectionMade(int x, int y);
 GPRO_NET_SYMBOL bool InitPlugin();
 GPRO_NET_SYMBOL bool ConnectToServer(const char* ip, int port);
 GPRO_NET_SYMBOL bool DestroyPlugin();
-GPRO_NET_SYMBOL bool UpdateOutputRemote();
-GPRO_NET_SYMBOL bool UpdateInputRemote();
+GPRO_NET_SYMBOL GameState UpdateOutputRemote();
+GPRO_NET_SYMBOL GameState UpdateInputRemote();
 #ifdef __cplusplus
 }
 #endif	// __cplusplus

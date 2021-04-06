@@ -24,3 +24,19 @@ MNCL::GameMessage::GameMessage()
 {
 	ID = GameMessageID::ID_GAME_MESSAGE_START;
 }
+
+MNCL::GameStateMessage::GameStateMessage(RakNet::BitStream& bs)
+{
+	
+}
+
+void MNCL::GameStateMessage::WriteToBitStream(RakNet::BitStream& bs)
+{
+	bs.Write(username);
+	bs.Write(isPlayerTurn);
+	bs.Write(amBottomRow);
+	bs.Write(playBoard);
+	bs.Write(x);
+	bs.Write(y);
+
+}

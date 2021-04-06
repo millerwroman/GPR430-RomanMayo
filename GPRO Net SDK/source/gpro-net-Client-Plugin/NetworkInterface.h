@@ -14,8 +14,8 @@ public:
 	bool ConnectToServer(const char* ip, int port) const;
 	RakNet::RakPeerInterface* GetRakInterface() const { return peer; }
 	//Update
-	bool UpdateOutputRemote(); // Send messages
-	bool UpdateInputRemote(); //Receive
+	GameState UpdateOutputRemote(); // Send messages
+	GameState UpdateInputRemote(); //Receive
 	//GameState & Turns
 	const GameState& GetGameState() const { return gameState; }
 	bool PlayerMoveSelected(int x, int y);

@@ -44,12 +44,21 @@ extern "C" {
 								7
 */
 
+//struct GameState
+//{
+//	int playerTurn;
+//	int x, y;
+//	int board[8][2];
+//};
+
 struct GameState
 {
-	int playerTurn;
+	std::string username;
+	bool isPlayerTurn;
+	int amBottomRow; // 0 is FALSE 1 is TRUE
+	int playBoard[8][2];
 	int x, y;
-	int board[8][2];
-};
+}
 
 
 #ifdef __cplusplus

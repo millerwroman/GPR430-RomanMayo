@@ -10,6 +10,7 @@ namespace MNCL //(Mancala)
 		ID_GAME_MESSAGE_START = gproNet::eMessageCommon::ID_GPRO_MESSAGE_COMMON_END,
 		ID_DEFAULT_GAME_MESSAGE,
 		ID_PLAYER_SELECTION,
+		ID_GAME_STATE,
 		ID_GAME_MESSAGE_END
 	};
 
@@ -40,6 +41,14 @@ namespace MNCL //(Mancala)
 		int x, y;
 	};
 
+	// TODO: How are we sending game state data?
+	struct GameStateMessage : public GameMessage
+	{
+		GameStateMessage() = default;
+		GameStateMessage(RakNet::BitStream& bs);
+		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
+	};
+
 	//Risk With sending stucts:
 	/*
 	* Risk Sending Pointer
@@ -53,5 +62,5 @@ namespace MNCL //(Mancala)
 
 struct PlayerTurn
 {
-	int x,y
+	int x, y;
 };

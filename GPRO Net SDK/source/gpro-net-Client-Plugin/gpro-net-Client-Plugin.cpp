@@ -62,16 +62,16 @@ bool DestroyPlugin()
 	return true;
 }
 
-bool UpdateOutputRemote()
+GameState UpdateOutputRemote()
 {
-	if (!g_Interface) return false;
+	if (!g_Interface) return GameState();
 
 	return g_Interface->UpdateOutputRemote();
 }
 
-bool UpdateInputRemote()
+GameState UpdateInputRemote()
 {
-	if (!g_Interface) return false;
+	if (!g_Interface) return GameState();
 
 	return g_Interface->UpdateInputRemote();
 }

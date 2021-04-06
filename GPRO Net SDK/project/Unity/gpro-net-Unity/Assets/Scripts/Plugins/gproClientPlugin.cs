@@ -4,10 +4,15 @@ using UnityEngine;
 
 using System.Runtime.InteropServices;
 
-struct PlayerTurn
+public struct GameState
 {
-    int x, y;
-}
+    public string username;
+    public bool isPlayerTurn;
+    public int amBottomRow; // 0 is FALSE 1 is TRUE
+    public int[,] playBoard;
+
+    public int x, y;
+};
 
 public class gproClientPlugin
 {
@@ -19,8 +24,8 @@ public class gproClientPlugin
     public static extern bool ConnectToServer(string ip, int port);
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool DestroyPlugin();
-    [DllImport("gpro-net-Client-Plugin"), CallingConvention = CallingConvention.Cdecl)]
-    public static extern PlayerTurn UpdateOutputRemote();
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
+    public static extern GameState UpdateOutputRemote();
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool UpdateInputRemote();
 }
