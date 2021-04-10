@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 public struct GameState
 {
-    public string username;
+    public char[] username;
     public bool isPlayerTurn;
     public int amBottomRow; // 0 is FALSE 1 is TRUE
     public int[,] playBoard;
@@ -17,15 +17,15 @@ public struct GameState
 public class gproClientPlugin
 {
     [DllImport("gpro-net-Client-Plugin")]
-    public static extern bool ClientSelectionMade(int x, int y);
-    [DllImport("gpro-net-Client-Plugin")]
     public static extern bool InitPlugin();
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern bool ConnectToServer(string ip, int port);
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool DestroyPlugin();
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
-    public static extern GameState UpdateOutputRemote();
+    public static extern bool UpdateOutputRemote(ref GameState gameState);
     [DllImport("gpro-net-Client-Plugin")]
-    public static extern bool UpdateInputRemote();
+    public static extern bool UpdateInputRemote(ref GameState gameState);
+    [DllImport("gpro-net-Client-Plugin")]
+    public static extern bool ClientSelectionMade(int x, int y, int PlayerIndex); //Edit
 }

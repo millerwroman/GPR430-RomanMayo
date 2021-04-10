@@ -21,48 +21,47 @@
 	gpro-net-gamestate.h
 	Header for common networking mini-game states.
 */
-
 #ifndef _GPRO_NET_GAMESTATE_H_
 #define _GPRO_NET_GAMESTATE_H_
-
+#include <stdbool.h>
 #ifdef __cplusplus
 extern "C" {
 #endif	// __cplusplus
 
 
-/*
-	Mancala:
-		[2]        ___________________________
-				  /				7			  \
-			 _______________________________________
-		 0	| 0  | 1  | 2  | 3  | 4  | 5  | 6  |    |	[8]
-			|    |____|____|____|____|____|____|    |
-		 1	|    | 6  | 5  | 4  | 3  | 2  | 1  | 0  |
-			|____|____|____|____|____|____|____|____|
+	/*
+		Mancala:
+			[2]        ___________________________
+					  /				7			  \
+				 _______________________________________
+			 0	| 0  | 1  | 2  | 3  | 4  | 5  | 6  |    |	[8]
+				|    |____|____|____|____|____|____|    |
+			 1	|    | 6  | 5  | 4  | 3  | 2  | 1  | 0  |
+				|____|____|____|____|____|____|____|____|
 
-				  \___________________________/
-								7
-*/
+					  \___________________________/
+									7
+	*/
 
-//struct GameState
-//{
-//	int playerTurn;
-//	int x, y;
-//	int board[8][2];
-//};
+	//struct GameState
+	//{
+	//	int playerTurn;
+	//	int x, y;
+	//	int board[8][2];
+	//};
 
-struct GameState
-{
-	std::string username;
-	bool isPlayerTurn;
-	int amBottomRow; // 0 is FALSE 1 is TRUE
-	int playBoard[8][2];
-	int x, y;
-}
+	struct GameState
+	{
+		char username[512];
+		bool isPlayerTurn;
+		int amBottomRow; // 0 is FALSE 1 is TRUE
+		int playBoard[8][2];
+		int x, y;
+	};
 
 
 #ifdef __cplusplus
-}
+};
 #endif	// __cplusplus
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "gpro-net/gpro-net/gpro-net-RakNet.hpp"
+#include "gpro-net-gamestate.h"
 #include <string>
 #include <queue>
 
@@ -25,6 +26,7 @@ namespace MNCL //(Mancala)
 
 	//struct TimeStampMessage : public GameMessage
 	//{
+	//{
 	//	//needs constructor
 	//	RakNet::MessageID Time_ID = ID_TIMESTAMP;
 	//	RakNet::Time time;
@@ -34,19 +36,23 @@ namespace MNCL //(Mancala)
 	struct PlayerSelectionMessage : public GameMessage
 	{
 		PlayerSelectionMessage() = default;
-		PlayerSelectionMessage(int _x, int _y) : GameMessage((RakNet::MessageID)ID_PLAYER_SELECTION), x(_x), y(_y) {};
+		PlayerSelectionMessage(int _x, int _y, int _playerIndex) : GameMessage((RakNet::MessageID)ID_PLAYER_SELECTION), x(_x), y(_y), playerIndex(_playerIndex){};
 		PlayerSelectionMessage(RakNet::BitStream& bs);
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
 		int x, y;
+		int playerIndex;
 	};
 
 	// TODO: How are we sending game state data?
 	struct GameStateMessage : public GameMessage
 	{
 		GameStateMessage() = default;
+		GameStateMessage(GameState& gameState);
 		GameStateMessage(RakNet::BitStream& bs);
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
+
+		GameState gs;
 	};
 
 	//Risk With sending stucts:

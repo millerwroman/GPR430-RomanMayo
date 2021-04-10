@@ -4,6 +4,7 @@ public class gproClientManager : MonoBehaviour
 {
     private string IP_ADDRESS = "172.16.2.186"; 
     private int SERVER_PORT = 7777;
+
     void Start()
     {
         gproClientPlugin.InitPlugin();
@@ -13,6 +14,7 @@ public class gproClientManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         gproClientPlugin.UpdateInputRemote();
         //gproClientPlugin.ClientSelectionMade(1,2);
         //Get Gamestate

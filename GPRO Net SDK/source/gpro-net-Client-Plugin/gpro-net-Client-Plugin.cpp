@@ -30,11 +30,11 @@
 
 static NetworkInterface* g_Interface;
 
-bool ClientSelectionMade(int x, int y)
+bool ClientSelectionMade(int x, int y, int playerIndex)
 {
 	if (!g_Interface) return false;
 
-	return g_Interface->PlayerMoveSelected(x, y);
+	return g_Interface->PlayerMoveSelected(x, y, playerIndex);
 }
 
 bool InitPlugin()
@@ -48,8 +48,7 @@ bool InitPlugin()
 bool ConnectToServer(const char* ip, int port)
 {
 	if (!g_Interface) return false;
-	
-	strcpy(g_Interface->stuff, ip);
+
 	return g_Interface->ConnectToServer(ip, port);
 }
 
@@ -62,17 +61,19 @@ bool DestroyPlugin()
 	return true;
 }
 
-GameState UpdateOutputRemote()
+bool UpdateOutputRemote(GameState& gameState)
 {
-	if (!g_Interface) return GameState();
+	if (!g_Interface) return false;
+	//g_Interface->UpdateOutputRemote();
 
-	return g_Interface->UpdateOutputRemote();
+	return true;
 }
 
-GameState UpdateInputRemote()
+bool UpdateInputRemote(GameState& gameState)
 {
-	if (!g_Interface) return GameState();
-
-	return g_Interface->UpdateInputRemote();
+	if (!g_Interface) return false;
+	//g_Interface->UpdateInputRemote(gameState);
+	strcpy(gameState.username, "asdasdasdasd");
+	return true;
 }
 

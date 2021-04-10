@@ -74,9 +74,9 @@ GameState NetworkInterface::UpdateInputRemote()
 			break;
 		case MNCL::GameMessageID::ID_PLAYER_SELECTION:
 		{
-			MNCL::PlayerSelectionMessage msg(bitstream);
+		/*	MNCL::PlayerSelectionMessage msg(bitstream);
 			turn.x = msg.x;
-			turn.y = msg.y;
+			turn.y = msg.y;*/
 		}
 		break;
 		default:
@@ -92,12 +92,12 @@ GameState NetworkInterface::UpdateInputRemote()
 	return gameState;
 }
 
-bool NetworkInterface::PlayerMoveSelected(int x, int y)
+bool NetworkInterface::PlayerMoveSelected(int x, int y, int playerIndex)
 {
 	//gameState.x = x;
 	//gameState.y = y;
 	RakNet::BitStream* bs = new RakNet::BitStream();
-	MNCL::PlayerSelectionMessage msg(x, y);
+	MNCL::PlayerSelectionMessage msg(x, y, playerIndex);
 	msg.WriteToBitStream(*bs);
 	sendQueue.push(bs);
 	return true;
