@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 public struct GameState
 {
-    public char[] username;
+    public string username;
     public bool isPlayerTurn;
     public int amBottomRow; // 0 is FALSE 1 is TRUE
     public int[,] playBoard;

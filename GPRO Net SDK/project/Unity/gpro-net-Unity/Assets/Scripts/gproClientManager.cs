@@ -14,12 +14,19 @@ public class gproClientManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        gproClientPlugin.UpdateInputRemote();
+        GameState gs = new GameState();   
+        gproClientPlugin.UpdateInputRemote(ref gs);
         //gproClientPlugin.ClientSelectionMade(1,2);
         //Get Gamestate
         //Make turn
-        gproClientPlugin.UpdateOutputRemote();
+        gproClientPlugin.UpdateOutputRemote(ref gs);
+
+        Foo(gs);
+    }
+
+    void Foo(GameState gs)
+    {
+        Debug.Log(gs.username);
     }
 }
 
