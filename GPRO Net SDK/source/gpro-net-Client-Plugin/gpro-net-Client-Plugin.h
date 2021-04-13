@@ -43,8 +43,8 @@ GPRO_NET_SYMBOL bool ClientSelectionMade(int x, int y, int playerIndex);
 GPRO_NET_SYMBOL bool InitPlugin();
 GPRO_NET_SYMBOL bool ConnectToServer(const char* ip, int port);
 GPRO_NET_SYMBOL bool DestroyPlugin();
-GPRO_NET_SYMBOL bool UpdateOutputRemote(GameState& gameState);
-GPRO_NET_SYMBOL bool UpdateInputRemote(GameState& gameState);
+GPRO_NET_SYMBOL bool UpdateOutputRemote(GameState* gameState);
+GPRO_NET_SYMBOL bool UpdateInputRemote(GameState* gameState);
 #ifdef __cplusplus
 }
 #endif	// __cplusplus

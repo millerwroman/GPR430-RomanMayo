@@ -23,7 +23,6 @@
 */
 #ifndef _GPRO_NET_GAMESTATE_H_
 #define _GPRO_NET_GAMESTATE_H_
-#include <stdbool.h>
 #ifdef __cplusplus
 extern "C" {
 #endif	// __cplusplus
@@ -53,7 +52,7 @@ extern "C" {
 	struct GameState
 	{
 		char username[512];
-		bool isPlayerTurn;
+		int isPlayerTurn;
 		int amBottomRow; // 0 is FALSE 1 is TRUE
 		int playBoard[8][2];
 		int x, y;

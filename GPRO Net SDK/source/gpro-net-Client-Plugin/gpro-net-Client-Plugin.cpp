@@ -61,7 +61,7 @@ bool DestroyPlugin()
 	return true;
 }
 
-bool UpdateOutputRemote(GameState& gameState)
+bool UpdateOutputRemote(GameState* gameState)
 {
 	if (!g_Interface) return false;
 	//g_Interface->UpdateOutputRemote();
@@ -69,11 +69,11 @@ bool UpdateOutputRemote(GameState& gameState)
 	return true;
 }
 
-bool UpdateInputRemote(GameState& gameState)
+bool UpdateInputRemote(GameState* gameState)
 {
 	if (!g_Interface) return false;
 	//g_Interface->UpdateInputRemote(gameState);
-	strcpy(gameState.username, "asdasdasdasd");
+	strcpy(gameState->username, "asdasdasdasd");
 	return true;
 }
 

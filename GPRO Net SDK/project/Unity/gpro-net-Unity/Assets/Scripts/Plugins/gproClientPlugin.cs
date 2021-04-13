@@ -4,10 +4,11 @@ using UnityEngine;
 
 using System.Runtime.InteropServices;
 
+
 public struct GameState
 {
     public string username;
-    public bool isPlayerTurn;
+    public int isPlayerTurn;
     public int amBottomRow; // 0 is FALSE 1 is TRUE
     public int[,] playBoard;
 
