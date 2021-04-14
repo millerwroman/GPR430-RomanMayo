@@ -61,11 +61,22 @@ bool DestroyPlugin()
 	return true;
 }
 
-bool UpdateOutputRemote(GameState* gameState)
+bool UpdateOutputRemote(GameStateTest* gameState, int* pArr)
 {
 	if (!g_Interface) return false;
 	//g_Interface->UpdateOutputRemote();
+	gameState->amBottomRow = 5;
+	gameState->x = 5;
+	gameState->y = 5;
 
+	int iIndex = 0; 
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			pArr[iIndex++]=5;
+		}
+	}
 	return true;
 }
 
@@ -76,4 +87,3 @@ bool UpdateInputRemote(GameState* gameState)
 	strcpy(gameState->username, "asdasdasdasd");
 	return true;
 }
-

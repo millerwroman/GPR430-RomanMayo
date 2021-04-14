@@ -19,12 +19,17 @@ public:
 	//GameState & Turns
 	const GameState& GetGameState() const { return gameState; }
 	bool PlayerMoveSelected(int x, int y, int playerIndex);
+
+
+
+	
 private:
 	void AddMessageToQueue(MNCL::GameMessage msg);
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
 	GameState gameState;
+	
 };
 
 

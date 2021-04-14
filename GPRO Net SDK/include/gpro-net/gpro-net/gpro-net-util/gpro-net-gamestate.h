@@ -58,6 +58,16 @@ extern "C" {
 		int x, y;
 	};
 
+	struct GameStateTest
+	{
+		int isPlayerTurn;
+		int amBottomRow; // 0 is FALSE 1 is TRUE
+		int x;
+		int y;
+	};
+
+	
+
 
 #ifdef __cplusplus
 };
