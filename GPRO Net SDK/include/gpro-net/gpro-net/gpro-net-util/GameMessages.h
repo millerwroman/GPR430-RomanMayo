@@ -12,6 +12,7 @@ namespace MNCL //(Mancala)
 		ID_DEFAULT_GAME_MESSAGE,
 		ID_PLAYER_SELECTION,
 		ID_GAME_STATE,
+		ID_ASSIGN_PLAYER,
 		ID_GAME_MESSAGE_END
 	};
 
@@ -48,11 +49,11 @@ namespace MNCL //(Mancala)
 	struct GameStateMessage : public GameMessage
 	{
 		GameStateMessage() = default;
-		GameStateMessage(GameState& gameState);
+		GameStateMessage(PlayerMove& gameState);
 		GameStateMessage(RakNet::BitStream& bs);
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
-		GameState gs;
+		PlayerMove gs;
 	};
 
 	//Risk With sending stucts:

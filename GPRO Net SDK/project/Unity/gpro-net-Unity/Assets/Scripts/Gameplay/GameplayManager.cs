@@ -35,13 +35,14 @@ using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
-    private GameState gameState;
+    public PlayerMove PlayerMove;
+    public int amBottomRow = -1;
+    public int[,] playBoard = new int[8, 2];
 
 
     void Start()
     {   //X is Left/Right
         //Y is Up/Down
-        gameState = new GameState { playBoard = new int[8, 2] };
     }
 
     // Update is called once per frame
@@ -54,29 +55,29 @@ public class GameplayManager : MonoBehaviour
     {
         Vector2Int selected = (obj.GetComponent<SlotIndex>()).Slot;
         //gproClientPlugin.ClientSelectionMade(selected.x,selected.y);
-        gameState.x = selected.x;
-        gameState.y = selected.y;
+        PlayerMove.x = selected.x;
+        PlayerMove.y = selected.y;
     }
 
     bool PLayerTurn()
     {
         //IS THIS SELECTION ON MY SIDE
 
-        int numRocks = gameState.playBoard[gameState.x, gameState.y];
-        gameState.playBoard[gameState.x, gameState.y] = 0;
+        int numRocks = playBoard[PlayerMove.x, PlayerMove.y];
+        playBoard[PlayerMove.x, PlayerMove.y] = 0;
 
-        Vector2Int sel = new Vector2Int(gameState.x, gameState.y);
-        gameState.x = 0;
-        gameState.y = 0;
+        Vector2Int sel = new Vector2Int(PlayerMove.x, PlayerMove.y);
+        PlayerMove.x = 0;
+        PlayerMove.y = 0;
 
         bool inAScore = false;
         while (numRocks > 0)
         {
             if (sel.x == 0) //Top Row
             {
-                while (sel.y >= gameState.amBottomRow)
+                while (sel.y >= amBottomRow)
                 {
-                    gameState.playBoard[sel.x, sel.y]++;
+                    playBoard[sel.x, sel.y]++;
                     numRocks--;
                     if (numRocks < 0)
                     {
@@ -85,7 +86,7 @@ public class GameplayManager : MonoBehaviour
 
                     sel.x--;
                     inAScore = false;
-                    if (sel.x == gameState.amBottomRow && sel.y == (gameState.amBottomRow == 1 ? 7 : 0))
+                    if (sel.x == amBottomRow && sel.y == (amBottomRow == 1 ? 7 : 0))
                     {
                         inAScore = true;
                     }
@@ -96,9 +97,9 @@ public class GameplayManager : MonoBehaviour
             }
             else if (sel.x == 1)
             {
-                while (sel.y <= (gameState.amBottomRow == 1 ? 7 : 6))
+                while (sel.y <= (amBottomRow == 1 ? 7 : 6))
                 {
-                    gameState.playBoard[sel.x, sel.y]++;
+                    playBoard[sel.x, sel.y]++;
                     numRocks--;
                     if (numRocks < 0)
                     {
@@ -107,7 +108,7 @@ public class GameplayManager : MonoBehaviour
 
                     sel.x++;
                     inAScore = false;
-                    if (sel.x == gameState.amBottomRow && sel.y == (gameState.amBottomRow == 1 ? 7 : 0))
+                    if (sel.x == amBottomRow && sel.y == (amBottomRow == 1 ? 7 : 0))
                     {
                         inAScore = true;
                     }

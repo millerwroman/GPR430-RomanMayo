@@ -14,11 +14,13 @@ public:
 	bool ConnectToServer(const char* ip, int port) const;
 	RakNet::RakPeerInterface* GetRakInterface() const { return peer; }
 	//Update
-	GameState UpdateOutputRemote(); // Send messages
-	GameState UpdateInputRemote(); //Receive
+	PlayerMove UpdateOutputRemote(); // Send messages
+	PlayerMove UpdateInputRemote(); //Receive
 	//GameState & Turns
-	const GameState& GetGameState() const { return gameState; }
+	const PlayerMove& GetGameState() const { return gameState; }
 	bool PlayerMoveSelected(int x, int y, int playerIndex);
+	int GetPlayerAssignment() const { return amBottomRow; }
+	int GetState() const { return unityState; }
 
 
 
@@ -28,8 +30,9 @@ private:
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
-	GameState gameState;
-	
+	PlayerMove gameState;
+	int amBottomRow = -1;
+	int unityState;
 };
 
 

@@ -49,19 +49,9 @@ extern "C" {
 	//	int board[8][2];
 	//};
 
-	struct GameState
-	{
-		char username[512];
-		int isPlayerTurn;
-		int amBottomRow; // 0 is FALSE 1 is TRUE
-		int playBoard[8][2];
-		int x, y;
-	};
-
-	struct GameStateTest
+	struct PlayerMove
 	{
 		int isPlayerTurn;
-		int amBottomRow; // 0 is FALSE 1 is TRUE
 		int x;
 		int y;
 	};

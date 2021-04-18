@@ -54,14 +54,21 @@ namespace gproNet
 		{
 		case ID_NEW_INCOMING_CONNECTION:
 			//printf("A connection is incoming.\n");
+			RakNet::BitStream bs;
+			bs.Write((RakNet::MessageID)MNCL::GameMessageID::ID_ASSIGN_PLAYER);
+			int playerIndex = -1;
 			if (!playerZeroTurn)
 			{
 				Players[0] = sender;
 				playerZeroTurn = true;
+				bs.Write(0);
+				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, false);
 			}
 			else
 			{
 				Players[1] = sender;
+				bs.Write(1);
+				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, false);
 				//Begin Game Funtion
 			}
 			return true;

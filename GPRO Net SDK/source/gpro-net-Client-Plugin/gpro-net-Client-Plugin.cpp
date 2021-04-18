@@ -61,29 +61,38 @@ bool DestroyPlugin()
 	return true;
 }
 
-bool UpdateOutputRemote(GameStateTest* gameState, int* pArr)
+bool UpdateOutputRemote(PlayerTurn* playerTurn, int* pArr)
 {
 	if (!g_Interface) return false;
 	//g_Interface->UpdateOutputRemote();
-	gameState->amBottomRow = 5;
-	gameState->x = 5;
-	gameState->y = 5;
-
-	int iIndex = 0; 
-	for (int i = 0; i < 2; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			pArr[iIndex++]=5;
-		}
-	}
 	return true;
 }
 
-bool UpdateInputRemote(GameState* gameState)
+bool UpdateInputRemote(PlayerMove* gameState)
 {
 	if (!g_Interface) return false;
 	//g_Interface->UpdateInputRemote(gameState);
-	strcpy(gameState->username, "asdasdasdasd");
+
 	return true;
+}
+
+
+
+//strcpy(gameState->username, "asdasdasdasd");
+int GetPlayerAssignment()
+{
+	if (!g_Interface) return -2;
+	return g_Interface->GetPlayerAssignment();
+}
+
+void GetState(int* state)
+{
+	if (!g_Interface)
+	{
+		*state = 0;
+		return;
+	}
+
+	*state = g_Interface->GetState();
+
 }

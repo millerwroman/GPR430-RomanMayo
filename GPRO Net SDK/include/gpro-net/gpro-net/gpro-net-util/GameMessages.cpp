@@ -25,27 +25,21 @@ MNCL::GameMessage::GameMessage()
 	ID = GameMessageID::ID_GAME_MESSAGE_START;
 }
 
-MNCL::GameStateMessage::GameStateMessage(GameState& gameState)
+MNCL::GameStateMessage::GameStateMessage(PlayerMove& gameState)
 {
 	gs = gameState;
 }
 
 MNCL::GameStateMessage::GameStateMessage(RakNet::BitStream& bs)
 {
-	bs.Read(gs.username);
 	bs.Read(gs.isPlayerTurn);
-	bs.Read(gs.amBottomRow);
-	bs.Read(gs.playBoard);
 	bs.Read(gs.x);
 	bs.Read(gs.y);
 }
 
 void MNCL::GameStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
-	bs.Write(gs.username);
 	bs.Write(gs.isPlayerTurn);
-	bs.Write(gs.amBottomRow);
-	bs.Write(gs.playBoard);
 	bs.Write(gs.x);
 	bs.Write(gs.y);
 

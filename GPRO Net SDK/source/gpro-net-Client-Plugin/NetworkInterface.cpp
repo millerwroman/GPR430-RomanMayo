@@ -26,7 +26,7 @@ bool NetworkInterface::ConnectToServer(const char* ip, int port) const
 	return true;
 }
 
-GameState NetworkInterface::UpdateOutputRemote()
+PlayerMove NetworkInterface::UpdateOutputRemote()
 {
 	/*RakNet::BitStream bs;
 	bs.Write((RakNet::MessageID)MNCL::GameMessageID::ID_DEFAULT_GAME_MESSAGE);
@@ -42,7 +42,7 @@ GameState NetworkInterface::UpdateOutputRemote()
 	return gameState;
 }
 
-GameState NetworkInterface::UpdateInputRemote()
+PlayerMove NetworkInterface::UpdateInputRemote()
 {
 	int count = 0;
 	RakNet::Packet* packet = 0;
@@ -74,9 +74,14 @@ GameState NetworkInterface::UpdateInputRemote()
 			break;
 		case MNCL::GameMessageID::ID_PLAYER_SELECTION:
 		{
-		/*	MNCL::PlayerSelectionMessage msg(bitstream);
-			turn.x = msg.x;
-			turn.y = msg.y;*/
+			/*	MNCL::PlayerSelectionMessage msg(bitstream);
+				turn.x = msg.x;
+				turn.y = msg.y;*/
+		}
+		break;
+		case MNCL::GameMessageID::ID_ASSIGN_PLAYER:
+		{
+			bitstream.Read(amBottomRow);
 		}
 		break;
 		default:
