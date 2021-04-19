@@ -15,7 +15,7 @@ using System.Collections;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.186";
+    private string IP_ADDRESS = "172.16.2.57";
     private int SERVER_PORT = 7777;
 
     enum StateEnum
@@ -38,10 +38,10 @@ public class gproClientManager : MonoBehaviour
         gproClientPlugin.InitPlugin();
         gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT);
 
-        do
-        {
-            gm.amBottomRow = gproClientPlugin.GetPlayerAssignment();
-        } while (gm.amBottomRow == -1);
+        //do
+        //{
+        //    gm.amBottomRow = gproClientPlugin.GetPlayerAssignment();
+        //} while (gm.amBottomRow == -1);
 
         if (gm.amBottomRow == -2)
         {
@@ -57,6 +57,7 @@ public class gproClientManager : MonoBehaviour
     void Update()
     {
         gproClientPlugin.GetState(ref currentState);
+        Debug.Log(currentState);
         switch ((StateEnum)currentState)
         {
             case StateEnum.NO_PLUGIN:
@@ -64,7 +65,7 @@ public class gproClientManager : MonoBehaviour
             case StateEnum.Waiting_For_Start:
                 break;
             case StateEnum.In_Game:
-               // gproClientPlugin.UpdateInputRemote(ref gs);
+                // gproClientPlugin.UpdateInputRemote(ref gs);
 
                 GCHandle handle = GCHandle.Alloc(gm.playBoard, GCHandleType.Pinned);
                 IntPtr pArr = handle.AddrOfPinnedObject();
@@ -78,7 +79,7 @@ public class gproClientManager : MonoBehaviour
                 Debug.Assert(true);
                 break;
         }
-        //
+
         //gproClientPlugin.ClientSelectionMade(1,2);
         //Get Gamestate
         //Make turn

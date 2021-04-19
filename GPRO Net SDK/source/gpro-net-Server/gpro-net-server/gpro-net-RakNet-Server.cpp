@@ -53,7 +53,8 @@ namespace gproNet
 		switch (msgID)
 		{
 		case ID_NEW_INCOMING_CONNECTION:
-			//printf("A connection is incoming.\n");
+		{
+			printf("A connection is incoming.\n");
 			RakNet::BitStream bs;
 			bs.Write((RakNet::MessageID)MNCL::GameMessageID::ID_ASSIGN_PLAYER);
 			int playerIndex = -1;
@@ -72,6 +73,7 @@ namespace gproNet
 				//Begin Game Funtion
 			}
 			return true;
+		}
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
 			//printf("The server is full.\n");
 			return true;

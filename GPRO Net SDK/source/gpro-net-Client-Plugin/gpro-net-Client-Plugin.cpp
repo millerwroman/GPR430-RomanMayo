@@ -89,7 +89,7 @@ void GetState(int* state)
 {
 	if (!g_Interface)
 	{
-		*state = 0;
+		*state = -5;
 		return;
 	}
 
