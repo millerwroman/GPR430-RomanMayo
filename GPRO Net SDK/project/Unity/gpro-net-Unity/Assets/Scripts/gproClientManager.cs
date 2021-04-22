@@ -15,7 +15,7 @@ using System.Collections;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.57";
+    private string IP_ADDRESS = "172.16.2.186";
     private int SERVER_PORT = 7777;
 
     enum StateEnum
@@ -94,7 +94,7 @@ public class gproClientManager : MonoBehaviour
         {
             for (int j = 0; j < 2; ++j)
             {
-                Debug.Log(gm.playBoard[i, j]);
+                //Debug.Log(gm.playBoard[i, j]);
             }
         }
     }

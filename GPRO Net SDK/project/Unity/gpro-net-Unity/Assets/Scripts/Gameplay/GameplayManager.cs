@@ -57,9 +57,10 @@ public class GameplayManager : MonoBehaviour
         //gproClientPlugin.ClientSelectionMade(selected.x,selected.y);
         PlayerMove.x = selected.x;
         PlayerMove.y = selected.y;
+        PlayerTurn();
     }
 
-    bool PLayerTurn()
+    bool PlayerTurn()
     {
         //IS THIS SELECTION ON MY SIDE
 
@@ -121,9 +122,18 @@ public class GameplayManager : MonoBehaviour
 
         //CHECK IF ROCK LANDED WITH NO ROCKS ON OTHER SIDE
 
+        UpdateGameBoard();
         //Did I land in my own goal
         return inAScore;
     }
 
-
+    void UpdateGameBoard()
+    {
+        SlotIndex[] arr = GameObject.FindObjectsOfType<SlotIndex>();
+        Debug.Log(arr.Length);
+        foreach (SlotIndex index in arr)
+        {
+            index.UpdateSlot(playBoard);
+        }
+    }
 }//End Class---
