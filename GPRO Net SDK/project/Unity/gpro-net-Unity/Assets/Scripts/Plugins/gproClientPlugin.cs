@@ -7,9 +7,16 @@ using System.Runtime.InteropServices;
 [StructLayout(LayoutKind.Sequential)]
 public struct PlayerMove
 {
-    public int isPlayerTurn;
-    public int x;
-    public int y;
+    public float LocX;
+    public float LocY;
+    public float LocZ;
+
+    public float RotX;
+    public float RotY;
+    public float RotZ;
+    public float RotW;
+
+    public int Shoot;
 };
 
 public class gproClientPlugin
@@ -32,7 +39,7 @@ public class gproClientPlugin
 
     //Update
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
-    public static extern bool UpdateOutputRemote(ref PlayerMove gameState, [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4)]int[,] pArray);
+    public static extern bool UpdateOutputRemote(ref PlayerMove gameState, [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4)] int[,] pArray);
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool UpdateInputRemote(ref PlayerMove playerMove);
 

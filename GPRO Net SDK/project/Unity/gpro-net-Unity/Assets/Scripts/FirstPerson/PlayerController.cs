@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,22 +28,45 @@ public class PlayerController : MonoBehaviour
     CharacterController controller = null;
     private Vector3 playerVelocity;
     private Vector3 playerMoveInput;
-    //Run/Spring
+    //Run/Sprint
     private bool shouldJump = false;
     private bool shouldSprint = false;
+
+    [Header("Projectile")]
+    public Transform spawnProjectileLocation;
+    public GameObject projectilePrefab;
+    public float projectileSpeed;
+    private bool didShoot = false;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
         rotationDeviderRecip = 1 / rotationDevider;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     void FixedUpdate()
     {
         MovePlayer();
     }
+
+    public void UpdateOutputRemote(ref PlayerMove move)
+    {
+        move.LocX = transform.position.x;
+        move.LocY = transform.position.y;
+        move.LocZ = transform.position.z;
+
+        move.RotX = transform.rotation.x;
+        move.RotY = transform.rotation.y;
+        move.RotZ = transform.rotation.z;
+        move.RotW = transform.rotation.w;
+
+        move.Shoot = Convert.ToInt32(didShoot);
+        didShoot = false;
+    }
+
     private void MovePlayer()
     {
-        Debug.Log(playerMoveInput);
         if (controller.isGrounded)
         {
             playerVelocity.y = 0.0f;
@@ -61,11 +85,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnYMove(InputValue value)
     {
-        playerMoveInput.x = value.Get<float>();
+        playerMoveInput.z = value.Get<float>();
     }
     public void OnXMove(InputValue value)
     {
-        playerMoveInput.z = -value.Get<float>();
+        playerMoveInput.x = -value.Get<float>();
     }
     public void OnJump()
     {
@@ -89,6 +113,13 @@ public class PlayerController : MonoBehaviour
     public void OnSprint(InputValue value)
     {
         shouldSprint = (int)value.Get<float>() != 0;
+    }
+
+    public void OnShoot()
+    {
+        GameObject obj = Instantiate(projectilePrefab, spawnProjectileLocation.position, Quaternion.identity);
+        obj.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
+        didShoot = true;
     }
 
 }
