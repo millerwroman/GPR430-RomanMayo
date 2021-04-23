@@ -30,12 +30,6 @@
 
 static NetworkInterface* g_Interface;
 
-bool ClientSelectionMade(int x, int y, int playerIndex)
-{
-	if (!g_Interface) return false;
-
-	return g_Interface->PlayerMoveSelected(x, y, playerIndex);
-}
 
 bool InitPlugin()
 {
@@ -61,38 +55,18 @@ bool DestroyPlugin()
 	return true;
 }
 
-bool UpdateOutputRemote(PlayerTurn* playerTurn, int* pArr)
+//Updates
+bool UpdateOutputRemote()
 {
 	if (!g_Interface) return false;
-	//g_Interface->UpdateOutputRemote();
+	g_Interface->UpdateOutputRemote();
 	return true;
 }
 
-bool UpdateInputRemote(PlayerMove* gameState)
+bool UpdateInputRemote(PlayerMove* playerMove, int* pArr)
 {
 	if (!g_Interface) return false;
-	//g_Interface->UpdateInputRemote(gameState);
+	//g_Interface->UpdateInputRemote(playerMove);
 
 	return true;
-}
-
-
-
-//strcpy(gameState->username, "asdasdasdasd");
-int GetPlayerAssignment()
-{
-	if (!g_Interface) return -2;
-	return g_Interface->GetPlayerAssignment();
-}
-
-void GetState(int* state)
-{
-	if (!g_Interface)
-	{
-		*state = -5;
-		return;
-	}
-
-	*state = g_Interface->GetState();
-
 }

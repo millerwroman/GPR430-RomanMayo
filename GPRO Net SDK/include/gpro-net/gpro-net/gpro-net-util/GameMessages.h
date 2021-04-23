@@ -34,26 +34,15 @@ namespace MNCL //(Mancala)
 	//	RakNet::MessageID ID;
 	//};
 
-	struct PlayerSelectionMessage : public GameMessage
-	{
-		PlayerSelectionMessage() = default;
-		PlayerSelectionMessage(int _x, int _y, int _playerIndex) : GameMessage((RakNet::MessageID)ID_PLAYER_SELECTION), x(_x), y(_y), playerIndex(_playerIndex){};
-		PlayerSelectionMessage(RakNet::BitStream& bs);
-		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
-
-		int x, y;
-		int playerIndex;
-	};
-
 	// TODO: How are we sending game state data?
-	struct GameStateMessage : public GameMessage
+	struct PlayerStateMessage : public GameMessage
 	{
-		GameStateMessage() = default;
-		GameStateMessage(PlayerMove& gameState);
-		GameStateMessage(RakNet::BitStream& bs);
+		PlayerStateMessage() = default;
+		PlayerStateMessage(PlayerMove& playerMove);
+		PlayerStateMessage(RakNet::BitStream& bs);
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
-		PlayerMove gs;
+		PlayerMove move;
 	};
 
 	//Risk With sending stucts:
@@ -66,8 +55,3 @@ namespace MNCL //(Mancala)
 	*/
 #pragma pack(pop)
 }
-
-struct PlayerTurn
-{
-	int x, y;
-};

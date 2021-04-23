@@ -1,19 +1,6 @@
 #include "GameMessages.h"
 #include "RakNet/RakPeerInterface.h"
 
-MNCL::PlayerSelectionMessage::PlayerSelectionMessage(RakNet::BitStream& bs)
-:GameMessage((RakNet::MessageID)ID_PLAYER_SELECTION)
-{
-	bs.Read(x);
-	bs.Read(y);
-}
-
-void MNCL::PlayerSelectionMessage::WriteToBitStream(RakNet::BitStream& bs)
-{
-	bs.Write(ID);
-	bs.Write(x);
-	bs.Write(y);
-}
 
 void MNCL::GameMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
@@ -25,22 +12,32 @@ MNCL::GameMessage::GameMessage()
 	ID = GameMessageID::ID_GAME_MESSAGE_START;
 }
 
-MNCL::GameStateMessage::GameStateMessage(PlayerMove& gameState)
+MNCL::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove)
 {
-	gs = gameState;
+	move = playerMove;
 }
 
-MNCL::GameStateMessage::GameStateMessage(RakNet::BitStream& bs)
+MNCL::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 {
-	bs.Read(gs.isPlayerTurn);
-	bs.Read(gs.x);
-	bs.Read(gs.y);
+	bs.Read(move.LocX);
+	bs.Read(move.LocY);
+	bs.Read(move.LocZ);
+	bs.Read(move.RotX);
+	bs.Read(move.RotY);
+	bs.Read(move.RotZ);
+	bs.Read(move.RotW);
+	bs.Read(move.Shoot);
 }
 
-void MNCL::GameStateMessage::WriteToBitStream(RakNet::BitStream& bs)
+void MNCL::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
-	bs.Write(gs.isPlayerTurn);
-	bs.Write(gs.x);
-	bs.Write(gs.y);
-
+	bs.Write(ID);
+	bs.Write(move.LocX);
+	bs.Write(move.LocY);
+	bs.Write(move.LocZ);
+	bs.Write(move.RotX);
+	bs.Write(move.RotY);
+	bs.Write(move.RotZ);
+	bs.Write(move.RotW);
+	bs.Write(move.Shoot);
 }

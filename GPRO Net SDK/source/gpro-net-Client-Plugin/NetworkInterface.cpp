@@ -68,22 +68,9 @@ PlayerMove NetworkInterface::UpdateInputRemote()
 			serverAddress = packet->systemAddress;
 			//packet->length This is how you would get the size of packet (remeber you already have first byte)
 			//if no timestand packetLenghts-1
-			UpdateOutputRemote();
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
 			break;
-		case MNCL::GameMessageID::ID_PLAYER_SELECTION:
-		{
-			/*	MNCL::PlayerSelectionMessage msg(bitstream);
-				turn.x = msg.x;
-				turn.y = msg.y;*/
-		}
-		break;
-		case MNCL::GameMessageID::ID_ASSIGN_PLAYER:
-		{
-			bitstream.Read(amBottomRow);
-		}
-		break;
 		default:
 			break;
 		}
@@ -97,15 +84,9 @@ PlayerMove NetworkInterface::UpdateInputRemote()
 	return gameState;
 }
 
-bool NetworkInterface::PlayerMoveSelected(int x, int y, int playerIndex)
+bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 {
-	//gameState.x = x;
-	//gameState.y = y;
-	RakNet::BitStream* bs = new RakNet::BitStream();
-	MNCL::PlayerSelectionMessage msg(x, y, playerIndex);
-	msg.WriteToBitStream(*bs);
-	sendQueue.push(bs);
-	return true;
+	
 }
 
 void NetworkInterface::AddMessageToQueue(MNCL::GameMessage msg)

@@ -38,20 +38,17 @@
 extern "C" {
 #endif	// __cplusplus
 
-	//Set Up
+	//Start Up
 	GPRO_NET_SYMBOL bool InitPlugin();
 	GPRO_NET_SYMBOL bool ConnectToServer(const char* ip, int port);
-	GPRO_NET_SYMBOL int GetPlayerAssignment();
 
 	//Shut Down
 	GPRO_NET_SYMBOL bool DestroyPlugin();
 
-	//State Check
-	GPRO_NET_SYMBOL void GetState(int* state);
-
 	//Update
-	GPRO_NET_SYMBOL bool UpdateOutputRemote(PlayerMove* gameState, int* pArr);
-	GPRO_NET_SYMBOL bool UpdateInputRemote(PlayerMove* gameState);
+	GPRO_NET_SYMBOL bool OutputLocalPlayerState(PlayerMove* playerMove);
+	GPRO_NET_SYMBOL bool UpdateOutputRemote();
+	GPRO_NET_SYMBOL bool UpdateInputRemote(PlayerMove* playerMove, int* pArr);
 
 	//Client Selection/Verification
 	GPRO_NET_SYMBOL bool ClientSelectionMade(int x, int y, int playerIndex);

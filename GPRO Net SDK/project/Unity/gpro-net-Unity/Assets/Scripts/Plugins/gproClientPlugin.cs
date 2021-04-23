@@ -39,9 +39,9 @@ public class gproClientPlugin
 
     //Update
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
-    public static extern bool UpdateOutputRemote(ref PlayerMove gameState, [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4)] int[,] pArray);
+    public static extern bool UpdateOutputRemote(ref PlayerMove playerMove);
     [DllImport("gpro-net-Client-Plugin")]
-    public static extern bool UpdateInputRemote(ref PlayerMove playerMove);
+    public static extern bool UpdateInputRemote(ref PlayerMove playerMove,[In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4)] int[,] pArray);
 
     //Client Selection
     [DllImport("gpro-net-Client-Plugin")]

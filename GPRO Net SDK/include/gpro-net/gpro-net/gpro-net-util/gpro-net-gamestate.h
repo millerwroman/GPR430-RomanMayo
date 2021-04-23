@@ -51,12 +51,34 @@ extern "C" {
 
 	struct PlayerMove
 	{
-		int isPlayerTurn;
-		int x;
-		int y;
+		PlayerMove() = default;
+		PlayerMove(const PlayerMove& move)
+		{
+			LocX = move.LocX;
+			LocY = move.LocY;
+			LocZ = move.LocZ;
+			
+			RotX = move.RotX;
+			RotY = move.RotY;
+			RotZ = move.RotZ;
+			RotW = move.RotW;
+
+			Shoot = move.Shoot;
+		}
+
+		float LocX;
+		float LocY;
+		float LocZ;
+
+		float RotX;
+		float RotY;
+		float RotZ;
+		float RotW;
+
+		int Shoot;
 	};
 
-	
+
 
 
 #ifdef __cplusplus
