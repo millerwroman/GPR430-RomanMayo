@@ -16,11 +16,8 @@ public:
 	//Update
 	PlayerMove UpdateOutputRemote(); // Send messages
 	PlayerMove UpdateInputRemote(); //Receive
-	//GameState & Turns
-	const PlayerMove& GetGameState() const { return gameState; }
-	bool PlayerMoveSelected(int x, int y, int playerIndex);
-	int GetPlayerAssignment() const { return amBottomRow; }
-	int GetState() const { return unityState; }
+	bool PackagePlayerState(PlayerMove* move);
+
 
 
 
