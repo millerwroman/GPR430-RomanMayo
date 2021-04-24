@@ -26,12 +26,6 @@ public class gproClientPlugin
     public static extern bool InitPlugin();
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern bool ConnectToServer(string ip, int port);
-    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
-    public static extern int GetPlayerAssignment();
-
-    //State
-    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void GetState(ref int state);
 
     //Shut down
     [DllImport("gpro-net-Client-Plugin")]
@@ -39,11 +33,12 @@ public class gproClientPlugin
 
     //Update
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
-    public static extern bool UpdateOutputRemote(ref PlayerMove playerMove);
+    public static extern bool UpdateOutputRemote();
     [DllImport("gpro-net-Client-Plugin")]
-    public static extern bool UpdateInputRemote(ref PlayerMove playerMove,[In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4)] int[,] pArray);
+    public static extern bool UpdateInputRemote();
 
-    //Client Selection
-    [DllImport("gpro-net-Client-Plugin")]
-    public static extern bool ClientSelectionMade(int x, int y, int PlayerIndex); //Edit
+    //Player State
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
+    public static extern bool OutputLocalPlayerState(ref PlayerMove playerMove);
+
 }

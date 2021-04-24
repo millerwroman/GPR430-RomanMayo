@@ -44,7 +44,7 @@ namespace gproNet
 		// process messages that can be handled the same way for all types of peers
 		switch (msgID)
 		{
-		case MNCL::GameMessageID::ID_DEFAULT_GAME_MESSAGE:
+		case FPV::GameMessageID::ID_DEFAULT_GAME_MESSAGE:
 		{
 			char stuff[512];
 			bitstream.Read(stuff);

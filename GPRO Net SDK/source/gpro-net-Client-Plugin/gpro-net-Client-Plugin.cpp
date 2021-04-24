@@ -63,10 +63,17 @@ bool UpdateOutputRemote()
 	return true;
 }
 
-bool UpdateInputRemote(PlayerMove* playerMove, int* pArr)
+bool UpdateInputRemote()
 {
 	if (!g_Interface) return false;
-	//g_Interface->UpdateInputRemote(playerMove);
+	g_Interface->UpdateInputRemote();
 
+	return true;
+}
+
+bool OutputLocalPlayerState(PlayerMove* playerMove)
+{
+	if (!g_Interface) return false;
+	g_Interface->PackagePlayerState(playerMove);
 	return true;
 }

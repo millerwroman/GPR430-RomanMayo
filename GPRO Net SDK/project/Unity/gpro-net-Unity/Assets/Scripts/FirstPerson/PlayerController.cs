@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
     }
 
-    public void UpdateOutputRemote(ref PlayerMove move)
+    public void GetPlayerMove(ref PlayerMove move)
     {
         move.LocX = transform.position.x;
         move.LocY = transform.position.y;

@@ -55,23 +55,7 @@ namespace gproNet
 		case ID_NEW_INCOMING_CONNECTION:
 		{
 			printf("A connection is incoming.\n");
-			RakNet::BitStream bs;
-			bs.Write((RakNet::MessageID)MNCL::GameMessageID::ID_ASSIGN_PLAYER);
-			int playerIndex = -1;
-			if (!playerZeroTurn)
-			{
-				Players[0] = sender;
-				playerZeroTurn = true;
-				bs.Write(0);
-				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, false);
-			}
-			else
-			{
-				Players[1] = sender;
-				bs.Write(1);
-				peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, false);
-				//Begin Game Funtion
-			}
+			Players.push_back(sender);
 			return true;
 		}
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
@@ -93,24 +77,14 @@ namespace gproNet
 			WriteTest(bitstream_w, "Hello client from server");
 			peer->Send(&bitstream_w, MEDIUM_PRIORITY, UNRELIABLE_SEQUENCED, 0, sender, false);
 		}	return true;
-		case MNCL::ID_PLAYER_SELECTION:
+		case FPV::ID_PLAYER_STATE:
 		{
-			MNCL::PlayerSelectionMessage data = MNCL::PlayerSelectionMessage(bitstream);
-			printf("%i %i \n", data.x, data.y);
-			if (Players[static_cast<int>(!playerZeroTurn)] == sender) //If it is the same systemadress as the player whos turn it is
-			{
-				//send to other client
-				RakNet::BitStream bsOut;
-				data.WriteToBitStream(bsOut);
-				peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(), true);
-			}
-			else
-			{
-				//Send back not your turn
-			}
+			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
+			printf("%f, %i\n", msg.move.LocX, msg.move.Shoot);
 			return true;
 		}
-		}
+
+		}//End Switch
 		return false;
 	}
 }

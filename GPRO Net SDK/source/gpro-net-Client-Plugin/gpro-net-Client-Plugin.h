@@ -46,12 +46,11 @@ extern "C" {
 	GPRO_NET_SYMBOL bool DestroyPlugin();
 
 	//Update
-	GPRO_NET_SYMBOL bool OutputLocalPlayerState(PlayerMove* playerMove);
 	GPRO_NET_SYMBOL bool UpdateOutputRemote();
-	GPRO_NET_SYMBOL bool UpdateInputRemote(PlayerMove* playerMove, int* pArr);
+	GPRO_NET_SYMBOL bool UpdateInputRemote();
 
-	//Client Selection/Verification
-	GPRO_NET_SYMBOL bool ClientSelectionMade(int x, int y, int playerIndex);
+	//Player State
+	GPRO_NET_SYMBOL bool OutputLocalPlayerState(PlayerMove* playerMove);
 
 #ifdef __cplusplus
 }

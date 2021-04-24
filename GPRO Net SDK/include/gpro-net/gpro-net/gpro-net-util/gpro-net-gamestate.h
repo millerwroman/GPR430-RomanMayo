@@ -51,21 +51,6 @@ extern "C" {
 
 	struct PlayerMove
 	{
-		PlayerMove() = default;
-		PlayerMove(const PlayerMove& move)
-		{
-			LocX = move.LocX;
-			LocY = move.LocY;
-			LocZ = move.LocZ;
-			
-			RotX = move.RotX;
-			RotY = move.RotY;
-			RotZ = move.RotZ;
-			RotW = move.RotW;
-
-			Shoot = move.Shoot;
-		}
-
 		float LocX;
 		float LocY;
 		float LocZ;
@@ -77,6 +62,20 @@ extern "C" {
 
 		int Shoot;
 	};
+
+	//void PlayerMoveCopy(PlayerMove& original, PlayerMove& move)
+	//{
+	//	original.LocX = move.LocX;
+	//	original.LocY = move.LocY;
+	//	original.LocZ = move.LocZ;
+
+	//	original.RotX = move.RotX;
+	//	original.RotY = move.RotY;
+	//	original.RotZ = move.RotZ;
+	//	original.RotW = move.RotW;
+
+	//	original.Shoot = move.Shoot;
+	//};
 
 
 

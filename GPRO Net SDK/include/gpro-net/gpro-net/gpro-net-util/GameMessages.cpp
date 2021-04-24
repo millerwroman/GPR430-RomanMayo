@@ -2,22 +2,23 @@
 #include "RakNet/RakPeerInterface.h"
 
 
-void MNCL::GameMessage::WriteToBitStream(RakNet::BitStream& bs)
+void FPV::GameMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
 	bs.Write(ID);
 }
 
-MNCL::GameMessage::GameMessage()
+FPV::GameMessage::GameMessage()
 {
 	ID = GameMessageID::ID_GAME_MESSAGE_START;
 }
 
-MNCL::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove)
+FPV::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove)
 {
 	move = playerMove;
+	ID = ID_PLAYER_STATE;
 }
 
-MNCL::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
+FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 {
 	bs.Read(move.LocX);
 	bs.Read(move.LocY);
@@ -29,7 +30,7 @@ MNCL::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 	bs.Read(move.Shoot);
 }
 
-void MNCL::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
+void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
 	bs.Write(ID);
 	bs.Write(move.LocX);

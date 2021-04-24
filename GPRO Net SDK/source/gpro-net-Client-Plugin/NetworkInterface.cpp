@@ -26,7 +26,7 @@ bool NetworkInterface::ConnectToServer(const char* ip, int port) const
 	return true;
 }
 
-PlayerMove NetworkInterface::UpdateOutputRemote()
+bool NetworkInterface::UpdateOutputRemote()
 {
 	/*RakNet::BitStream bs;
 	bs.Write((RakNet::MessageID)MNCL::GameMessageID::ID_DEFAULT_GAME_MESSAGE);
@@ -39,12 +39,11 @@ PlayerMove NetworkInterface::UpdateOutputRemote()
 		peer->Send(&(*bs), HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
 		sendQueue.pop();
 	}
-	return gameState;
+	return true;
 }
 
-PlayerMove NetworkInterface::UpdateInputRemote()
+bool NetworkInterface::UpdateInputRemote()
 {
-	int count = 0;
 	RakNet::Packet* packet = 0;
 	RakNet::MessageID msgID = 0;
 	RakNet::Time dtSendToReceive = 0;
@@ -80,16 +79,17 @@ PlayerMove NetworkInterface::UpdateInputRemote()
 	}
 
 	// done
-	//return count;
-	return gameState;
+	return true;
 }
 
 bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 {
-	
+	FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(*move);
+	AddMessageToQueue(msg);
+	return true;
 }
 
-void NetworkInterface::AddMessageToQueue(MNCL::GameMessage msg)
+void NetworkInterface::AddMessageToQueue(FPV::GameMessage msg)
 {
 	RakNet::BitStream* bs = new RakNet::BitStream();
 	msg.WriteToBitStream(*bs);

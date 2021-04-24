@@ -4,15 +4,14 @@
 #include <string>
 #include <queue>
 
-namespace MNCL //(Mancala)
+namespace FPV
 {
 	enum GameMessageID
 	{
 		ID_GAME_MESSAGE_START = gproNet::eMessageCommon::ID_GPRO_MESSAGE_COMMON_END,
 		ID_DEFAULT_GAME_MESSAGE,
-		ID_PLAYER_SELECTION,
+		ID_PLAYER_STATE,
 		ID_GAME_STATE,
-		ID_ASSIGN_PLAYER,
 		ID_GAME_MESSAGE_END
 	};
 
@@ -34,7 +33,6 @@ namespace MNCL //(Mancala)
 	//	RakNet::MessageID ID;
 	//};
 
-	// TODO: How are we sending game state data?
 	struct PlayerStateMessage : public GameMessage
 	{
 		PlayerStateMessage() = default;

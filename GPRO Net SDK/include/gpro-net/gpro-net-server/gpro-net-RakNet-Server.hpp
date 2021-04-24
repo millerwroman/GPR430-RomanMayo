@@ -28,6 +28,7 @@
 
 
 #include "gpro-net/gpro-net/gpro-net-RakNet.hpp"
+#include <vector>
 
 
 namespace gproNet
@@ -69,8 +70,7 @@ namespace gproNet
 		virtual bool ProcessMessage(RakNet::BitStream& bitstream, RakNet::SystemAddress const sender, RakNet::Time const dtSendToReceive, RakNet::MessageID const msgID);
 
 	private:
-		RakNet::SystemAddress Players[2];
-		bool playerZeroTurn = false;
+		std::vector<RakNet::SystemAddress> Players;
 	};
 
 }

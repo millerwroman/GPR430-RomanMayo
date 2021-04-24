@@ -14,8 +14,9 @@ public:
 	bool ConnectToServer(const char* ip, int port) const;
 	RakNet::RakPeerInterface* GetRakInterface() const { return peer; }
 	//Update
-	PlayerMove UpdateOutputRemote(); // Send messages
-	PlayerMove UpdateInputRemote(); //Receive
+	bool UpdateOutputRemote(); // Send messages
+	bool UpdateInputRemote(); //Receive
+
 	bool PackagePlayerState(PlayerMove* move);
 
 
@@ -23,13 +24,10 @@ public:
 
 	
 private:
-	void AddMessageToQueue(MNCL::GameMessage msg);
+	void AddMessageToQueue(FPV::GameMessage msg);
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
-	PlayerMove gameState;
-	int amBottomRow = -1;
-	int unityState;
 };
 
 
