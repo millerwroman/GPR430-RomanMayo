@@ -19,15 +19,18 @@ public:
 
 	bool PackagePlayerState(PlayerMove* move);
 
+	//Debug
+	const char* PrintDebugUnity();
 
 
 
 	
 private:
-	void AddMessageToQueue(FPV::GameMessage msg);
+	void AddMessageToQueue(FPV::GameMessage& msg);
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
+	std::string debugMessage;
 };
 
 

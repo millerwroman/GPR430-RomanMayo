@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
     public float projectileSpeed;
     private bool didShoot = false;
 
+    private PlayerMove move;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -48,9 +50,10 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         MovePlayer();
+        UpdateMove();
     }
 
-    public void GetPlayerMove(ref PlayerMove move)
+    public void UpdateMove()
     {
         move.LocX = transform.position.x;
         move.LocY = transform.position.y;
@@ -60,9 +63,12 @@ public class PlayerController : MonoBehaviour
         move.RotY = transform.rotation.y;
         move.RotZ = transform.rotation.z;
         move.RotW = transform.rotation.w;
+    }
 
-        move.Shoot = Convert.ToInt32(didShoot);
+    public ref PlayerMove GetPlayerMove()
+    {
         didShoot = false;
+        return ref move;
     }
 
     private void MovePlayer()

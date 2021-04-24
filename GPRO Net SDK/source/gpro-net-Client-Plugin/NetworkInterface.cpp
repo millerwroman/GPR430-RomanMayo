@@ -89,7 +89,12 @@ bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 	return true;
 }
 
-void NetworkInterface::AddMessageToQueue(FPV::GameMessage msg)
+const char* NetworkInterface::PrintDebugUnity()
+{
+	return debugMessage.c_str();
+}
+
+void NetworkInterface::AddMessageToQueue(FPV::GameMessage& msg)
 {
 	RakNet::BitStream* bs = new RakNet::BitStream();
 	msg.WriteToBitStream(*bs);

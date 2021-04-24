@@ -15,8 +15,6 @@ public struct PlayerMove
     public float RotY;
     public float RotZ;
     public float RotW;
-
-    public int Shoot;
 };
 
 public class gproClientPlugin
@@ -41,4 +39,8 @@ public class gproClientPlugin
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
     public static extern bool OutputLocalPlayerState(ref PlayerMove playerMove);
 
+
+    //Debug
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
+    public static extern IntPtr DebugMessage();
 }

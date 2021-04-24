@@ -52,6 +52,9 @@ extern "C" {
 	//Player State
 	GPRO_NET_SYMBOL bool OutputLocalPlayerState(PlayerMove* playerMove);
 
+	//Debug
+	GPRO_NET_SYMBOL const char* DebugMessage();
+
 #ifdef __cplusplus
 }
 #endif	// __cplusplus

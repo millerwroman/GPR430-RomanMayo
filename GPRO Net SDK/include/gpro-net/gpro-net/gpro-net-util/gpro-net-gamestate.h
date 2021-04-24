@@ -59,8 +59,6 @@ extern "C" {
 		float RotY;
 		float RotZ;
 		float RotW;
-
-		int Shoot;
 	};
 
 	//void PlayerMoveCopy(PlayerMove& original, PlayerMove& move)

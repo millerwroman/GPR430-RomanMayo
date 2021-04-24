@@ -77,3 +77,9 @@ bool OutputLocalPlayerState(PlayerMove* playerMove)
 	g_Interface->PackagePlayerState(playerMove);
 	return true;
 }
+
+ const char* DebugMessage()
+{
+	 if (!g_Interface) return nullptr;
+	 return g_Interface->PrintDebugUnity();
+}

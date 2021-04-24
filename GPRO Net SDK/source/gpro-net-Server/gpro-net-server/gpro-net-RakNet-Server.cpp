@@ -80,10 +80,13 @@ namespace gproNet
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
-			printf("%f, %i\n", msg.move.LocX, msg.move.Shoot);
+			printf("%f, %f, %f\n", msg.move.LocX, msg.move.LocY, msg.move.LocZ);
 			return true;
 		}
-
+		default:
+		{
+			printf("A default Packing ID: %d", msgID);
+		}
 		}//End Switch
 		return false;
 	}

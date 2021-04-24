@@ -33,11 +33,22 @@ public class gproClientManager : MonoBehaviour
         gproClientPlugin.UpdateInputRemote();
 
         //Update Info
-        PlayerMove move = new PlayerMove();
-        localPlayer.GetPlayerMove(ref move);
-        gproClientPlugin.OutputLocalPlayerState(ref move);
+        gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
 
         //Output Remote
         gproClientPlugin.UpdateOutputRemote();
+
+        PrintDebugMessage(gproClientPlugin.DebugMessage());
+    }
+
+    void PrintDebugMessage(IntPtr ptr)
+    {
+        string str = Marshal.PtrToStringAnsi(ptr);
+        Debug.Log(str);
+    }
+
+    void OnDisable()
+    {
+        gproClientPlugin.DestroyPlugin();
     }
 }
