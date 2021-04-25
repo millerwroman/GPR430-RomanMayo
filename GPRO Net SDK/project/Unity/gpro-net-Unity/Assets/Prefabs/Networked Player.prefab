@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 2986731043107685304}
   - component: {fileID: 2986731043107685311}
   - component: {fileID: 2986731043107685310}
-  - component: {fileID: 2986731043107685308}
-  - component: {fileID: 2986731043107685306}
-  - component: {fileID: 2986731043107685307}
+  - component: {fileID: 861361543045143010}
+  - component: {fileID: 6295405725808333104}
   m_Layer: 0
   m_Name: Networked Player
   m_TagString: Player
@@ -85,8 +84,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!143 &2986731043107685308
-CharacterController:
+--- !u!136 &861361543045143010
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -95,15 +94,11 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2986731043107685306
+--- !u!114 &6295405725808333104
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,51 +107,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2986731043107685283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 523a68949e4a0314da02c581ae605f69, type: 3}
+  m_Script: {fileID: 11500000, guid: 76e08f78d6ed2fc47afc7b7f9d63a70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  sprintSpeed: 10
-  jumpHeight: 9.81
-  gravityValue: -9.81
-  rotationDivider: 15
-  maxCameraAngle: 30
-  minCameraAngle: -30
-  spawnProjectileLocation: {fileID: 5833312642335639542}
-  projectilePrefab: {fileID: 8250501749124571999, guid: c721aaddc7ce69045b4b3df33af3d2ae,
-    type: 3}
-  projectileSpeed: 1000
---- !u!114 &2986731043107685307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2986731043107685283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 44c0373a93b52f54596a4c4cd8cd41b1,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: FPV
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &6702513938796222612
 GameObject:
   m_ObjectHideFlags: 0
