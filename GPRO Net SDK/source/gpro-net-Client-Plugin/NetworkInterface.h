@@ -37,6 +37,7 @@ private:
 
 	std::vector<PlayerMove*> networkedMoves;
 	void AddState(PlayerMove& move);
+	static PlayerMove* DynamicMoveCopy(PlayerMove& move);
 };
 
 

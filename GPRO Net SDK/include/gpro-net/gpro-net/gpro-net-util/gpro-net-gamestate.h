@@ -63,20 +63,6 @@ extern "C" {
 		float RotW;
 	};
 
-	//void PlayerMoveCopy(PlayerMove& original, PlayerMove& move)
-	//{
-	//	original.LocX = move.LocX;
-	//	original.LocY = move.LocY;
-	//	original.LocZ = move.LocZ;
-
-	//	original.RotX = move.RotX;
-	//	original.RotY = move.RotY;
-	//	original.RotZ = move.RotZ;
-	//	original.RotW = move.RotW;
-
-	//	original.Shoot = move.Shoot;
-	//};
-
 
 
 

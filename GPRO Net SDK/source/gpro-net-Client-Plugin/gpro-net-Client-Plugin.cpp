@@ -90,10 +90,6 @@ int GetLocalPlayerIndex()
 	return g_Interface->GetLocalPlayerIndex();
 }
 
-bool GetNetworkedPlayers(PlayerMove* moves, int* size)
-{
-}
-
 int GetNetworkedPlayers(PlayerMove* playerMove, int lastCount)
 {
 	if (!g_Interface) return -1;
