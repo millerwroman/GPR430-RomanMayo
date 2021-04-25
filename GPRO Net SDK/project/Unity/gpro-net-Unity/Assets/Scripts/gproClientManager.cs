@@ -67,8 +67,8 @@ public class gproClientManager : MonoBehaviour
 
         //Output Remote
         gproClientPlugin.UpdateOutputRemote();
+       // PrintDebugMessage(gproClientPlugin.DebugMessage());
 
-        PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
 
     void GetNetworkedPlayer()
@@ -77,7 +77,7 @@ public class gproClientManager : MonoBehaviour
         while (true)
         {
             PlayerMove move = new PlayerMove();
-            int action = gproClientPlugin.GetNetworkedPlayers(ref move, networkedMoves.Count);
+            int action = gproClientPlugin.GetNetworkedPlayers(ref move, networkedMoves.Count);      
             if (action == 0)
             {
                 break;

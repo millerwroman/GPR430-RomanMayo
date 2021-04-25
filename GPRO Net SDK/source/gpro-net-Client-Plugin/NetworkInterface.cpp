@@ -120,9 +120,13 @@ bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 
 int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 {
-	if (networkedMoves.size() < lastCount) return 0; //No more to get
-	moves = networkedMoves[lastCount];
-	return 1; //Valid
+	if (lastCount < networkedMoves.size())
+	{
+		moves = networkedMoves[lastCount];
+		return 1; //Valid
+	}
+	return 0;
+	
 }
 
 const char* NetworkInterface::PrintDebugUnity()
