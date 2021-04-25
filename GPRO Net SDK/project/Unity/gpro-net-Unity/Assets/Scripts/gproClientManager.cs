@@ -93,6 +93,12 @@ public class gproClientManager : MonoBehaviour
     {
         foreach (PlayerMove move in networkedMoves)
         {
+            if (!networkedPlayers.ContainsKey(move.PlayerIndex))
+            {
+                Debug.Log("New Player!");
+                NewPlayerConnected(move);
+                continue;
+            }
             networkedPlayers[move.PlayerIndex].NetworkUpdate(move);
         }
     }
