@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,13 @@ public class NetworkedPlayer : MonoBehaviour
 {
     private PlayerMove move;
     private Transform gun;
+
+
+    private void Start()
+    {
+
+        gun = transform.GetChild(0);
+    }
 
     public void NetworkUpdate(PlayerMove newMove)
     {
