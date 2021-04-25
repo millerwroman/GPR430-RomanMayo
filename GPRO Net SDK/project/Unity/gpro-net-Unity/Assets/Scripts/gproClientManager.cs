@@ -23,7 +23,7 @@ public class gproClientManager : MonoBehaviour
     //Players
     private PlayerController localPlayer;
     private List<PlayerMove> networkedMoves = new List<PlayerMove>();
-    private Dictionary<int, PlayerController> networkedPlayers = new Dictionary<int, PlayerController>();
+    private Dictionary<int, NetworkedPlayer> networkedPlayers = new Dictionary<int, NetworkedPlayer>();
 
     void Start()
     {
@@ -107,7 +107,7 @@ public class gproClientManager : MonoBehaviour
     {
         //Instantiate
         GameObject obj = GameObject.Instantiate(playerPrefab);
-        PlayerController cont =  obj.GetComponent<PlayerController>();
+        NetworkedPlayer cont = obj.GetComponent<NetworkedPlayer>();
         cont.NetworkUpdate(newPlayer);
         networkedPlayers.Add(newPlayer.PlayerIndex, cont);
     }

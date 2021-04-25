@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     CharacterController controller = null;
     private Vector3 playerVelocity;
     private Vector3 playerMoveInput;
+
+    private Camera localCamera;
     //Run/Sprint
     private bool shouldJump = false;
     private bool shouldSprint = false;
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
         rotationDividerInv = 1 / rotationDivider;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        localCamera = gameObject.GetComponentInChildren<Camera>();
     }
     void FixedUpdate()
     {
@@ -52,13 +55,7 @@ public class PlayerController : MonoBehaviour
         UpdateMove();
     }
 
-    public void NetworkUpdate(PlayerMove newMove)
-    {
-        move = newMove;
-        transform.position = new Vector3(move.LocX, move.LocY, move.LocZ);
-        transform.rotation = new Quaternion(move.RotX, move.RotY, move.RotZ, move.RotW);
 
-    }
 
     public void UpdateMove()
     {
@@ -125,7 +122,7 @@ public class PlayerController : MonoBehaviour
         cameraRotation.x = (cameraRotation.x + 180f) % 360f;
         cameraRotation.x = Mathf.Clamp(cameraRotation.x, (minCameraAngle + 180), (maxCameraAngle + 180));
         cameraRotation.x -= 180f;
-        Camera.main.transform.rotation = Quaternion.Euler(cameraRotation);
+       localCamera.transform.rotation = Quaternion.Euler(cameraRotation);
     }
     public void OnSprint(InputValue value)
     {
