@@ -15,16 +15,15 @@ using System.Collections;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.59";
+    private string IP_ADDRESS = "172.16.2.51";
     private int SERVER_PORT = 7777;
     private PlayerController localPlayer;
 
     void Start()
     {
         localPlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        Debug.Log("Bob");
-        Debug.Log("Init Plugin:" + gproClientPlugin.InitPlugin());
-        Debug.Log("Connecting to Server:" + gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT));
+        gproClientPlugin.InitPlugin();
+        Debug.Log("Connected to Server:" + gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT));
     }
 
     private void Update()
@@ -39,6 +38,11 @@ public class gproClientManager : MonoBehaviour
         gproClientPlugin.UpdateOutputRemote();
 
         PrintDebugMessage(gproClientPlugin.DebugMessage());
+    }
+
+    void NewPlayerConnected(PlayerMove)
+    {
+
     }
 
     void PrintDebugMessage(IntPtr ptr)
