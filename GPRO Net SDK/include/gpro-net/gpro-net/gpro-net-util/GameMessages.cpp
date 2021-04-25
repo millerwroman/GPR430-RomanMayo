@@ -20,7 +20,7 @@ FPV::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove)
 
 FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 {
-
+	bs.Read(move.playerIndex);
 	bs.Read(move.LocX);
 	bs.Read(move.LocY);
 	bs.Read(move.LocZ);
@@ -33,6 +33,7 @@ FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
 	bs.Write(ID);
+	bs.Write(move.playerIndex);
 	bs.Write(move.LocX);
 	bs.Write(move.LocY);
 	bs.Write(move.LocZ);

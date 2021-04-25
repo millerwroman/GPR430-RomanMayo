@@ -28,6 +28,8 @@
 
 
 #include "gpro-net/gpro-net/gpro-net-RakNet.hpp"
+#include "gpro-net/gpro-net/gpro-net-util/GameMessages.h"
+#include "gpro-net/gpro-net/gpro-net-util/gpro-net-gamestate.h"
 #include <vector>
 
 

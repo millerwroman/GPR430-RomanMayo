@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     private float gravityValue = -9.81f;
     [Header("Camera")]
     [SerializeField]
-    private float rotationDevider = 5.0f;
-    private float rotationDeviderRecip;
+    private float rotationDivider = 5.0f;
+    private float rotationDividerInv;
     [SerializeField]
     [Range(0f, 170f)] private float maxCameraAngle = -170f;
     [SerializeField]
@@ -36,14 +36,13 @@ public class PlayerController : MonoBehaviour
     public Transform spawnProjectileLocation;
     public GameObject projectilePrefab;
     public float projectileSpeed;
-    private bool didShoot = false;
 
     private PlayerMove move;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        rotationDeviderRecip = 1 / rotationDevider;
+        rotationDividerInv = 1 / rotationDivider;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -51,6 +50,14 @@ public class PlayerController : MonoBehaviour
     {
         MovePlayer();
         UpdateMove();
+    }
+
+    public void NetworkUpdate(PlayerMove newMove)
+    {
+        move = newMove;
+        transform.position = new Vector3(move.LocX, move.LocY, move.LocZ);
+        transform.rotation = new Quaternion(move.RotX, move.RotY, move.RotZ, move.RotW);
+
     }
 
     public void UpdateMove()
@@ -67,8 +74,12 @@ public class PlayerController : MonoBehaviour
 
     public ref PlayerMove GetPlayerMove()
     {
-        didShoot = false;
         return ref move;
+    }
+
+    public void SetPlayerIndex(int index)
+    {
+        move.PlayerIndex = index;
     }
 
     private void MovePlayer()
@@ -106,11 +117,11 @@ public class PlayerController : MonoBehaviour
     {
         //Character Rotation
         Vector3 deltaRotation = new Vector3(0, value.Get<Vector2>().x, 0);
-        deltaRotation *= rotationDeviderRecip;
+        deltaRotation *= rotationDividerInv;
         transform.Rotate(deltaRotation);
         Vector3 cameraRotation = Camera.main.transform.rotation.eulerAngles;
         //Remap camera angle
-        cameraRotation.x -= value.Get<Vector2>().y * rotationDeviderRecip;
+        cameraRotation.x -= value.Get<Vector2>().y * rotationDividerInv;
         cameraRotation.x = (cameraRotation.x + 180f) % 360f;
         cameraRotation.x = Mathf.Clamp(cameraRotation.x, (minCameraAngle + 180), (maxCameraAngle + 180));
         cameraRotation.x -= 180f;
@@ -125,7 +136,6 @@ public class PlayerController : MonoBehaviour
     {
         GameObject obj = Instantiate(projectilePrefab, spawnProjectileLocation.position, Quaternion.identity);
         obj.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
-        didShoot = true;
     }
 
 }

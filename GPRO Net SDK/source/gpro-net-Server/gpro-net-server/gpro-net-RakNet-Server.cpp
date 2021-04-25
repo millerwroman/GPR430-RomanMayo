@@ -56,6 +56,10 @@ namespace gproNet
 		{
 			printf("A connection is incoming.\n");
 			Players.push_back(sender);
+			RakNet::BitStream bs;
+			bs.Write((RakNet::MessageID)ID_NEW_INCOMING_CONNECTION);
+			bs.Write(Players.size() - 1);
+			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, false);
 			return true;
 		}
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
@@ -81,6 +85,10 @@ namespace gproNet
 		{
 			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
 			printf("%f, %f, %f\n", msg.move.LocX, msg.move.LocY, msg.move.LocZ);
+
+			RakNet::BitStream bs;
+			msg.WriteToBitStream(bs);
+			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
 			return true;
 		}
 		default:

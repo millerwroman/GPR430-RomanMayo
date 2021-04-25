@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 /* THIS IS HOW TO SEND 2D ARRAYS ACROSS SHIT
@@ -17,13 +18,36 @@ public class gproClientManager : MonoBehaviour
 {
     private string IP_ADDRESS = "172.16.2.51";
     private int SERVER_PORT = 7777;
+    public GameObject playerPrefab;
+
+    //Players
     private PlayerController localPlayer;
+    private List<PlayerMove> networkedMoves = new List<PlayerMove>();
+    private Dictionary<int, PlayerController> networkedPlayers = new Dictionary<int, PlayerController>();
 
     void Start()
     {
         localPlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         gproClientPlugin.InitPlugin();
         Debug.Log("Connected to Server:" + gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT));
+        StartCoroutine(GetLocalPlayerIndex());
+    }
+
+    IEnumerator GetLocalPlayerIndex()
+    {
+        switch (gproClientPlugin.GetLocalPlayerIndex())
+        {
+            case -1:
+                //Possible stack overflow
+                yield return new WaitWhile(() => gproClientPlugin.GetLocalPlayerIndex() == -1);
+                break;
+            case -2:
+                Debug.Log("NO PLUGIN");
+                break;
+            default:
+                localPlayer.SetPlayerIndex(gproClientPlugin.GetLocalPlayerIndex());
+                break;
+        }
     }
 
     private void Update()
@@ -31,8 +55,15 @@ public class gproClientManager : MonoBehaviour
         //Input Remote
         gproClientPlugin.UpdateInputRemote();
 
-        //Update Info
+        //Update
         gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
+        GetNetworkedPlayer();
+        UpdateNetworkedPlayers();
+
+
+
+
+
 
         //Output Remote
         gproClientPlugin.UpdateOutputRemote();
@@ -40,9 +71,39 @@ public class gproClientManager : MonoBehaviour
         PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
 
-    void NewPlayerConnected(PlayerMove)
+    void GetNetworkedPlayer()
     {
+        networkedMoves.Clear();
+        while (true)
+        {
+            PlayerMove move = new PlayerMove();
+            int action = gproClientPlugin.GetNetworkedPlayers(ref move, networkedMoves.Count);
+            if (action == 0)
+            {
+                break;
+            }
+            if (action == 1)
+            {
+                networkedMoves.Add(move);
+            }
+        }
+    }
 
+    void UpdateNetworkedPlayers()
+    {
+        foreach (PlayerMove move in networkedMoves)
+        {
+            networkedPlayers[move.PlayerIndex].NetworkUpdate(move);
+        }
+    }
+
+    void NewPlayerConnected(PlayerMove newPlayer)
+    {
+        //Instantiate
+        GameObject obj = GameObject.Instantiate(playerPrefab);
+        PlayerController cont =  obj.GetComponent<PlayerController>();
+        cont.NetworkUpdate(newPlayer);
+        networkedPlayers.Add(newPlayer.PlayerIndex, cont);
     }
 
     void PrintDebugMessage(IntPtr ptr)

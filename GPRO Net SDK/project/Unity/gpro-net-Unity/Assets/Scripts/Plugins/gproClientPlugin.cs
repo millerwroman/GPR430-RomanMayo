@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 [StructLayout(LayoutKind.Sequential)]
 public struct PlayerMove
 {
+    public int PlayerIndex;
+
     public float LocX;
     public float LocY;
     public float LocZ;
@@ -24,6 +26,8 @@ public class gproClientPlugin
     public static extern bool InitPlugin();
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern bool ConnectToServer(string ip, int port);
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int GetLocalPlayerIndex();
 
     //Shut down
     [DllImport("gpro-net-Client-Plugin")]
@@ -38,6 +42,8 @@ public class gproClientPlugin
     //Player State
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
     public static extern bool OutputLocalPlayerState(ref PlayerMove playerMove);
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int GetNetworkedPlayers(ref PlayerMove move, int size );
 
 
     //Debug

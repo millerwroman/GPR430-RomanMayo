@@ -41,6 +41,7 @@ extern "C" {
 	//Start Up
 	GPRO_NET_SYMBOL bool InitPlugin();
 	GPRO_NET_SYMBOL bool ConnectToServer(const char* ip, int port);
+	GPRO_NET_SYMBOL int GetLocalPlayerIndex();
 
 	//Shut Down
 	GPRO_NET_SYMBOL bool DestroyPlugin();
@@ -51,6 +52,7 @@ extern "C" {
 
 	//Player State
 	GPRO_NET_SYMBOL bool OutputLocalPlayerState(PlayerMove* playerMove);
+	GPRO_NET_SYMBOL int GetNetworkedPlayers(PlayerMove* playerMove, int lastCount);
 
 	//Debug
 	GPRO_NET_SYMBOL const char* DebugMessage();

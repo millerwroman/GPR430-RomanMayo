@@ -51,6 +51,8 @@ extern "C" {
 
 	struct PlayerMove
 	{
+		int playerIndex;
+		
 		float LocX;
 		float LocY;
 		float LocZ;

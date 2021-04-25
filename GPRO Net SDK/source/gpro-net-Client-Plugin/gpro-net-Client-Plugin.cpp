@@ -78,8 +78,24 @@ bool OutputLocalPlayerState(PlayerMove* playerMove)
 	return true;
 }
 
- const char* DebugMessage()
+const char* DebugMessage()
 {
-	 if (!g_Interface) return nullptr;
-	 return g_Interface->PrintDebugUnity();
+	if (!g_Interface) return nullptr;
+	return g_Interface->PrintDebugUnity();
+}
+
+int GetLocalPlayerIndex()
+{
+	if (!g_Interface) return -2;
+	return g_Interface->GetLocalPlayerIndex();
+}
+
+bool GetNetworkedPlayers(PlayerMove* moves, int* size)
+{
+}
+
+int GetNetworkedPlayers(PlayerMove* playerMove, int lastCount)
+{
+	if (!g_Interface) return -1;
+	return g_Interface->GetNetworkedMoves(playerMove, lastCount);
 }

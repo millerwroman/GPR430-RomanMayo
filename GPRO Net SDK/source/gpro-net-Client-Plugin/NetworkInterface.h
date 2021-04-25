@@ -10,8 +10,9 @@ public:
 	//Construction
 	NetworkInterface();
 	~NetworkInterface();
-	//Connections
+	//Start Up
 	bool ConnectToServer(const char* ip, int port) const;
+	int GetLocalPlayerIndex() { return localPlayerIndex; }
 	RakNet::RakPeerInterface* GetRakInterface() const { return peer; }
 	//Update
 	bool UpdateOutputRemote(); // Send messages
@@ -19,9 +20,10 @@ public:
 
 	bool PackagePlayerState(PlayerMove* move);
 
+	int GetNetworkedMoves(PlayerMove* moves, int lastCount);
+
 	//Debug
 	const char* PrintDebugUnity();
-
 
 
 	
@@ -31,6 +33,10 @@ private:
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
 	std::string debugMessage;
+	int localPlayerIndex = -1;
+
+	std::vector<PlayerMove*> networkedMoves;
+	void AddState(PlayerMove& move);
 };
 
 
