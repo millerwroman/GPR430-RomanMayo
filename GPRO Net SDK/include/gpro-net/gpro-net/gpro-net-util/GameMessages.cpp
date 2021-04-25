@@ -20,6 +20,7 @@ FPV::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove)
 
 FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 {
+	ID = FPV::ID_PLAYER_STATE;
 	bs.Read(move.playerIndex);
 	bs.Read(move.LocX);
 	bs.Read(move.LocY);

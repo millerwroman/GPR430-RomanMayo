@@ -76,10 +76,13 @@ bool NetworkInterface::UpdateInputRemote()
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg(bitstream);
+			debugMessage = std::to_string(msg.move.LocX);
+
 			AddState(msg.move);
 		}
 		break;
 		default:
+			debugMessage = "Default Case: " + std::to_string(msgID);
 			break;
 		}
 

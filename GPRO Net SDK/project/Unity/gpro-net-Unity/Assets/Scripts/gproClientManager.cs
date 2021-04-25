@@ -67,7 +67,7 @@ public class gproClientManager : MonoBehaviour
 
         //Output Remote
         gproClientPlugin.UpdateOutputRemote();
-       // PrintDebugMessage(gproClientPlugin.DebugMessage());
+        PrintDebugMessage(gproClientPlugin.DebugMessage());
 
     }
 

@@ -32,7 +32,7 @@ private:
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
-	std::string debugMessage;
+	std::string debugMessage = "DEFUALT";
 	int localPlayerIndex = -1;
 
 	std::vector<PlayerMove*> networkedMoves;

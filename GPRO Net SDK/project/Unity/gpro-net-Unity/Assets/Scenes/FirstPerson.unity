@@ -461,6 +461,11 @@ PrefabInstance:
       propertyPath: projectileSpeed
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 1994321927462620400, guid: 9187897a6c4859948a3772ca331abbf2,
+        type: 3}
+      propertyPath: rotationDivider
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1994321927462620402, guid: 9187897a6c4859948a3772ca331abbf2,
         type: 3}
       propertyPath: m_RootOrder
