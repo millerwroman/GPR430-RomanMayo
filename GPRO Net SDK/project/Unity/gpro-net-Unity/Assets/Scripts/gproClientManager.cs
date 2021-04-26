@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.51";
+    private string IP_ADDRESS = "172.16.2.60";
     private int SERVER_PORT = 7777;
     public GameObject playerPrefab;
 
@@ -77,7 +77,8 @@ public class gproClientManager : MonoBehaviour
         while (true)
         {
             PlayerMove move = new PlayerMove();
-            int action = gproClientPlugin.GetNetworkedPlayers(ref move, networkedMoves.Count);      
+            int action = gproClientPlugin.GetNetworkedPlayers(ref move, networkedMoves.Count);
+            //Debug.Log(move.LocX);
             if (action == 0)
             {
                 break;
@@ -95,8 +96,9 @@ public class gproClientManager : MonoBehaviour
         {
             if (!networkedPlayers.ContainsKey(move.PlayerIndex))
             {
-                Debug.Log("New Player!");
-                NewPlayerConnected(move);
+
+                //Debug.Log(move.);
+                //NewPlayerConnected(move);
                 continue;
             }
             networkedPlayers[move.PlayerIndex].NetworkUpdate(move);

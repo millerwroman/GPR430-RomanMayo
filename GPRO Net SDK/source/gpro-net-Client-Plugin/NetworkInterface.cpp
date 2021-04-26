@@ -76,7 +76,6 @@ bool NetworkInterface::UpdateInputRemote()
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg(bitstream);
-			debugMessage = std::to_string(msg.move.LocX);
 
 			AddState(msg.move);
 		}
@@ -125,7 +124,8 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 {
 	if (lastCount < networkedMoves.size())
 	{
-		moves = networkedMoves[lastCount];
+		PlayerMove* m = networkedMoves[lastCount];
+		debugMessage = std::to_string(m->LocX);
 		return 1; //Valid
 	}
 	return 0;

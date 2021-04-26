@@ -58,7 +58,9 @@ namespace gproNet
 			Players.push_back(sender);
 			RakNet::BitStream bs;
 			bs.Write((RakNet::MessageID)ID_NEW_INCOMING_CONNECTION);
-			bs.Write(Players.size() - 1);
+			int index = static_cast<int>(Players.size()) -1;
+			bs.Write(index);
+			printf("New Player Id: %i \n", index);
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, false);
 			return true;
 		}
@@ -84,7 +86,7 @@ namespace gproNet
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
-			printf("%f, %f, %f\n", msg.move.LocX, msg.move.LocY, msg.move.LocZ);
+			//printf("%f, %f, %f\n", msg.move.LocX, msg.move.LocY, msg.move.LocZ);
 
 			RakNet::BitStream bs;
 			msg.WriteToBitStream(bs);
