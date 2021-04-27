@@ -56,7 +56,7 @@ bool NetworkInterface::UpdateInputRemote()
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 			break;
-		case ID_NEW_INCOMING_CONNECTION:
+		case FPV::ID_REQUEST_PLAYER_ID:
 			bitstream.Read(localPlayerIndex);
 			debugMessage = "HERERERERERERE";
 			break;

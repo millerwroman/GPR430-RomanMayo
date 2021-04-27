@@ -57,7 +57,7 @@ namespace gproNet
 			printf("A connection is incoming.\n");
 			Players.push_back(sender);
 			RakNet::BitStream bs;
-			bs.Write((RakNet::MessageID)ID_NEW_INCOMING_CONNECTION);
+			bs.Write((RakNet::MessageID)FPV::ID_REQUEST_PLAYER_ID);
 			int index = static_cast<int>(Players.size()) -1;
 			bs.Write(index);
 			printf("New Player Id: %i \n", index);
