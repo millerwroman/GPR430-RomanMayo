@@ -43,3 +43,4 @@ void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 	bs.Write(move.RotZ);
 	bs.Write(move.RotW);
 }
+

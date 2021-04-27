@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.60";
+    private string IP_ADDRESS = "172.16.2.59";
     private int SERVER_PORT = 7777;
     public GameObject playerPrefab;
 
@@ -30,25 +30,13 @@ public class gproClientManager : MonoBehaviour
         localPlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         gproClientPlugin.InitPlugin();
         Debug.Log("Connected to Server:" + gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT));
-        StartCoroutine(GetLocalPlayerIndex());
+
+        int index = gproClientPlugin.GetLocalPlayerIndex();
+        
+
     }
 
-    IEnumerator GetLocalPlayerIndex()
-    {
-        switch (gproClientPlugin.GetLocalPlayerIndex())
-        {
-            case -1:
-                //Possible stack overflow
-                yield return new WaitWhile(() => gproClientPlugin.GetLocalPlayerIndex() == -1);
-                break;
-            case -2:
-                Debug.Log("NO PLUGIN");
-                break;
-            default:
-                localPlayer.SetPlayerIndex(gproClientPlugin.GetLocalPlayerIndex());
-                break;
-        }
-    }
+
 
     private void Update()
     {
@@ -60,7 +48,7 @@ public class gproClientManager : MonoBehaviour
         GetNetworkedPlayer();
         UpdateNetworkedPlayers();
 
-
+       
 
 
 
@@ -68,7 +56,6 @@ public class gproClientManager : MonoBehaviour
         //Output Remote
         gproClientPlugin.UpdateOutputRemote();
         PrintDebugMessage(gproClientPlugin.DebugMessage());
-
     }
 
     void GetNetworkedPlayer()
@@ -78,7 +65,6 @@ public class gproClientManager : MonoBehaviour
         {
             PlayerMove move = new PlayerMove();
             int action = gproClientPlugin.GetNetworkedPlayers(ref move, networkedMoves.Count);
-            //Debug.Log(move.LocX);
             if (action == 0)
             {
                 break;
@@ -96,8 +82,8 @@ public class gproClientManager : MonoBehaviour
         {
             if (!networkedPlayers.ContainsKey(move.PlayerIndex))
             {
+               // Debug.Log("New Player! Index: " + move.PlayerIndex);
 
-                //Debug.Log(move.);
                 //NewPlayerConnected(move);
                 continue;
             }
@@ -117,7 +103,7 @@ public class gproClientManager : MonoBehaviour
     void PrintDebugMessage(IntPtr ptr)
     {
         string str = Marshal.PtrToStringAnsi(ptr);
-        Debug.Log(str);
+        Debug.Log("DLL Debug: " + str);
     }
 
     void OnDisable()

@@ -52,13 +52,13 @@ bool NetworkInterface::UpdateInputRemote()
 	{
 		RakNet::BitStream bitstream(packet->data, packet->length, false);
 		bitstream.Read(msgID);
-
 		switch (msgID)
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 			break;
 		case ID_NEW_INCOMING_CONNECTION:
 			bitstream.Read(localPlayerIndex);
+			debugMessage = "HERERERERERERE";
 			break;
 		case ID_REMOTE_CONNECTION_LOST:
 			break;
@@ -68,8 +68,6 @@ bool NetworkInterface::UpdateInputRemote()
 			break;
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 			serverAddress = packet->systemAddress;
-			//packet->length This is how you would get the size of packet (remeber you already have first byte)
-			//if no timestand packetLenghts-1
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
 			break;
@@ -81,7 +79,7 @@ bool NetworkInterface::UpdateInputRemote()
 		}
 		break;
 		default:
-			debugMessage = "Default Case: " + std::to_string(msgID);
+			//debugMessage = "Default Case: " + std::to_string(msgID);
 			break;
 		}
 
@@ -125,11 +123,18 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 	if (lastCount < networkedMoves.size())
 	{
 		PlayerMove* m = networkedMoves[lastCount];
-		debugMessage = std::to_string(m->LocX);
+		moves->playerIndex = m->playerIndex;
+		moves->LocX = m->LocX;
+		moves->LocY = m->LocY;
+		moves->LocZ = m->LocZ;
+		moves->RotX = m->RotX;
+		moves->RotY = m->RotY;
+		moves->RotZ = m->RotZ;
+		moves->RotW = m->RotW;
 		return 1; //Valid
 	}
 	return 0;
-	
+
 }
 
 const char* NetworkInterface::PrintDebugUnity()
