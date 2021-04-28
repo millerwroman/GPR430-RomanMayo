@@ -94,7 +94,7 @@ public class gproClientManager : MonoBehaviour
             }
             else
             {
-                // networkedPlayers[move.PlayerIndex].NetworkUpdate(move);
+                networkedPlayers[move.PlayerIndex].NetworkUpdate(move);
             }
         }
     }

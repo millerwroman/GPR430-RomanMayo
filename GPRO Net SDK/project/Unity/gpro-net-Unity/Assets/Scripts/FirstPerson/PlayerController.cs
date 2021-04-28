@@ -63,10 +63,10 @@ public class PlayerController : MonoBehaviour
         move.LocY = transform.position.y;
         move.LocZ = transform.position.z;
 
-        move.RotX = transform.rotation.x;
-        move.RotY = transform.rotation.y;
-        move.RotZ = transform.rotation.z;
-        move.RotW = transform.rotation.w;
+        move.RotX = localCamera.transform.rotation.x;
+        move.RotY = localCamera.transform.rotation.y;
+        move.RotZ = localCamera.transform.rotation.z;
+        move.RotW = localCamera.transform.rotation.w;
     }
 
     public ref PlayerMove GetPlayerMove()
