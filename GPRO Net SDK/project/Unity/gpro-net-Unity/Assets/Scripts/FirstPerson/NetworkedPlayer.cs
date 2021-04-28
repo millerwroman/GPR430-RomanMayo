@@ -6,13 +6,11 @@ using UnityEngine;
 public class NetworkedPlayer : MonoBehaviour
 {
     private PlayerMove move;
-    private Transform gun;
+    public Transform gun;
 
 
     private void Start()
     {
-
-        gun = transform.GetChild(0);
     }
 
     public void NetworkUpdate(PlayerMove newMove)

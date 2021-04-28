@@ -60,7 +60,7 @@ public class gproClientManager : MonoBehaviour
 
             //Output Remote
             gproClientPlugin.UpdateOutputRemote();
-            
+
         }
         PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
@@ -87,20 +87,21 @@ public class gproClientManager : MonoBehaviour
     {
         foreach (PlayerMove move in networkedMoves)
         {
-            Debug.Log("Index" + move.PlayerIndex);
             if (!networkedPlayers.ContainsKey(move.PlayerIndex))
             {
                 Debug.Log("New Player! Index: " + move.PlayerIndex);
-
-                // NewPlayerConnected(move);
-                continue;
+                NewPlayerConnected(move);
             }
-            networkedPlayers[move.PlayerIndex].NetworkUpdate(move);
+            else
+            {
+                // networkedPlayers[move.PlayerIndex].NetworkUpdate(move);
+            }
         }
     }
 
     void NewPlayerConnected(PlayerMove newPlayer)
     {
+
         //Instantiate
         GameObject obj = GameObject.Instantiate(playerPrefab);
         NetworkedPlayer cont = obj.GetComponent<NetworkedPlayer>();
