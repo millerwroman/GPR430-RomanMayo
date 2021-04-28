@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.51";
+    private string IP_ADDRESS = "172.16.2.186";
     private int SERVER_PORT = 7777;
     public GameObject playerPrefab;
 
@@ -30,31 +30,38 @@ public class gproClientManager : MonoBehaviour
         localPlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         gproClientPlugin.InitPlugin();
         Debug.Log("Connected to Server:" + gproClientPlugin.ConnectToServer(IP_ADDRESS, SERVER_PORT));
-
-        int index = gproClientPlugin.GetLocalPlayerIndex();
-        
-
+        localPlayer.SetPlayerIndex(gproClientPlugin.GetLocalPlayerIndex());
     }
 
 
 
     private void Update()
     {
-        //Input Remote
-        gproClientPlugin.UpdateInputRemote();
+        if (localPlayer.GetPlayerMove().PlayerIndex == -1)
+        {
+            localPlayer.SetPlayerIndex(gproClientPlugin.GetLocalPlayerIndex());
+            Debug.Log("Unity Local Player Index: " + localPlayer.GetPlayerMove().PlayerIndex);
+            gproClientPlugin.UpdateInputRemote();
+        }
+        else
+        {
+            //Input Remote
+            gproClientPlugin.UpdateInputRemote();
 
-        //Update
-        gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
-        GetNetworkedPlayer();
-        UpdateNetworkedPlayers();
-
-       
+            //Update
+            gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
+            GetNetworkedPlayer();
+            UpdateNetworkedPlayers();
 
 
 
 
-        //Output Remote
-        gproClientPlugin.UpdateOutputRemote();
+
+
+            //Output Remote
+            gproClientPlugin.UpdateOutputRemote();
+            
+        }
         PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
 
@@ -80,11 +87,12 @@ public class gproClientManager : MonoBehaviour
     {
         foreach (PlayerMove move in networkedMoves)
         {
+            Debug.Log("Index" + move.PlayerIndex);
             if (!networkedPlayers.ContainsKey(move.PlayerIndex))
             {
                 Debug.Log("New Player! Index: " + move.PlayerIndex);
 
-                NewPlayerConnected(move);
+                // NewPlayerConnected(move);
                 continue;
             }
             networkedPlayers[move.PlayerIndex].NetworkUpdate(move);

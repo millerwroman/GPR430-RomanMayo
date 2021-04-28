@@ -58,7 +58,6 @@ bool NetworkInterface::UpdateInputRemote()
 			break;
 		case FPV::ID_REQUEST_PLAYER_ID:
 			bitstream.Read(localPlayerIndex);
-			debugMessage = "HERERERERERERE";
 			break;
 		case ID_REMOTE_CONNECTION_LOST:
 			break;

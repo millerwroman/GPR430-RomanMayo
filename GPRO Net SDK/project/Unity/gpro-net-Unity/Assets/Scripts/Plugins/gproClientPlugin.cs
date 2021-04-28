@@ -26,7 +26,7 @@ public class gproClientPlugin
     public static extern bool InitPlugin();
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern bool ConnectToServer(string ip, int port);
-    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("gpro-net-Client-Plugin")]
     public static extern int GetLocalPlayerIndex();
 
     //Shut down

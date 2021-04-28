@@ -26,7 +26,7 @@ public:
 	const char* PrintDebugUnity();
 
 
-	
+
 private:
 	void AddMessageToQueue(FPV::GameMessage& msg);
 	RakNet::RakPeerInterface* peer;
