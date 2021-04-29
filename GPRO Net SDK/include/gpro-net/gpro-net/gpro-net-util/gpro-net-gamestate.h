@@ -63,6 +63,15 @@ extern "C" {
 		float RotW;
 	};
 
+	struct ProjectileMove
+	{
+		int ProjIndex;
+
+		float LocX;
+		float LocY;
+		float LocZ;
+	};
+
 
 
 

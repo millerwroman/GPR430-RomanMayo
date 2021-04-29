@@ -24,6 +24,7 @@
 	****THIS FILE MUST NOT CONTAIN C++ KEYWORDS****
 */
 
+//https://docs.microsoft.com/en-us/dotnet/framework/interop/marshaling-different-types-of-arrays
 
 
 #ifndef _GPRO_NET_PLUGIN_CLIENT_H_
@@ -54,6 +55,10 @@ extern "C" {
 	GPRO_NET_SYMBOL bool OutputLocalPlayerState(PlayerMove* playerMove);
 	GPRO_NET_SYMBOL int GetNetworkedPlayers(PlayerMove* playerMove, int lastCount);
 
+	//Proj State
+	GPRO_NET_SYMBOL bool OutputLocalProjState(ProjectileMove* projMoveArr, int size);
+	GPRO_NET_SYMBOL int GetNetworkedProjs(ProjectileMove* projMove, int lastCount);
+	
 	//Debug
 	GPRO_NET_SYMBOL const char* DebugMessage();
 

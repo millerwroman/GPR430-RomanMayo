@@ -44,3 +44,27 @@ void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 	bs.Write(move.RotW);
 }
 
+FPV::ProjStateMessage::ProjStateMessage(ProjectileMove& playerMove)
+{
+	ID = ID_PROJ_STATE;
+	move = playerMove;
+}
+
+FPV::ProjStateMessage::ProjStateMessage(RakNet::BitStream& bs)
+{
+	ID = ID_PROJ_STATE;
+	bs.Read(move.ProjIndex);
+	bs.Read(move.LocX);
+	bs.Read(move.LocY);
+	bs.Read(move.LocZ);
+}
+
+void FPV::ProjStateMessage::WriteToBitStream(RakNet::BitStream& bs)
+{
+	bs.Write(ID);
+	bs.Write(move.ProjIndex);
+	bs.Write(move.LocX);
+	bs.Write(move.LocY);
+	bs.Write(move.LocZ);
+}
+

@@ -11,6 +11,7 @@ namespace FPV
 		ID_GAME_MESSAGE_START = gproNet::eMessageCommon::ID_GPRO_MESSAGE_COMMON_END,
 		ID_DEFAULT_GAME_MESSAGE,
 		ID_PLAYER_STATE,
+		ID_PROJ_STATE,
 		ID_REQUEST_PLAYER_ID,
 		ID_GAME_MESSAGE_END
 	};
@@ -41,6 +42,16 @@ namespace FPV
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
 		PlayerMove move;
+	};
+
+	struct ProjStateMessage : public GameMessage
+	{
+		ProjStateMessage() = default;
+		ProjStateMessage(ProjectileMove& playerMove);
+		ProjStateMessage(RakNet::BitStream& bs);
+		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
+
+		ProjectileMove move;
 	};
 
 	//Risk With sending stucts:

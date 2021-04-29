@@ -19,6 +19,16 @@ public struct PlayerMove
     public float RotW;
 };
 
+[StructLayout(LayoutKind.Sequential)]
+public struct ProjectileMove
+{
+    public int ProjIndex;
+
+    public float LocX;
+    public float LocY;
+    public float LocZ;
+}
+
 public class gproClientPlugin
 {
     //Start up

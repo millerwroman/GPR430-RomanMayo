@@ -19,8 +19,10 @@ public:
 	bool UpdateInputRemote(); //Receive
 
 	bool PackagePlayerState(PlayerMove* move);
+	bool PackageProjStates(ProjectileMove* moves, int size);
 
 	int GetNetworkedMoves(PlayerMove* moves, int lastCount);
+	int GetNetworkedProjMoves(ProjectileMove* moves, int lastCount);
 
 	//Debug
 	const char* PrintDebugUnity();
@@ -36,8 +38,10 @@ private:
 	int localPlayerIndex = -1;
 
 	std::vector<PlayerMove*> networkedMoves;
+	std::vector<ProjectileMove*> networkedProjMoves;
 	void AddState(PlayerMove& move);
+	void AddState(ProjectileMove& move);
 	static PlayerMove* DynamicMoveCopy(PlayerMove& move);
+	static ProjectileMove* DynamicMoveCopy(ProjectileMove& move);
 };
-
 

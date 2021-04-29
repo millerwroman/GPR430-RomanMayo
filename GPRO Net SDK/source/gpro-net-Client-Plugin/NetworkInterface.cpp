@@ -77,6 +77,13 @@ bool NetworkInterface::UpdateInputRemote()
 			AddState(msg.move);
 		}
 		break;
+		case FPV::ID_PROJ_STATE:
+		{
+			FPV::ProjStateMessage msg(bitstream);
+
+			
+		}
+		break;;
 		default:
 			//debugMessage = "Default Case: " + std::to_string(msgID);
 			break;
@@ -95,6 +102,12 @@ void NetworkInterface::AddState(PlayerMove& move)
 	networkedMoves.push_back(DynamicMoveCopy(move));
 }
 
+void NetworkInterface::AddState(ProjectileMove& move)
+{
+	networkedProjMoves.push_back(DynamicMoveCopy(move));
+}
+
+
 PlayerMove* NetworkInterface::DynamicMoveCopy(PlayerMove& move)
 {
 	PlayerMove* m = new PlayerMove();
@@ -110,10 +123,31 @@ PlayerMove* NetworkInterface::DynamicMoveCopy(PlayerMove& move)
 	return m;
 }
 
+ProjectileMove* NetworkInterface::DynamicMoveCopy(ProjectileMove& move)
+{
+	ProjectileMove* m = new ProjectileMove();
+	m->ProjIndex = move.ProjIndex;
+	m->LocX = move.LocX;
+	m->LocY = move.LocY;
+	m->LocZ = move.LocZ;
+
+	return m;
+}
+
 bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 {
 	FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(*move);
 	AddMessageToQueue(msg);
+	return true;
+}
+
+bool NetworkInterface::PackageProjStates(ProjectileMove* moves, int size)
+{
+	for(int i=0; i<size; ++i)
+	{
+		FPV::ProjStateMessage msg = FPV::ProjStateMessage(moves[i]);
+		AddMessageToQueue(msg);
+	}
 	return true;
 }
 
@@ -130,6 +164,21 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 		moves->RotY = m->RotY;
 		moves->RotZ = m->RotZ;
 		moves->RotW = m->RotW;
+		return 1; //Valid
+	}
+	return 0;
+
+}
+
+int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount)
+{
+	if (lastCount < networkedProjMoves.size())
+	{
+		ProjectileMove* m = networkedProjMoves[lastCount];
+		moves->ProjIndex = m->ProjIndex;
+		moves->LocX = m->LocX;
+		moves->LocY = m->LocY;
+		moves->LocZ = m->LocZ;
 		return 1; //Valid
 	}
 	return 0;

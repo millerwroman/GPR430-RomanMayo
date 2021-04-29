@@ -18,12 +18,15 @@ public class gproClientManager : MonoBehaviour
 {
     private string IP_ADDRESS = "172.16.2.186";
     private int SERVER_PORT = 7777;
+    [Header("Networked Object Prefabs")]
     public GameObject playerPrefab;
-
+    public GameObject projectilePrefab;
     //Players
     private PlayerController localPlayer;
     private List<PlayerMove> networkedMoves = new List<PlayerMove>();
     private Dictionary<int, NetworkedPlayer> networkedPlayers = new Dictionary<int, NetworkedPlayer>();
+
+    private Dictionary<int, NetworkedProjectile> networkedProjectiles = new Dictionary<int, NetworkedProjectile>();
 
     void Start()
     {
@@ -40,7 +43,6 @@ public class gproClientManager : MonoBehaviour
         if (localPlayer.GetPlayerMove().PlayerIndex == -1)
         {
             localPlayer.SetPlayerIndex(gproClientPlugin.GetLocalPlayerIndex());
-            Debug.Log("Unity Local Player Index: " + localPlayer.GetPlayerMove().PlayerIndex);
             gproClientPlugin.UpdateInputRemote();
         }
         else
@@ -89,7 +91,6 @@ public class gproClientManager : MonoBehaviour
         {
             if (!networkedPlayers.ContainsKey(move.PlayerIndex))
             {
-                Debug.Log("New Player! Index: " + move.PlayerIndex);
                 NewPlayerConnected(move);
             }
             else
@@ -107,6 +108,14 @@ public class gproClientManager : MonoBehaviour
         NetworkedPlayer cont = obj.GetComponent<NetworkedPlayer>();
         cont.NetworkUpdate(newPlayer);
         networkedPlayers.Add(newPlayer.PlayerIndex, cont);
+    }
+
+    void NewProjectileFound(ProjectileMove newProj)
+    {
+        GameObject obj = GameObject.Instantiate(projectilePrefab);
+        NetworkedProjectile cont = obj.GetComponent<NetworkedProjectile>();
+        cont.NetworkUpdate(newProj);
+        networkedProjectiles.Add(newProj.ProjIndex, cont);
     }
 
     void PrintDebugMessage(IntPtr ptr)
