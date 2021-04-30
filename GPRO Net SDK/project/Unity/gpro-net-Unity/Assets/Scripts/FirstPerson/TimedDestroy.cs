@@ -8,7 +8,7 @@ public class TimedDestroy : MonoBehaviour
     private ProjectileMove move;
     void Start()
     {
-        move.ProjIndex =  gproClientManager.Instance.NextProjIndex;
+        move.ProjIndex =  gproClientManager.Instance.GetNextProjIndex();
         gproClientManager.Instance.AddLocalProj(this);
         StartCoroutine(TimeDelete());
     }

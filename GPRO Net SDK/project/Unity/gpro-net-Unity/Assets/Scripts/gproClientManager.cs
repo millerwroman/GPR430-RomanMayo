@@ -33,15 +33,8 @@ public class gproClientManager : MonoBehaviour
     //Local Shit
     private PlayerController localPlayer;
     private Dictionary<int, TimedDestroy> localProjs = new Dictionary<int, TimedDestroy>();
-    public int NextProjIndex
-    {
-        get
-        {
-            ++NextProjIndex;
-            return NextProjIndex;
-        }
-        set { }
-    }
+    private int NextProjIndex = 0;
+
 
     private static gproClientManager _instance;
     public static gproClientManager Instance
@@ -54,6 +47,12 @@ public class gproClientManager : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    public int GetNextProjIndex()
+    {
+        ++NextProjIndex;
+        return NextProjIndex;
     }
 
     void Start()
