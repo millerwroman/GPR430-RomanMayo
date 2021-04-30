@@ -19,7 +19,7 @@ public:
 	bool UpdateInputRemote(); //Receive
 
 	bool PackagePlayerState(PlayerMove* move);
-	bool PackageProjStates(ProjectileMove* moves, int size);
+	bool PackageProjStates(ProjectileMove* moves);
 
 	int GetNetworkedMoves(PlayerMove* moves, int lastCount);
 	int GetNetworkedProjMoves(ProjectileMove* moves, int lastCount);

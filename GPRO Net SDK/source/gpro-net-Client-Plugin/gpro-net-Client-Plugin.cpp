@@ -96,7 +96,7 @@ int GetNetworkedPlayers(PlayerMove* playerMove, int lastCount)
 	return g_Interface->GetNetworkedMoves(playerMove, lastCount);
 }
 
-bool OutputLocalProjState(ProjectileMove* projMoveArr, int size)
+bool OutputLocalProjState(ProjectileMove* projMoveArr)
 {
 	if (!g_Interface) return false;
 	return g_Interface->PackageProjStates(projMoveArr, size);

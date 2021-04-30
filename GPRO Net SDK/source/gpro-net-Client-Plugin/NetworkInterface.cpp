@@ -81,7 +81,7 @@ bool NetworkInterface::UpdateInputRemote()
 		{
 			FPV::ProjStateMessage msg(bitstream);
 
-			
+
 		}
 		break;;
 		default:
@@ -141,13 +141,11 @@ bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 	return true;
 }
 
-bool NetworkInterface::PackageProjStates(ProjectileMove* moves, int size)
+bool NetworkInterface::PackageProjStates(ProjectileMove* moves)
 {
-	for(int i=0; i<size; ++i)
-	{
-		FPV::ProjStateMessage msg = FPV::ProjStateMessage(moves[i]);
-		AddMessageToQueue(msg);
-	}
+
+	FPV::ProjStateMessage msg = FPV::ProjStateMessage(*moves);
+	AddMessageToQueue(msg);
 	return true;
 }
 

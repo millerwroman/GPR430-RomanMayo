@@ -16,17 +16,45 @@ using System.Collections.Generic;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.186";
+    private string IP_ADDRESS = "172.16.2.56";
     private int SERVER_PORT = 7777;
     [Header("Networked Object Prefabs")]
     public GameObject playerPrefab;
     public GameObject projectilePrefab;
-    //Players
-    private PlayerController localPlayer;
+
+    //Networked Players
     private List<PlayerMove> networkedMoves = new List<PlayerMove>();
     private Dictionary<int, NetworkedPlayer> networkedPlayers = new Dictionary<int, NetworkedPlayer>();
 
+    //Networked Projs
+    private List<ProjectileMove> networkedProjMoves = new List<ProjectileMove>();
     private Dictionary<int, NetworkedProjectile> networkedProjectiles = new Dictionary<int, NetworkedProjectile>();
+
+    //Local Shit
+    private PlayerController localPlayer;
+    private Dictionary<int, TimedDestroy> localProjs = new Dictionary<int, TimedDestroy>();
+    public int NextProjIndex
+    {
+        get
+        {
+            ++NextProjIndex;
+            return NextProjIndex;
+        }
+        set { }
+    }
+
+    private static gproClientManager _instance;
+    public static gproClientManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = GameObject.FindObjectOfType<gproClientManager>();
+            }
+            return _instance;
+        }
+    }
 
     void Start()
     {
@@ -50,11 +78,16 @@ public class gproClientManager : MonoBehaviour
             //Input Remote
             gproClientPlugin.UpdateInputRemote();
 
-            //Update
+            //Update Players
             gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
             GetNetworkedPlayer();
             UpdateNetworkedPlayers();
 
+            //Update Proj
+            // This will need to loop and shit
+            OutputLocalProjs();
+            GetNetworkedProjs();
+            UpdateNetworkedProjs();
 
 
 
@@ -100,6 +133,49 @@ public class gproClientManager : MonoBehaviour
         }
     }
 
+    void OutputLocalProjs()
+    {
+        foreach (KeyValuePair<int, TimedDestroy> i in localProjs)
+        {
+            gproClientPlugin.OutputLocalProjState(ref i.Value.GetMove());
+        }
+    }
+
+    void GetNetworkedProjs()
+    {
+        networkedProjMoves.Clear();
+        while (true)
+        {
+            ProjectileMove move = new ProjectileMove();
+            int action = gproClientPlugin.GetNetworkedProjs(ref move, networkedProjMoves.Count);
+            if (action == 0)
+            {
+                break;
+            }
+            if (action == 1)
+            {
+                networkedProjMoves.Add(move);
+            }
+        }
+    }
+
+    void UpdateNetworkedProjs()
+    {
+        foreach (ProjectileMove move in networkedProjMoves)
+        {
+            if (!networkedProjectiles.ContainsKey(move.ProjIndex))
+            {
+                NewProjectileFound(move);
+            }
+            else
+            {
+                networkedProjectiles[move.ProjIndex].NetworkUpdate(move);
+            }
+        }
+    }
+
+
+
     void NewPlayerConnected(PlayerMove newPlayer)
     {
 
@@ -127,5 +203,14 @@ public class gproClientManager : MonoBehaviour
     void OnDisable()
     {
         gproClientPlugin.DestroyPlugin();
+    }
+
+    public void AddLocalProj(TimedDestroy proj)
+    {
+        localProjs.Add(proj.GetMove().ProjIndex, proj);
+    }
+    public void RemoveLocalProj(TimedDestroy proj)
+    {
+        localProjs.Remove(proj.GetMove().ProjIndex);
     }
 }

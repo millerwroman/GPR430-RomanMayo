@@ -53,8 +53,15 @@ public class gproClientPlugin
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
     public static extern bool OutputLocalPlayerState(ref PlayerMove playerMove);
     [DllImport("gpro-net-Client-Plugin")]
-    public static extern int GetNetworkedPlayers(ref PlayerMove move, int size );
+    public static extern int GetNetworkedPlayers(ref PlayerMove move, int size);
 
+    //Proj State
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
+
+    public static extern bool OutputLocalProjState(ref ProjectileMove projMoveArr);
+    [DllImport("gpro-net-Client-Plugin")]
+
+    public static extern int GetNetworkedProjs(ref ProjectileMove projMove, int lastCount);
 
     //Debug
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]

@@ -56,7 +56,7 @@ extern "C" {
 	GPRO_NET_SYMBOL int GetNetworkedPlayers(PlayerMove* playerMove, int lastCount);
 
 	//Proj State
-	GPRO_NET_SYMBOL bool OutputLocalProjState(ProjectileMove* projMoveArr, int size);
+	GPRO_NET_SYMBOL bool OutputLocalProjState(ProjectileMove* projMoveArr);
 	GPRO_NET_SYMBOL int GetNetworkedProjs(ProjectileMove* projMove, int lastCount);
 	
 	//Debug
