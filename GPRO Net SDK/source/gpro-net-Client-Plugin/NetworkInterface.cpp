@@ -80,8 +80,7 @@ bool NetworkInterface::UpdateInputRemote()
 		case FPV::ID_PROJ_STATE:
 		{
 			FPV::ProjStateMessage msg(bitstream);
-
-
+			AddState(msg.move);
 		}
 		break;;
 		default:
