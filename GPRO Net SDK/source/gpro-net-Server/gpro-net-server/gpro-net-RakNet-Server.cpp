@@ -106,7 +106,7 @@ namespace gproNet
 		{
 			FPV::ProjDeletedMessage msg(bitstream);
 
-			printf("Proj Deleted Index: %d", std::to_string(msg.i));
+			printf("Proj Deleted Index: %d\n", msg.i);
 
 			RakNet::BitStream bs;
 			msg.WriteToBitStream(bs);

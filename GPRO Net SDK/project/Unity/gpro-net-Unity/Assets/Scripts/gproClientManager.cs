@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.56";
+    private string IP_ADDRESS = "172.16.2.51";
     private int SERVER_PORT = 7777;
     [Header("Networked Object Prefabs")]
     public GameObject playerPrefab;
@@ -104,15 +104,22 @@ public class gproClientManager : MonoBehaviour
     void HandleDeletedProjs()
     {
         int count = 0;
-        while(true)
+        int bob = 0;
+        while (bob<10)
         {
             int i = gproClientPlugin.GetDeletedProjs(count);
-            if(i==-1)
+            
+            if (i == -1)
             {
+                Debug.Log("Proj Break");
                 break;
             }
             networkedProjectiles[i].DeleteProj();
+            Debug.Log("Deleted Index: " + i);
+
+            ++bob;
         }
+        Debug.Log("End Check");
     }
 
     void GetNetworkedPlayer()

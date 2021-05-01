@@ -169,6 +169,7 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 		moves->RotW = m->RotW;
 		return 1; //Valid
 	}
+	networkedMoves.clear();
 	return 0;
 
 }
@@ -184,6 +185,7 @@ int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount
 		moves->LocZ = m->LocZ;
 		return 1; //Valid
 	}
+	networkedMoves.clear();
 	return 0;
 
 }
@@ -201,6 +203,7 @@ int NetworkInterface::GetDeletedProjs(int count)
 	{
 		return deletedProjs[count];
 	}
+	deletedProjs.clear();
 	return -1;
 }
 
