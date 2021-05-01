@@ -86,7 +86,7 @@ bool NetworkInterface::UpdateInputRemote()
 		case FPV::ID_PROJ_DELETED:
 		{
 			FPV::ProjDeletedMessage msg(bitstream);
-			deletedProjs.push_back(msg.i);
+			HandleDeleteNetworkedProj(msg.i);
 		}
 		break;
 		default:
@@ -205,6 +205,18 @@ int NetworkInterface::GetDeletedProjs(int count)
 	}
 	deletedProjs.clear();
 	return -1;
+}
+
+void NetworkInterface::HandleDeleteNetworkedProj(int index)
+{
+	deletedProjs.push_back(index);
+	for (int i = 0; i < networkedProjMoves.size(); ++i)
+	{
+		if (networkedProjMoves[i]->ProjIndex == index)
+		{
+			networkedProjMoves.erase(networkedProjMoves.begin() + i);
+		}
+	}
 }
 
 const char* NetworkInterface::PrintDebugUnity()

@@ -104,22 +104,18 @@ public class gproClientManager : MonoBehaviour
     void HandleDeletedProjs()
     {
         int count = 0;
-        int bob = 0;
-        while (bob<10)
+        while (true)
         {
             int i = gproClientPlugin.GetDeletedProjs(count);
-            
+            ++count;
             if (i == -1)
             {
-                Debug.Log("Proj Break");
                 break;
             }
+            Debug.Log("delete Index: " + i);
             networkedProjectiles[i].DeleteProj();
-            Debug.Log("Deleted Index: " + i);
-
-            ++bob;
+            networkedProjectiles.Remove(i);
         }
-        Debug.Log("End Check");
     }
 
     void GetNetworkedPlayer()
@@ -187,10 +183,12 @@ public class gproClientManager : MonoBehaviour
         {
             if (!networkedProjectiles.ContainsKey(move.ProjIndex))
             {
+                Debug.Log("New Proj Index: " + move.ProjIndex);
                 NewProjectileFound(move);
             }
             else
             {
+                Debug.Log("Update Index: " + move.ProjIndex);
                 networkedProjectiles[move.ProjIndex].NetworkUpdate(move);
             }
         }
