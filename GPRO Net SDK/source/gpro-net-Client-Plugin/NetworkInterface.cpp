@@ -185,7 +185,7 @@ int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount
 		moves->LocZ = m->LocZ;
 		return 1; //Valid
 	}
-	networkedMoves.clear();
+	networkedProjMoves.clear();
 	return 0;
 
 }

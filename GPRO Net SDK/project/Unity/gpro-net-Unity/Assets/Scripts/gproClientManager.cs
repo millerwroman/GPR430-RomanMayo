@@ -173,19 +173,19 @@ public class gproClientManager : MonoBehaviour
 
     void UpdateNetworkedProjs()
     {
+        Debug.Log("move Size: " + networkedProjMoves.Count);
         foreach (ProjectileMove move in networkedProjMoves)
         {
             if (!networkedProjectiles.ContainsKey(move.ProjIndex))
             {
-                Debug.Log("New Proj Index: " + move.ProjIndex);
                 NewProjectileFound(move);
             }
             else
             {
-                Debug.Log("Update Index: " + move.ProjIndex);
                 networkedProjectiles[move.ProjIndex].NetworkUpdate(move);
             }
         }
+        networkedProjMoves.Clear();
     }
 
 
