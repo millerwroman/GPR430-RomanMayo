@@ -68,3 +68,20 @@ void FPV::ProjStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 	bs.Write(move.LocZ);
 }
 
+FPV::ProjDeletedMessage::ProjDeletedMessage(int index)
+{
+	ID = ID_PROJ_DELETED;
+	i = index;
+}
+
+FPV::ProjDeletedMessage::ProjDeletedMessage(RakNet::BitStream& bs)
+{
+	ID = ID_PROJ_DELETED;
+	bs.Read(i);
+}
+
+void FPV::ProjDeletedMessage::WriteToBitStream(RakNet::BitStream& bs)
+{
+	bs.Write(ID);
+	bs.Write(i);
+}

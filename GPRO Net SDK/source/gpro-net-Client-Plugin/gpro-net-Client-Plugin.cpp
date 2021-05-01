@@ -107,3 +107,15 @@ int GetNetworkedProjs(ProjectileMove* projMove, int lastCount)
 	if (!g_Interface) return -1;
 	return g_Interface->GetNetworkedProjMoves(projMove, lastCount);
 }
+
+GPRO_NET_SYMBOL bool ProjectileDeleted(int index)
+{
+	if (!g_Interface) return false;
+	return g_Interface->ProjDeleted(index);
+}
+
+GPRO_NET_SYMBOL int GetDeletedProjs(int count)
+{
+	if (!g_Interface) return -1;
+	return g_Interface->GetDeletedProjs(count);
+}

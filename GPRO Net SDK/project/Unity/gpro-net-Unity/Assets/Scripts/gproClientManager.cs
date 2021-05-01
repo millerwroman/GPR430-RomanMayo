@@ -88,6 +88,8 @@ public class gproClientManager : MonoBehaviour
             GetNetworkedProjs();
             UpdateNetworkedProjs();
 
+            //Delete/Disconnect
+            HandleDeletedProjs();
 
 
 
@@ -97,6 +99,20 @@ public class gproClientManager : MonoBehaviour
 
         }
         PrintDebugMessage(gproClientPlugin.DebugMessage());
+    }
+
+    void HandleDeletedProjs()
+    {
+        int count = 0;
+        while(true)
+        {
+            int i = gproClientPlugin.GetDeletedProjs(count);
+            if(i==-1)
+            {
+                break;
+            }
+            networkedProjectiles[i].DeleteProj();
+        }
     }
 
     void GetNetworkedPlayer()
@@ -211,5 +227,6 @@ public class gproClientManager : MonoBehaviour
     public void RemoveLocalProj(TimedDestroy proj)
     {
         localProjs.Remove(proj.GetMove().ProjIndex);
+        gproClientPlugin.ProjectileDeleted(proj.GetMove().ProjIndex);
     }
 }

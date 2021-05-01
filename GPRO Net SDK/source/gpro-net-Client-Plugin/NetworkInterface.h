@@ -24,6 +24,9 @@ public:
 	int GetNetworkedMoves(PlayerMove* moves, int lastCount);
 	int GetNetworkedProjMoves(ProjectileMove* moves, int lastCount);
 
+	bool ProjDeleted(int index);
+	int GetDeletedProjs(int count);
+
 	//Debug
 	const char* PrintDebugUnity();
 
@@ -39,6 +42,7 @@ private:
 
 	std::vector<PlayerMove*> networkedMoves;
 	std::vector<ProjectileMove*> networkedProjMoves;
+	std::vector<int> deletedProjs;
 	void AddState(PlayerMove& move);
 	void AddState(ProjectileMove& move);
 	static PlayerMove* DynamicMoveCopy(PlayerMove& move);

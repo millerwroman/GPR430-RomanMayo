@@ -102,6 +102,17 @@ namespace gproNet
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
 			return true;
 		}
+		case FPV::ID_PROJ_DELETED:
+		{
+			FPV::ProjDeletedMessage msg(bitstream);
+
+			printf("Proj Deleted Index: %d", std::to_string(msg.i));
+
+			RakNet::BitStream bs;
+			msg.WriteToBitStream(bs);
+			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
+			return true;
+		}
 		default:
 		{
 			printf("A default Packing ID: %d", msgID);

@@ -57,11 +57,15 @@ public class gproClientPlugin
 
     //Proj State
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
-
     public static extern bool OutputLocalProjState(ref ProjectileMove projMoveArr);
     [DllImport("gpro-net-Client-Plugin")]
-
     public static extern int GetNetworkedProjs(ref ProjectileMove projMove, int lastCount);
+
+    //Delete and Disconnect
+    [DllImport("gpro-net-Client-Plugin")]
+    public static extern bool ProjectileDeleted(int index);
+    [DllImport("gpro-net-Client-Plugin")]
+    public static extern int GetDeletedProjs(int count);
 
     //Debug
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]

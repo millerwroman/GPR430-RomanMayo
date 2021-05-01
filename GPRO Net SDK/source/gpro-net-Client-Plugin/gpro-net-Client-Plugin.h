@@ -58,6 +58,10 @@ extern "C" {
 	//Proj State
 	GPRO_NET_SYMBOL bool OutputLocalProjState(ProjectileMove* projMoveArr);
 	GPRO_NET_SYMBOL int GetNetworkedProjs(ProjectileMove* projMove, int lastCount);
+
+	//Disconnection/Delete
+	GPRO_NET_SYMBOL bool ProjectileDeleted(int index);
+	GPRO_NET_SYMBOL int GetDeletedProjs(int count);
 	
 	//Debug
 	GPRO_NET_SYMBOL const char* DebugMessage();

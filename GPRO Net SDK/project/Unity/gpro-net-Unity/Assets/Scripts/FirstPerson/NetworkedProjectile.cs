@@ -11,4 +11,9 @@ public class NetworkedProjectile : MonoBehaviour
         move = newMove;
         transform.position = new Vector3(move.LocX, move.LocY, move.LocZ);
     }
+
+    public void DeleteProj()
+    {
+        Destroy(gameObject);
+    }
 }
