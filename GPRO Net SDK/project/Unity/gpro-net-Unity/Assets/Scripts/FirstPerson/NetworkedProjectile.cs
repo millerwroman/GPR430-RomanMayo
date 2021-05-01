@@ -5,15 +5,29 @@ using UnityEngine;
 public class NetworkedProjectile : MonoBehaviour
 {
     private ProjectileMove move;
+    private bool UpdatedThisFrame = false;
+
+    void Start()
+    {
+        gproClientManager.FinishedNetworkUpdate.AddListener(HandleDeleteProj);
+    }
 
     public void NetworkUpdate(ProjectileMove newMove)
     {
         move = newMove;
         transform.position = new Vector3(move.LocX, move.LocY, move.LocZ);
+        UpdatedThisFrame = true;
     }
 
-    public void DeleteProj()
+    private void HandleDeleteProj()
     {
-        Destroy(gameObject);
+        if(UpdatedThisFrame)
+        {
+            UpdatedThisFrame = false;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

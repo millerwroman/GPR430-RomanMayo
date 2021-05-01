@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 using System.Collections.Generic;
 
 
@@ -35,7 +36,7 @@ public class gproClientManager : MonoBehaviour
     private Dictionary<int, TimedDestroy> localProjs = new Dictionary<int, TimedDestroy>();
     private int NextProjIndex = 0;
 
-
+    public static UnityEvent FinishedNetworkUpdate = new UnityEvent();
     private static gproClientManager _instance;
     public static gproClientManager Instance
     {
@@ -76,47 +77,40 @@ public class gproClientManager : MonoBehaviour
         {
             //Input Remote
             gproClientPlugin.UpdateInputRemote();
-
-            //Update Players
-            gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
             GetNetworkedPlayer();
-            UpdateNetworkedPlayers();
-
-            //Update Proj
-            // This will need to loop and shit
-            OutputLocalProjs();
             GetNetworkedProjs();
+
+            //Update
+            UpdateNetworkedPlayers();
             UpdateNetworkedProjs();
-
-            //Delete/Disconnect
-            HandleDeletedProjs();
-
-
+            FinishedNetworkUpdate.Invoke();
 
 
             //Output Remote
-            gproClientPlugin.UpdateOutputRemote();
+            OutputLocalProjs();
+            gproClientPlugin.OutputLocalPlayerState(ref localPlayer.GetPlayerMove());
+            gproClientPlugin.UpdateOutputRemote(); // This is actual send messages
 
         }
         PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
 
-    void HandleDeletedProjs()
-    {
-        int count = 0;
-        while (true)
-        {
-            int i = gproClientPlugin.GetDeletedProjs(count);
-            ++count;
-            if (i == -1)
-            {
-                break;
-            }
-            Debug.Log("delete Index: " + i);
-            networkedProjectiles[i].DeleteProj();
-            networkedProjectiles.Remove(i);
-        }
-    }
+    //void HandleDeletedProjs()
+    //{
+    //    int count = 0;
+    //    while (true)
+    //    {
+    //        int i = gproClientPlugin.GetDeletedProjs(count);
+    //        ++count;
+    //        if (i == -1)
+    //        {
+    //            break;
+    //        }
+    //        Debug.Log("delete Index: " + i);
+    //        networkedProjectiles[i].DeleteProj();
+    //        networkedProjectiles.Remove(i);
+    //    }
+    //}
 
     void GetNetworkedPlayer()
     {
