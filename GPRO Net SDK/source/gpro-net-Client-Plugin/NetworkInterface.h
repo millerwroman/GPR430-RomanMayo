@@ -26,6 +26,7 @@ public:
 
 	bool ProjDeleted(int index);
 	int GetDeletedProjs(int count);
+	void HandleDeleteNetworkedProj(int index);
 
 	//Debug
 	const char* PrintDebugUnity();
