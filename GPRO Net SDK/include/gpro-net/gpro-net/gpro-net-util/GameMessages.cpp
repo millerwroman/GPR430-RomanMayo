@@ -85,3 +85,21 @@ void FPV::TimeStampMessage::WriteToBitStream(RakNet::BitStream& bs)
 	bs.Write(ID);
 	bs.Write(time);
 }
+
+FPV::ChatMessage::ChatMessage(char m[512])
+{
+	ID = ID_CHAT_MSG;
+	std::strcpy(msg, m);
+}
+
+FPV::ChatMessage::ChatMessage(RakNet::BitStream& bs)
+{
+	ID = ID_CHAT_MSG;
+	bs.Read(msg);
+}
+
+void FPV::ChatMessage::WriteToBitStream(RakNet::BitStream& bs)
+{
+	bs.Write(ID);
+	bs.Write(msg);
+}

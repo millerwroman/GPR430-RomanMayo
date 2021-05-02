@@ -101,6 +101,15 @@ namespace gproNet
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
 			return true;
 		}
+		case FPV::ID_CHAT_MSG:
+		{
+			FPV::ChatMessage msg = FPV::ChatMessage(bitstream);
+
+			RakNet::BitStream bs;
+			msg.WriteToBitStream(bs);
+			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
+			return true;
+		}
 		default:
 		{
 			printf("A default Packing ID: %d", msgID);

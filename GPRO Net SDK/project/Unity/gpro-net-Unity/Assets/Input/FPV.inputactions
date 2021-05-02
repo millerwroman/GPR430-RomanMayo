@@ -52,6 +52,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Enter",
+                    "type": "Button",
+                    "id": "275cbf27-dede-40d9-956b-1170aa50002f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -156,7 +164,18 @@
                 },
                 {
                     "name": "",
-                    "id": "0a45b292-16ee-47a6-aed1-46b603b0874f",
+                    "id": "8adb0469-e5c0-494d-a697-76cb7be8f840",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Enter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7c35be69-8ba4-48ae-a035-a9bcf43db667",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",

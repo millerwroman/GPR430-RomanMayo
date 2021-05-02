@@ -24,8 +24,10 @@ public:
 	int GetNetworkedMoves(PlayerMove* moves, int lastCount);
 	int GetNetworkedProjMoves(ProjectileMove* moves, int lastCount);
 
-	//Debug
-	const char* PrintDebugUnity();
+	//Char
+	const char* GetChatMessage();
+	bool PackageChatMessage(char* msg, size_t size);
+
 
 
 
@@ -34,7 +36,7 @@ private:
 	RakNet::RakPeerInterface* peer;
 	RakNet::SystemAddress serverAddress;
 	std::queue<RakNet::BitStream*> sendQueue;
-	std::string debugMessage = "DEFUALT";
+	std::string chatMessage = "DEFUALT";
 	int localPlayerIndex = -1;
 
 	std::vector<PlayerMove*> networkedMoves;
@@ -45,5 +47,7 @@ private:
 	static ProjectileMove* DynamicMoveCopy(ProjectileMove& move);
 
 	RakNet::BitStream& ReadTimestamp(RakNet::BitStream& bitstream, RakNet::Time& dtSendToReceive_out, RakNet::MessageID& msgID_out);
+
+	void DeadReckonPlayer(PlayerMove& move, float dt);
 };
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -41,13 +42,17 @@ public class PlayerController : MonoBehaviour
 
     private PlayerMove move;
 
+    private InputField chat;
+    public Text chatOutput;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
         rotationDividerInv = 1 / rotationDivider;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
         localCamera = gameObject.GetComponentInChildren<Camera>();
+        chat = gameObject.GetComponentInChildren<InputField>();
     }
     void FixedUpdate()
     {
@@ -122,11 +127,26 @@ public class PlayerController : MonoBehaviour
         cameraRotation.x = (cameraRotation.x + 180f) % 360f;
         cameraRotation.x = Mathf.Clamp(cameraRotation.x, (minCameraAngle + 180), (maxCameraAngle + 180));
         cameraRotation.x -= 180f;
-       localCamera.transform.rotation = Quaternion.Euler(cameraRotation);
+        localCamera.transform.rotation = Quaternion.Euler(cameraRotation);
     }
     public void OnSprint(InputValue value)
     {
         shouldSprint = (int)value.Get<float>() != 0;
+    }
+
+    public void OnEnter()
+    {
+        if (!chat.isFocused)
+        {
+
+            chat.ActivateInputField();
+
+        }
+        else
+        {
+            gproClientManager.Instance.OutputMessage(chat.text);
+            chat.text = "";
+        }
     }
 
     public void OnShoot()
@@ -135,4 +155,8 @@ public class PlayerController : MonoBehaviour
         obj.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * projectileSpeed);
     }
 
+    public void AddChatMessage(string msg)
+    {
+        chatOutput.text = "Incomming Message: \n" + msg;
+    }
 }

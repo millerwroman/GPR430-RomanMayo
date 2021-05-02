@@ -59,6 +59,8 @@ extern "C" {
 	GPRO_NET_SYMBOL bool OutputLocalProjState(ProjectileMove* projMoveArr);
 	GPRO_NET_SYMBOL int GetNetworkedProjs(ProjectileMove* projMove, int lastCount);
 
+
+	GPRO_NET_SYMBOL bool OutputLocalChatMessages(char* str, size_t size);
 	
 	//Debug
 	GPRO_NET_SYMBOL const char* DebugMessage();

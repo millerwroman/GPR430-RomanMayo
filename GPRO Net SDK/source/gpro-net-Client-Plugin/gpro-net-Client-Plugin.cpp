@@ -78,10 +78,10 @@ bool OutputLocalPlayerState(PlayerMove* playerMove)
 	return true;
 }
 
-const char* DebugMessage()
+const char* GetChatMessage()
 {
 	if (!g_Interface) return nullptr;
-	return g_Interface->PrintDebugUnity();
+	return g_Interface->GetChatMessage();
 }
 
 int GetLocalPlayerIndex()
@@ -106,4 +106,11 @@ int GetNetworkedProjs(ProjectileMove* projMove, int lastCount)
 {
 	if (!g_Interface) return -1;
 	return g_Interface->GetNetworkedProjMoves(projMove, lastCount);
+}
+
+GPRO_NET_SYMBOL bool OutputLocalChatMessages(char* str, size_t size)
+{
+	if (!g_Interface) return false;
+	return g_Interface->PackageChatMessage(str, size);
+
 }

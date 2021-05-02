@@ -40,5 +40,6 @@
     <None Include="..\..\Unity\gpro-net-Unity\Assets\Scripts\Plugins\gproClientPlugin.cs">
       <Filter>Header Files\Unity</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

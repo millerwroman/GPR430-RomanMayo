@@ -86,6 +86,12 @@ bool NetworkInterface::UpdateInputRemote()
 			AddState(msg.move);
 		}
 		break;
+		case FPV::ID_CHAT_MSG:
+		{
+			FPV::ChatMessage msg(bitstream);
+			chatMessage = msg.msg;
+		}
+		break;
 		default:
 			//debugMessage = "Default Case: " + std::to_string(msgID);
 			break;
@@ -151,6 +157,16 @@ bool NetworkInterface::PackageProjStates(ProjectileMove* moves)
 	return true;
 }
 
+bool NetworkInterface::PackageChatMessage(char* msg, size_t size)
+{
+	char arr[512];
+	strcpy_s(arr, size, msg);
+	FPV::ChatMessage Fmsg = FPV::ChatMessage(arr);
+	debugMessage = Fmsg.msg;
+	AddMessageToQueue(Fmsg);
+	return true;
+}
+
 int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 {
 	if (lastCount < networkedMoves.size())
@@ -188,7 +204,7 @@ int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount
 
 }
 
-const char* NetworkInterface::PrintDebugUnity()
+const char* NetworkInterface::GetChatMessage()
 {
 	return debugMessage.c_str();
 }

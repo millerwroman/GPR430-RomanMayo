@@ -14,6 +14,7 @@ namespace FPV
 		ID_PROJ_STATE,
 		ID_REQUEST_PLAYER_ID,
 		ID_PROJ_DELETED,
+		ID_CHAT_MSG,
 		ID_GAME_MESSAGE_END
 	};
 
@@ -55,6 +56,16 @@ namespace FPV
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
 		ProjectileMove move;
+	};
+
+	struct ChatMessage : public GameMessage
+	{
+		ChatMessage() = default;
+		ChatMessage(char m[512]);
+		ChatMessage(RakNet::BitStream& bs);
+		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
+		
+		char msg[512];
 	};
 
 	//Risk With sending stucts:

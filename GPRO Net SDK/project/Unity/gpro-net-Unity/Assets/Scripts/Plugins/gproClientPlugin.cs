@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using System.Text;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct PlayerMove
@@ -65,7 +66,10 @@ public class gproClientPlugin
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool ProjectileDeleted(int index);
 
+    [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
+    public static extern bool OutputLocalChatMessages(StringBuilder data, int size);
+
     //Debug
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]
-    public static extern IntPtr DebugMessage();
+    public static extern IntPtr GetChatMessage();
 }

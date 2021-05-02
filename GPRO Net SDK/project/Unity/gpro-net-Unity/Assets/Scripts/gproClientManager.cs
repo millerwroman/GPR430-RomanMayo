@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using System.Text;
 
 
 /* THIS IS HOW TO SEND 2D ARRAYS ACROSS SHIT
@@ -79,6 +80,7 @@ public class gproClientManager : MonoBehaviour
             gproClientPlugin.UpdateInputRemote();
             GetNetworkedPlayer();
             GetNetworkedProjs();
+            GetChatMessage(gproClientPlugin.GetChatMessage());
 
             //Update
             UpdateNetworkedPlayers();
@@ -92,7 +94,6 @@ public class gproClientManager : MonoBehaviour
             gproClientPlugin.UpdateOutputRemote(); // This is actual send messages
 
         }
-        PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
 
     void GetNetworkedPlayer()
@@ -190,10 +191,10 @@ public class gproClientManager : MonoBehaviour
         networkedProjectiles.Add(newProj.ProjIndex, cont);
     }
 
-    void PrintDebugMessage(IntPtr ptr)
+    void GetChatMessage(IntPtr ptr)
     {
         string str = Marshal.PtrToStringAnsi(ptr);
-        Debug.Log("DLL Debug: " + str);
+        localPlayer.AddChatMessage(str);
     }
 
     void OnDisable()
@@ -218,5 +219,12 @@ public class gproClientManager : MonoBehaviour
     public void RemoveNetworkedPlayer(int index)
     {
         networkedPlayers.Remove(index);
+    }
+
+    public void OutputMessage(string msg)
+    {
+        StringBuilder buffer = new StringBuilder(512);
+        buffer.Append(msg);
+        gproClientPlugin.OutputLocalChatMessages(buffer, buffer.Capacity);
     }
 }
