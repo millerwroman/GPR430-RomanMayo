@@ -63,7 +63,7 @@ extern "C" {
 	GPRO_NET_SYMBOL bool OutputLocalChatMessages(char* str, size_t size);
 	
 	//Debug
-	GPRO_NET_SYMBOL const char* DebugMessage();
+	GPRO_NET_SYMBOL const char* GetChatMessage();
 
 #ifdef __cplusplus
 }

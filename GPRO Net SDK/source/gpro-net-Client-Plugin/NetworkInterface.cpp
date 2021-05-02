@@ -162,7 +162,6 @@ bool NetworkInterface::PackageChatMessage(char* msg, size_t size)
 	char arr[512];
 	strcpy_s(arr, size, msg);
 	FPV::ChatMessage Fmsg = FPV::ChatMessage(arr);
-	debugMessage = Fmsg.msg;
 	AddMessageToQueue(Fmsg);
 	return true;
 }
@@ -189,7 +188,6 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 
 int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount)
 {
-	debugMessage = "Proj Move Size: " + std::to_string(networkedProjMoves.size());
 	if (lastCount < networkedProjMoves.size())
 	{
 		ProjectileMove* m = networkedProjMoves[lastCount];
@@ -206,7 +204,7 @@ int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount
 
 const char* NetworkInterface::GetChatMessage()
 {
-	return debugMessage.c_str();
+	return chatMessage.c_str();
 }
 
 void NetworkInterface::AddMessageToQueue(FPV::GameMessage& msg)
