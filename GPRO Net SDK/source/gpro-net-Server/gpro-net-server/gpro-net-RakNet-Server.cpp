@@ -86,7 +86,7 @@ namespace gproNet
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
-			//printf("%f, %f, %f\n", msg.move.LocX, msg.move.LocY, msg.move.LocZ);
+			printf("Time: %f", msg.time);
 
 			RakNet::BitStream bs;
 			msg.WriteToBitStream(bs);

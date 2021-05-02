@@ -135,7 +135,7 @@ ProjectileMove* NetworkInterface::DynamicMoveCopy(ProjectileMove& move)
 
 bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 {
-	FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(*move);
+	FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(*move, RakNet::GetTime());
 	AddMessageToQueue(msg);
 	return true;
 }

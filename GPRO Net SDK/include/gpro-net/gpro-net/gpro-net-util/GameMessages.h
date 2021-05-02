@@ -26,19 +26,21 @@ namespace FPV
 		RakNet::MessageID ID;
 	};
 
-	//struct TimeStampMessage : public GameMessage
-	//{
-	//{
-	//	//needs constructor
-	//	RakNet::MessageID Time_ID = ID_TIMESTAMP;
-	//	RakNet::Time time;
-	//	RakNet::MessageID ID;
-	//};
+	struct TimeStampMessage : public GameMessage
+	{
+		TimeStampMessage() = default;
+		TimeStampMessage(RakNet::Time t);
+		TimeStampMessage(RakNet::BitStream& bs);
+		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
-	struct PlayerStateMessage : public GameMessage
+		RakNet::Time time;
+		RakNet::MessageID MsgID;
+	};
+
+	struct PlayerStateMessage : public TimeStampMessage
 	{
 		PlayerStateMessage() = default;
-		PlayerStateMessage(PlayerMove& playerMove);
+		PlayerStateMessage(PlayerMove& playerMove, RakNet::Time t);
 		PlayerStateMessage(RakNet::BitStream& bs);
 		virtual void WriteToBitStream(RakNet::BitStream& bs) override;
 
