@@ -43,5 +43,7 @@ private:
 	void AddState(ProjectileMove& move);
 	static PlayerMove* DynamicMoveCopy(PlayerMove& move);
 	static ProjectileMove* DynamicMoveCopy(ProjectileMove& move);
+
+	RakNet::BitStream& ReadTimestamp(RakNet::BitStream& bitstream, RakNet::Time& dtSendToReceive_out, RakNet::MessageID& msgID_out);
 };
 

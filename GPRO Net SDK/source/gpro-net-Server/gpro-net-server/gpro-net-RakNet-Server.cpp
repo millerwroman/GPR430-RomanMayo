@@ -84,9 +84,10 @@ namespace gproNet
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
-			//printf("Time: %f", msg.time);
 
 			RakNet::BitStream bs;
+			bs.Write((RakNet::MessageID)ID_TIMESTAMP);
+			bs.Write(RakNet::GetTime() - dtSendToReceive);
 			msg.WriteToBitStream(bs);
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
 			return true;
@@ -94,17 +95,6 @@ namespace gproNet
 		case FPV::ID_PROJ_STATE:
 		{
 			FPV::ProjStateMessage msg = FPV::ProjStateMessage(bitstream);
-
-			RakNet::BitStream bs;
-			msg.WriteToBitStream(bs);
-			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);
-			return true;
-		}
-		case FPV::ID_PROJ_DELETED:
-		{
-			FPV::ProjDeletedMessage msg(bitstream);
-
-			printf("Proj Deleted Index: %d\n", msg.i);
 
 			RakNet::BitStream bs;
 			msg.WriteToBitStream(bs);

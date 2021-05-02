@@ -208,7 +208,6 @@ public class gproClientManager : MonoBehaviour
     public void RemoveLocalProj(TimedDestroy proj)
     {
         localProjs.Remove(proj.GetMove().ProjIndex);
-        gproClientPlugin.ProjectileDeleted(proj.GetMove().ProjIndex);
     }
 
     public void RemoveNetworkedProj(int index)

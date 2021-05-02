@@ -1,5 +1,6 @@
 #include "NetworkInterface.h"
 
+const float UNITY_VEL = 5;
 
 NetworkInterface::NetworkInterface()
 {
@@ -52,6 +53,8 @@ bool NetworkInterface::UpdateInputRemote()
 	{
 		RakNet::BitStream bitstream(packet->data, packet->length, false);
 		bitstream.Read(msgID);
+		ReadTimestamp(bitstream, dtSendToReceive, msgID);
+
 		switch (msgID)
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
@@ -198,3 +201,24 @@ void NetworkInterface::AddMessageToQueue(FPV::GameMessage& msg)
 	msg.WriteToBitStream(*bs);
 	sendQueue.push(bs);
 }
+
+RakNet::BitStream& NetworkInterface::ReadTimestamp(RakNet::BitStream& bitstream, RakNet::Time& dtSendToReceive_out, RakNet::MessageID& msgID_out)
+{
+	RakNet::Time tSend = 0, tReceive = 0;
+	if (msgID_out == ID_TIMESTAMP)
+	{
+		tReceive = RakNet::GetTime();
+		bitstream.Read(tSend);
+		bitstream.Read(msgID_out);
+		dtSendToReceive_out = (tReceive - tSend);
+	}
+	return bitstream;
+}
+
+//void NetworkInterface::DeadReckonPlayer(PlayerMove& move, float dt)
+//{
+//	float comp = UNITY_VEL * dt;
+//	move.LocX  = (move.LocX >= 0 ? move.LocX)
+//	move.LocY += comp;
+//	move.LocZ += comp;
+//}
