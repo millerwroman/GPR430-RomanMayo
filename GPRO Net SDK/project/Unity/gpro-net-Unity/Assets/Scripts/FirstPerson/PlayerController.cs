@@ -157,6 +157,6 @@ public class PlayerController : MonoBehaviour
 
     public void AddChatMessage(string msg)
     {
-        chatOutput.text = "Incomming Message: \n" + msg;
+        chatOutput.text = "New Message: " + msg;
     }
 }

@@ -104,7 +104,7 @@ namespace gproNet
 		case FPV::ID_CHAT_MSG:
 		{
 			FPV::ChatMessage msg = FPV::ChatMessage(bitstream);
-
+			printf("Message: %s\n", msg.msg);
 			RakNet::BitStream bs;
 			msg.WriteToBitStream(bs);
 			peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, sender, true);

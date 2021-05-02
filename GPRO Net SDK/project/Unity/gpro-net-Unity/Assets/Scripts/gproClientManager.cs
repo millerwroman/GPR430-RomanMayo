@@ -194,6 +194,7 @@ public class gproClientManager : MonoBehaviour
     void GetChatMessage(IntPtr ptr)
     {
         string str = Marshal.PtrToStringAnsi(ptr);
+        Debug.Log("manager: " + str);
         localPlayer.AddChatMessage(str);
     }
 
