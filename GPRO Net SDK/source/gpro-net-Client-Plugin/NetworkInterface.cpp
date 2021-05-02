@@ -135,7 +135,7 @@ ProjectileMove* NetworkInterface::DynamicMoveCopy(ProjectileMove& move)
 
 bool NetworkInterface::PackagePlayerState(PlayerMove* move)
 {
-	FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(*move, RakNet::GetTime());
+	FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(*move);
 	AddMessageToQueue(msg);
 	return true;
 }
@@ -185,13 +185,6 @@ int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount
 
 }
 
-bool NetworkInterface::ProjDeleted(int index)
-{
-	FPV::ProjDeletedMessage msg(index);
-	AddMessageToQueue(msg);
-	return true;
-}
-
 const char* NetworkInterface::PrintDebugUnity()
 {
 	return debugMessage.c_str();
@@ -200,6 +193,8 @@ const char* NetworkInterface::PrintDebugUnity()
 void NetworkInterface::AddMessageToQueue(FPV::GameMessage& msg)
 {
 	RakNet::BitStream* bs = new RakNet::BitStream();
+	bs->Write((RakNet::MessageID)ID_TIMESTAMP);
+	bs->Write(RakNet::GetTime());
 	msg.WriteToBitStream(*bs);
 	sendQueue.push(bs);
 }

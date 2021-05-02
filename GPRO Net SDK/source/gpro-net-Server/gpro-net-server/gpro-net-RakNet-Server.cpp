@@ -46,8 +46,6 @@ namespace gproNet
 
 	bool cRakNetServer::ProcessMessage(RakNet::BitStream& bitstream, RakNet::SystemAddress const sender, RakNet::Time const dtSendToReceive, RakNet::MessageID const msgID)
 	{
-		if (cRakNetManager::ProcessMessage(bitstream, sender, dtSendToReceive, msgID))
-			return true;
 
 		// server-specific messages
 		switch (msgID)
@@ -86,7 +84,7 @@ namespace gproNet
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg = FPV::PlayerStateMessage(bitstream);
-			printf("Time: %f", msg.time);
+			//printf("Time: %f", msg.time);
 
 			RakNet::BitStream bs;
 			msg.WriteToBitStream(bs);

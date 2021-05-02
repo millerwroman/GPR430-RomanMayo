@@ -24,9 +24,6 @@ public:
 	int GetNetworkedMoves(PlayerMove* moves, int lastCount);
 	int GetNetworkedProjMoves(ProjectileMove* moves, int lastCount);
 
-	bool ProjDeleted(int index);
-	void HandleDeleteNetworkedProj(int index);
-
 	//Debug
 	const char* PrintDebugUnity();
 

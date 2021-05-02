@@ -12,15 +12,15 @@ FPV::GameMessage::GameMessage()
 	ID = GameMessageID::ID_GAME_MESSAGE_START;
 }
 
-FPV::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove, RakNet::Time t) : TimeStampMessage(t)
+FPV::PlayerStateMessage::PlayerStateMessage(PlayerMove& playerMove)
 {
 	move = playerMove;
-	MsgID = ID_PLAYER_STATE;
+	ID = ID_PLAYER_STATE;
 }
 
-FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs) : TimeStampMessage(bs)
+FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 {
-	MsgID = FPV::ID_PLAYER_STATE;
+	ID = FPV::ID_PLAYER_STATE;
 	bs.Read(move.playerIndex);
 	bs.Read(move.LocX);
 	bs.Read(move.LocY);
@@ -33,8 +33,7 @@ FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs) : TimeStampMe
 
 void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 {
-	TimeStampMessage::TimeStampMessage(bs);
-	bs.Write(MsgID);
+	bs.Write(ID);
 	bs.Write(move.playerIndex);
 	bs.Write(move.LocX);
 	bs.Write(move.LocY);
@@ -67,24 +66,6 @@ void FPV::ProjStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 	bs.Write(move.LocX);
 	bs.Write(move.LocY);
 	bs.Write(move.LocZ);
-}
-
-FPV::ProjDeletedMessage::ProjDeletedMessage(int index)
-{
-	ID = ID_PROJ_DELETED;
-	i = index;
-}
-
-FPV::ProjDeletedMessage::ProjDeletedMessage(RakNet::BitStream& bs)
-{
-	ID = ID_PROJ_DELETED;
-	bs.Read(i);
-}
-
-void FPV::ProjDeletedMessage::WriteToBitStream(RakNet::BitStream& bs)
-{
-	bs.Write(ID);
-	bs.Write(i);
 }
 
 FPV::TimeStampMessage::TimeStampMessage(RakNet::Time t)
