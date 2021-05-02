@@ -64,8 +64,6 @@ public class gproClientPlugin
     //Delete and Disconnect
     [DllImport("gpro-net-Client-Plugin")]
     public static extern bool ProjectileDeleted(int index);
-    [DllImport("gpro-net-Client-Plugin")]
-    public static extern int GetDeletedProjs(int count);
 
     //Debug
     [DllImport("gpro-net-Client-Plugin", CallingConvention = CallingConvention.StdCall)]

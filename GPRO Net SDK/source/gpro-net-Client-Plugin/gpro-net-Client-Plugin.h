@@ -61,7 +61,6 @@ extern "C" {
 
 	//Disconnection/Delete
 	GPRO_NET_SYMBOL bool ProjectileDeleted(int index);
-	GPRO_NET_SYMBOL int GetDeletedProjs(int count);
 	
 	//Debug
 	GPRO_NET_SYMBOL const char* DebugMessage();

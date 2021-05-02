@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 public class gproClientManager : MonoBehaviour
 {
-    private string IP_ADDRESS = "172.16.2.51";
+    private string IP_ADDRESS = "172.16.2.60";
     private int SERVER_PORT = 7777;
     [Header("Networked Object Prefabs")]
     public GameObject playerPrefab;
@@ -95,23 +95,6 @@ public class gproClientManager : MonoBehaviour
         PrintDebugMessage(gproClientPlugin.DebugMessage());
     }
 
-    //void HandleDeletedProjs()
-    //{
-    //    int count = 0;
-    //    while (true)
-    //    {
-    //        int i = gproClientPlugin.GetDeletedProjs(count);
-    //        ++count;
-    //        if (i == -1)
-    //        {
-    //            break;
-    //        }
-    //        Debug.Log("delete Index: " + i);
-    //        networkedProjectiles[i].DeleteProj();
-    //        networkedProjectiles.Remove(i);
-    //    }
-    //}
-
     void GetNetworkedPlayer()
     {
         networkedMoves.Clear();
@@ -173,7 +156,6 @@ public class gproClientManager : MonoBehaviour
 
     void UpdateNetworkedProjs()
     {
-        Debug.Log("move Size: " + networkedProjMoves.Count);
         foreach (ProjectileMove move in networkedProjMoves)
         {
             if (!networkedProjectiles.ContainsKey(move.ProjIndex))
@@ -227,5 +209,10 @@ public class gproClientManager : MonoBehaviour
     {
         localProjs.Remove(proj.GetMove().ProjIndex);
         gproClientPlugin.ProjectileDeleted(proj.GetMove().ProjIndex);
+    }
+
+    public void RemoveNetworkedProj(int index)
+    {
+        networkedProjectiles.Remove(index);
     }
 }

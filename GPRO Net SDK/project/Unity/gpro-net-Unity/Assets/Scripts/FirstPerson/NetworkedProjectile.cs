@@ -21,13 +21,15 @@ public class NetworkedProjectile : MonoBehaviour
 
     private void HandleDeleteProj()
     {
-        if(UpdatedThisFrame)
+        if (UpdatedThisFrame)
         {
             UpdatedThisFrame = false;
         }
         else
         {
+            gproClientManager.Instance.RemoveNetworkedProj(move.ProjIndex);
             Destroy(gameObject);
+
         }
     }
 }

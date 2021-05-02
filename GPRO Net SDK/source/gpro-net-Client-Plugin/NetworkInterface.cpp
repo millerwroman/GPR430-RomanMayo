@@ -83,12 +83,6 @@ bool NetworkInterface::UpdateInputRemote()
 			AddState(msg.move);
 		}
 		break;
-		case FPV::ID_PROJ_DELETED:
-		{
-			FPV::ProjDeletedMessage msg(bitstream);
-			HandleDeleteNetworkedProj(msg.i);
-		}
-		break;
 		default:
 			//debugMessage = "Default Case: " + std::to_string(msgID);
 			break;
@@ -176,6 +170,7 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 
 int NetworkInterface::GetNetworkedProjMoves(ProjectileMove* moves, int lastCount)
 {
+	debugMessage = "Proj Move Size: " + std::to_string(networkedProjMoves.size());
 	if (lastCount < networkedProjMoves.size())
 	{
 		ProjectileMove* m = networkedProjMoves[lastCount];
@@ -195,21 +190,6 @@ bool NetworkInterface::ProjDeleted(int index)
 	FPV::ProjDeletedMessage msg(index);
 	AddMessageToQueue(msg);
 	return true;
-}
-
-int NetworkInterface::GetDeletedProjs(int count)
-{
-	if (count < deletedProjs.size())
-	{
-		return deletedProjs[count];
-	}
-	deletedProjs.clear();
-	return -1;
-}
-
-void NetworkInterface::HandleDeleteNetworkedProj(int index)
-{
-	deletedProjs.push_back(index);
 }
 
 const char* NetworkInterface::PrintDebugUnity()
