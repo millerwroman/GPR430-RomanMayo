@@ -215,4 +215,9 @@ public class gproClientManager : MonoBehaviour
     {
         networkedProjectiles.Remove(index);
     }
+
+    public void RemoveNetworkedPlayer(int index)
+    {
+        networkedPlayers.Remove(index);
+    }
 }

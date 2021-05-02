@@ -5,8 +5,8 @@ using UnityEngine;
 public class NetworkedProjectile : MonoBehaviour
 {
     private ProjectileMove move;
-    private bool UpdatedThisFrame = false;
-
+    private bool updatedThisFrame = false;
+    private int frameDelay = 0;
     void Start()
     {
         gproClientManager.FinishedNetworkUpdate.AddListener(HandleDeleteProj);
@@ -16,16 +16,18 @@ public class NetworkedProjectile : MonoBehaviour
     {
         move = newMove;
         transform.position = new Vector3(move.LocX, move.LocY, move.LocZ);
-        UpdatedThisFrame = true;
+        updatedThisFrame = true;
     }
 
     private void HandleDeleteProj()
     {
-        if (UpdatedThisFrame)
+        ++frameDelay;
+        if (updatedThisFrame)
         {
-            UpdatedThisFrame = false;
+            updatedThisFrame = false;
+            frameDelay = 0;
         }
-        else
+        else if (frameDelay > 10 && !updatedThisFrame)
         {
             gproClientManager.Instance.RemoveNetworkedProj(move.ProjIndex);
             Destroy(gameObject);
