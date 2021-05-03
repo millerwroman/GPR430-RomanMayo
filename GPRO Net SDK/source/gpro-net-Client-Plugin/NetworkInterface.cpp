@@ -76,7 +76,7 @@ bool NetworkInterface::UpdateInputRemote()
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg(bitstream);
-
+			DeadReckonPlayer(msg.move, (float)dtSendToReceive);
 			AddState(msg.move);
 		}
 		break;
@@ -232,10 +232,9 @@ RakNet::BitStream& NetworkInterface::ReadTimestamp(RakNet::BitStream& bitstream,
 	return bitstream;
 }
 
-//void NetworkInterface::DeadReckonPlayer(PlayerMove& move, float dt)
-//{
-//	float comp = UNITY_VEL * dt;
-//	move.LocX  = (move.LocX >= 0 ? move.LocX)
-//	move.LocY += comp;
-//	move.LocZ += comp;
-//}
+void NetworkInterface::DeadReckonPlayer(PlayerMove& move, float dt)
+{
+	move.LocX += move.VelX * dt;
+	move.LocY += move.VelY * dt;
+	move.LocZ += move.VelZ * dt;
+}
