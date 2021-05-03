@@ -76,7 +76,7 @@ bool NetworkInterface::UpdateInputRemote()
 		case FPV::ID_PLAYER_STATE:
 		{
 			FPV::PlayerStateMessage msg(bitstream);
-			DeadReckonPlayer(msg.move, (float)dtSendToReceive);
+			DeadReckonPlayer(msg.move, ((float)dtSendToReceive/1000));
 			AddState(msg.move);
 		}
 		break;
