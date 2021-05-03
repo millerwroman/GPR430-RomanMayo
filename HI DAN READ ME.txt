@@ -1,0 +1,14 @@
+Hey Dan! Here is the quick info to get our project running
+
+Set IP for server in resource/cfg-remote.txt
+Set IP for Unity Client in gproClientManager.cs line 21
+
+REIMPORT THE DLL!!!! DO A FULL REBUILD PLEASE!
+
+The game has a 2 person limit. After you have hit capacity you must restart the server to then reconnect.
+The server does need to run before clients connect
+
+WASD to move
+Left Click to shoot
+Mouse to look
+Enter to start typing in chat, Enter again to send
