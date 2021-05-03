@@ -72,6 +72,10 @@ public class PlayerController : MonoBehaviour
         move.RotY = localCamera.transform.rotation.y;
         move.RotZ = localCamera.transform.rotation.z;
         move.RotW = localCamera.transform.rotation.w;
+
+        move.VelX = playerVelocity.x;
+        move.VelY = playerVelocity.y;
+        move.VelZ = playerVelocity.z;
     }
 
     public ref PlayerMove GetPlayerMove()

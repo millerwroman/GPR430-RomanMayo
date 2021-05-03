@@ -61,6 +61,10 @@ extern "C" {
 		float RotY;
 		float RotZ;
 		float RotW;
+
+		float VelX;
+		float VelY;
+		float VelZ;
 	};
 
 	struct ProjectileMove

@@ -179,6 +179,9 @@ int NetworkInterface::GetNetworkedMoves(PlayerMove* moves, int lastCount)
 		moves->RotY = m->RotY;
 		moves->RotZ = m->RotZ;
 		moves->RotW = m->RotW;
+		moves->VelX = m->VelX;
+		moves->VelY = m->VelY;
+		moves->VelZ = m->VelZ;
 		return 1; //Valid
 	}
 	networkedMoves.clear();

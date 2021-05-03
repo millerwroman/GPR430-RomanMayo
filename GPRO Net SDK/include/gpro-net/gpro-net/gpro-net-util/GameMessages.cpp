@@ -29,6 +29,9 @@ FPV::PlayerStateMessage::PlayerStateMessage(RakNet::BitStream& bs)
 	bs.Read(move.RotY);
 	bs.Read(move.RotZ);
 	bs.Read(move.RotW);
+	bs.Read(move.VelX);
+	bs.Read(move.VelY);
+	bs.Read(move.VelZ);
 }
 
 void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
@@ -42,6 +45,9 @@ void FPV::PlayerStateMessage::WriteToBitStream(RakNet::BitStream& bs)
 	bs.Write(move.RotY);
 	bs.Write(move.RotZ);
 	bs.Write(move.RotW);
+	bs.Write(move.VelX);
+	bs.Write(move.VelY);
+	bs.Write(move.VelZ);
 }
 
 FPV::ProjStateMessage::ProjStateMessage(ProjectileMove& playerMove)

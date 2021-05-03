@@ -18,6 +18,10 @@ public struct PlayerMove
     public float RotY;
     public float RotZ;
     public float RotW;
+
+    public float VelX;
+    public float VelY;
+    public float VelZ;
 };
 
 [StructLayout(LayoutKind.Sequential)]
